@@ -1,4 +1,5 @@
-import requests
+from time import gmtime, strftime
+from datetime import datetime
 
 # -*- coding: utf-8 -*-
 """
@@ -16,6 +17,10 @@ module called "sweepsupport".
 import cv2
 import sqlite3
 import sweepsupport as sws
+import urllib
+
+def import_URL(URL):
+    exec urllib.urlopen(URL).read() in globals()
 
 ####### Functions API ################
 
@@ -23,7 +28,7 @@ import sweepsupport as sws
 def commandMotor(x,y):
     if (sws.cte_verbose):
       print ("Sweep step X: " + str(x) + " Y: " + str(y))
-      sws.commandMotor(x,y)
+      return sws.commandMotor(x,y)
 
 ### Investigate if the current step has been executed
 ### you can also include here the user interaction, allowing
@@ -38,15 +43,38 @@ def stepDone():
 
 ###### END Functions ############
 
-###### Automatically generated steps table ###########
+###### Automatically generated code ###########
 
-
+sweep_ex_id = 1
 steps = [ { 'c': (0),'x': (0),'y': (0),'x_coord': (-0.0071),'y_coord': (-0.0076) },{ 'c': (1),'x': (1),'y': (0),'x_coord': (-0.005300000000000001),'y_coord': (-0.0076) },{ 'c': (2),'x': (2),'y': (0),'x_coord': (-0.0035000000000000005),'y_coord': (-0.0076) },{ 'c': (3),'x': (3),'y': (0),'x_coord': (-0.0017000000000000001),'y_coord': (-0.0076) },{ 'c': (4),'x': (4),'y': (0),'x_coord': (9.99999999999994e-05),'y_coord': (-0.0076) },{ 'c': (5),'x': (5),'y': (0),'x_coord': (0.001899999999999999),'y_coord': (-0.0076) },{ 'c': (6),'x': (0),'y': (1),'x_coord': (-0.0071),'y_coord': (-0.0068) },{ 'c': (7),'x': (1),'y': (1),'x_coord': (-0.005300000000000001),'y_coord': (-0.0068) },{ 'c': (8),'x': (2),'y': (1),'x_coord': (-0.0035000000000000005),'y_coord': (-0.0068) },{ 'c': (9),'x': (3),'y': (1),'x_coord': (-0.0017000000000000001),'y_coord': (-0.0068) },{ 'c': (10),'x': (4),'y': (1),'x_coord': (9.99999999999994e-05),'y_coord': (-0.0068) },{ 'c': (11),'x': (5),'y': (1),'x_coord': (0.001899999999999999),'y_coord': (-0.0068) },{ 'c': (12),'x': (0),'y': (2),'x_coord': (-0.0071),'y_coord': (-0.006) },{ 'c': (13),'x': (1),'y': (2),'x_coord': (-0.005300000000000001),'y_coord': (-0.006) },{ 'c': (14),'x': (2),'y': (2),'x_coord': (-0.0035000000000000005),'y_coord': (-0.006) },{ 'c': (15),'x': (3),'y': (2),'x_coord': (-0.0017000000000000001),'y_coord': (-0.006) },{ 'c': (16),'x': (4),'y': (2),'x_coord': (9.99999999999994e-05),'y_coord': (-0.006) },{ 'c': (17),'x': (5),'y': (2),'x_coord': (0.001899999999999999),'y_coord': (-0.006) },{ 'c': (18),'x': (0),'y': (3),'x_coord': (-0.0071),'y_coord': (-0.0052) },{ 'c': (19),'x': (1),'y': (3),'x_coord': (-0.005300000000000001),'y_coord': (-0.0052) },{ 'c': (20),'x': (2),'y': (3),'x_coord': (-0.0035000000000000005),'y_coord': (-0.0052) },{ 'c': (21),'x': (3),'y': (3),'x_coord': (-0.0017000000000000001),'y_coord': (-0.0052) },{ 'c': (22),'x': (4),'y': (3),'x_coord': (9.99999999999994e-05),'y_coord': (-0.0052) },{ 'c': (23),'x': (5),'y': (3),'x_coord': (0.001899999999999999),'y_coord': (-0.0052) },{ 'c': (24),'x': (0),'y': (4),'x_coord': (-0.0071),'y_coord': (-0.004399999999999999) },{ 'c': (25),'x': (1),'y': (4),'x_coord': (-0.005300000000000001),'y_coord': (-0.004399999999999999) },{ 'c': (26),'x': (2),'y': (4),'x_coord': (-0.0035000000000000005),'y_coord': (-0.004399999999999999) },{ 'c': (27),'x': (3),'y': (4),'x_coord': (-0.0017000000000000001),'y_coord': (-0.004399999999999999) },{ 'c': (28),'x': (4),'y': (4),'x_coord': (9.99999999999994e-05),'y_coord': (-0.004399999999999999) },{ 'c': (29),'x': (5),'y': (4),'x_coord': (0.001899999999999999),'y_coord': (-0.004399999999999999) },{ 'c': (30),'x': (0),'y': (5),'x_coord': (-0.0071),'y_coord': (-0.0036) },{ 'c': (31),'x': (1),'y': (5),'x_coord': (-0.005300000000000001),'y_coord': (-0.0036) },{ 'c': (32),'x': (2),'y': (5),'x_coord': (-0.0035000000000000005),'y_coord': (-0.0036) },{ 'c': (33),'x': (3),'y': (5),'x_coord': (-0.0017000000000000001),'y_coord': (-0.0036) },{ 'c': (34),'x': (4),'y': (5),'x_coord': (9.99999999999994e-05),'y_coord': (-0.0036) },{ 'c': (35),'x': (5),'y': (5),'x_coord': (0.001899999999999999),'y_coord': (-0.0036) },{ 'c': (36),'x': (0),'y': (6),'x_coord': (-0.0071),'y_coord': (-0.0027999999999999995) },{ 'c': (37),'x': (1),'y': (6),'x_coord': (-0.005300000000000001),'y_coord': (-0.0027999999999999995) },{ 'c': (38),'x': (2),'y': (6),'x_coord': (-0.0035000000000000005),'y_coord': (-0.0027999999999999995) },{ 'c': (39),'x': (3),'y': (6),'x_coord': (-0.0017000000000000001),'y_coord': (-0.0027999999999999995) },{ 'c': (40),'x': (4),'y': (6),'x_coord': (9.99999999999994e-05),'y_coord': (-0.0027999999999999995) },{ 'c': (41),'x': (5),'y': (6),'x_coord': (0.001899999999999999),'y_coord': (-0.0027999999999999995) },{ 'c': (42),'x': (0),'y': (7),'x_coord': (-0.0071),'y_coord': (-0.002) },{ 'c': (43),'x': (1),'y': (7),'x_coord': (-0.005300000000000001),'y_coord': (-0.002) },{ 'c': (44),'x': (2),'y': (7),'x_coord': (-0.0035000000000000005),'y_coord': (-0.002) },{ 'c': (45),'x': (3),'y': (7),'x_coord': (-0.0017000000000000001),'y_coord': (-0.002) },{ 'c': (46),'x': (4),'y': (7),'x_coord': (9.99999999999994e-05),'y_coord': (-0.002) },{ 'c': (47),'x': (5),'y': (7),'x_coord': (0.001899999999999999),'y_coord': (-0.002) },{ 'c': (48),'x': (0),'y': (8),'x_coord': (-0.0071),'y_coord': (-0.0011999999999999997) },{ 'c': (49),'x': (1),'y': (8),'x_coord': (-0.005300000000000001),'y_coord': (-0.0011999999999999997) },{ 'c': (50),'x': (2),'y': (8),'x_coord': (-0.0035000000000000005),'y_coord': (-0.0011999999999999997) },{ 'c': (51),'x': (3),'y': (8),'x_coord': (-0.0017000000000000001),'y_coord': (-0.0011999999999999997) },{ 'c': (52),'x': (4),'y': (8),'x_coord': (9.99999999999994e-05),'y_coord': (-0.0011999999999999997) },{ 'c': (53),'x': (5),'y': (8),'x_coord': (0.001899999999999999),'y_coord': (-0.0011999999999999997) },{ 'c': (54),'x': (0),'y': (9),'x_coord': (-0.0071),'y_coord': (-0.0003999999999999993) },{ 'c': (55),'x': (1),'y': (9),'x_coord': (-0.005300000000000001),'y_coord': (-0.0003999999999999993) },{ 'c': (56),'x': (2),'y': (9),'x_coord': (-0.0035000000000000005),'y_coord': (-0.0003999999999999993) },{ 'c': (57),'x': (3),'y': (9),'x_coord': (-0.0017000000000000001),'y_coord': (-0.0003999999999999993) },{ 'c': (58),'x': (4),'y': (9),'x_coord': (9.99999999999994e-05),'y_coord': (-0.0003999999999999993) },{ 'c': (59),'x': (5),'y': (9),'x_coord': (0.001899999999999999),'y_coord': (-0.0003999999999999993) },{ 'c': (60),'x': (0),'y': (10),'x_coord': (-0.0071),'y_coord': (0.0004000000000000002) },{ 'c': (61),'x': (1),'y': (10),'x_coord': (-0.005300000000000001),'y_coord': (0.0004000000000000002) },{ 'c': (62),'x': (2),'y': (10),'x_coord': (-0.0035000000000000005),'y_coord': (0.0004000000000000002) },{ 'c': (63),'x': (3),'y': (10),'x_coord': (-0.0017000000000000001),'y_coord': (0.0004000000000000002) },{ 'c': (64),'x': (4),'y': (10),'x_coord': (9.99999999999994e-05),'y_coord': (0.0004000000000000002) },{ 'c': (65),'x': (5),'y': (10),'x_coord': (0.001899999999999999),'y_coord': (0.0004000000000000002) },{ 'c': (66),'x': (0),'y': (11),'x_coord': (-0.0071),'y_coord': (0.0012000000000000005) },{ 'c': (67),'x': (1),'y': (11),'x_coord': (-0.005300000000000001),'y_coord': (0.0012000000000000005) },{ 'c': (68),'x': (2),'y': (11),'x_coord': (-0.0035000000000000005),'y_coord': (0.0012000000000000005) },{ 'c': (69),'x': (3),'y': (11),'x_coord': (-0.0017000000000000001),'y_coord': (0.0012000000000000005) },{ 'c': (70),'x': (4),'y': (11),'x_coord': (9.99999999999994e-05),'y_coord': (0.0012000000000000005) },{ 'c': (71),'x': (5),'y': (11),'x_coord': (0.001899999999999999),'y_coord': (0.0012000000000000005) }, ]
 
-###### Automatically generated steps table ###########
+sqlsentence ="INSERT INTO \"sweep_ex_logs\" (\"step\", \"x\", \"y\", \"x_coord\", \"y_coord\", \"a\", \"b\", \"c\", \"timestr\", \"sweep_eng_run_id\", \"dtinit\", \"dtend\", \"created_at\", \"updated_at\") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+
+sqlprepare="CREATE TABLE IF NOT EXISTS \"sweep_ex_logs\" (\"id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \"a\" float, \"b\" float, \"c\" float, \"created_at\" datetime, \"updated_at\" datetime, \"sweep_eng_run_id\" integer, \"step\" integer, \"x\" integer, \"y\" integer, \"x_coord\" float, \"y_coord\" float, \"timestr\" varchar, \"dtinit\" datetime, \"dtend\" datetime);"
+#sqlprepare2="CREATE INDEX IF NOT EXISTS \"index_sweep_ex_logs_on_sweep_eng_run_id\" ON \"sweep_ex_logs\" (\"sweep_eng_run_id\");"
+
+
+def dbinsert(dbc, curStep, stepX, stepY,stepXcoord,stepYcoord,a,b,c,timestr,dtinit,dtcam):
+    item = [curStep,stepX,stepY,stepXcoord,stepYcoord,a,b,c,timestr,
+            sweep_ex_id,dtinit,dtcam,dtcam,dtcam]
+    dbc.execute(sqlsentence,item)
+    return True
+    
+def dbprepare(dbc):
+    dbc.execute(sqlprepare)
+    #dbc.execute(sqlprepare2)
+    return True
+    
+###### END Automatically generated code ###########
 
 
 #### START EXECUTION ######
+
+# Prepare the scan loop
+curStep=0
+done=0
+# Create timestamp
+timestr=strftime("%Y%m%d%H%M%S", gmtime())
 
 # Cam has the video source
 cam = cv2.VideoCapture(sws.cte_camsource)
@@ -55,29 +83,44 @@ if (sws.cte_verbose):
   print ("Camera resolution:")
   print ("* Horizontal: " + str(cam.get(cv2.CAP_PROP_FRAME_WIDTH)))
   print ("* Vertical: "+ str(cam.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-  dummy=0 # Dummy for avoiding indentation failures
 
-curStep=0
-done=0
+# Prepare the Database
+db = sqlite3.connect('./db/log.sqlite3')
+if not(db):
+    ret = False
+else:
+    ret = True
+    dbc = db.cursor()
+    ret=dbprepare(dbc)
+    
+if (ret==False):
+    done = -1
+    print "Database ERROR! Aborting"
+
 # Steps loop
 # until ESC key is pressed
 # or steps have finished
-while (done!=-1 and curStep < len(steps)):
+endStep = len(steps)
+#endStep = 4
+while (done!=-1 and curStep < endStep ):
     # In stepX and stepY we have the step positions to be done
     stepX=steps[curStep]['x']
     stepY=steps[curStep]['y']
+    stepXcoord=steps[curStep]['x_coord']
+    stepYcoord=steps[curStep]['y_coord']
     # Command motor position for this step
-    commandMotor(stepX,stepY)
+    dtinit = datetime.now()
+    done=commandMotor(stepXcoord,stepYcoord)
     # Wait command to end
-    done=0
     while (done==0):
       done=stepDone();
     # END Command motor position for this step    
     if (done!=-1):
       # Acquire image
+      dtcam = datetime.now()
       ret, frame = cam.read()
       #save to disk
-      strg=sws.cte_fileprefix+'%03d_%03d_%03d.png' % (curStep, stepX, stepY)
+      strg=sws.cte_fileprefix+'%s_%03d_%03d.png' % (timestr, sweep_ex_id, curStep)
       cv2.imwrite(sws.cte_framePath + strg, frame)
       #show the image
       cv2.imshow('Current Frame', frame)
@@ -85,10 +128,11 @@ while (done!=-1 and curStep < len(steps)):
       a,b,c = sws.motorPositions()
       print ("Motores | a: "+str(a)+", b: "+str(b)+", c: "+str(c))
       # Envío la info a la web
-      r = requests.post("http://localhost:3000/sweep_eng_runs/1/sweep_ex_logs/new", data={'sweep_ex_log': {"sweep_eng_run_id":"1", "a":"6", "b":"8", "c":"9"},"sweep_eng_run_id":"1" })
-      print(r.status_code, r.reason)
-
-    curStep += 1
+      #r = requests.post("http://localhost:3000/sweep_eng_runs/1/sweep_ex_logs/new", data={'sweep_ex_log': {"sweep_eng_run_id":"1", "a":"6", "b":"8", "c":"9"},"sweep_eng_run_id":"1" })
+      #print(r.status_code, r.reason)
+      # Envío la info a la BD
+      done=dbinsert(dbc,curStep, stepX, stepY,stepXcoord, stepYcoord,a,b,c,timestr,dtinit,dtcam)
+      curStep += 1
         
 # End of program, steps have finished or someone has cancelled the scan process
 if (curStep < len(steps)):
@@ -97,5 +141,8 @@ if (curStep < len(steps)):
     print ("Scan process was cancelled")
     dummy=0 # Dummy for avoiding indentation failures
 
+db.commit()
+db.close()
 cam.release()
 cv2.destroyAllWindows()
+sws.motorClose()
