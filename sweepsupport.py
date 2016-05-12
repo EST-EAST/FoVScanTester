@@ -1,9 +1,13 @@
 import cv2
-
+import os
 import serial
 
-#cte_serial_port = '/dev/ttyUSB0'
-cte_serial_port = 'COM1:'
+if (os.name == 'nt'):
+    cte_serial_port = 'COM1:'
+else:
+    cte_serial_port = '/dev/ttyUSB0'
+
+print "El puerto serie será: "+cte_serial_port
 
 ser = serial.Serial(
     port=cte_serial_port,
@@ -22,22 +26,27 @@ cte_framePath = "./00_acquired/"
 
 cte_stepTime=1000
 
+# M2 = x
 cte_lsx_min = -500      # End of LS travel in lower units
 cte_lsx_max = +500      # End of LS travel in upper units
 cte_lsx_scale = 40.0     # LS units / mm
 cte_lsx_zero = +50      # LS units coincidence with 0 mm (center) 
 
+# M1 = y
 cte_lsy_min = -500      # End of LS travel in lower units
 cte_lsy_max = +500      # End of LS travel in upper units
 cte_lsy_scale = 40.0     # LS units / mm
 cte_lsy_zero = +50      # LS units coincidence with 0 mm (center) 
 
+# M3 = compensacion
 cte_lscomp_min = -500      # End of LS travel in lower units
 cte_lscomp_max = +500      # End of LS travel in upper units
 cte_lscomp_scale = 40.0     # LS units / mm
 cte_lscomp_zero = +50      # LS units coincidence with 0 mm (center) 
 
-
+lsx_pos = 0.0
+lsy_pos = 0.0
+lscomp_pos = 0.0
 
 def commandMotor(x,y):
     ret = 0
@@ -61,12 +70,14 @@ def commandMotor(x,y):
         ret=-1
     else:
         # send the commands
-        cmdx_str = "1MOV%4d" % (lsx_pos)
+        cmdx_str = "2MOV%4d" % (lsx_pos)
         ser.write(cmdx_str+'\0')
-        cmdy_str = "2MOV%4d" % (lsy_pos)
+        cmdy_str = "1MOV%4d" % (lsy_pos)
+        ser.write(cmdy_str+'\0')
+        cmdy_str = "3MOV%4d" % (lscomp_pos)
         ser.write(cmdy_str+'\0')
         ret = 0
-    return ret
+    return ret,lsx_pos,lsy_pos,lscomp_pos
 
 def stepDone():
     # Wait for command or step time
@@ -82,13 +93,14 @@ def stepDone():
         else:
             ## Another key presssed
             ret=0
+
     return ret
 
 def motorPositions():
-  a = 1
-  b = 2
-  c = 3
-  return a,b,c
+  m1_fdback = lsy_pos
+  m2_fdback = lsx_pos
+  m3_fdback = lscomp_pos
+  return m1_fdback, m2_fdback, m3_fdback
 
 def motorClose():
     ser.close()             # close port

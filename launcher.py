@@ -4,13 +4,14 @@ Created on Thu May 12 13:13:44 2016
 
 @author: txinto
 """
-
-
+import os
 import urllib
+
 def import_URL(URL):
     exec urllib.urlopen(URL).read() in globals()
     
 menurl = "http://gatatac.org:5555/sweep_exes"
+print "Running on "+os.name
 print "The menu chooser will be downloaded from "+menurl+".py"
 print "The list of avaliable algorithms are here: "+menurl
 import_URL(menurl+".py")
