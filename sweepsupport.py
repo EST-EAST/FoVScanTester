@@ -7,8 +7,9 @@ if (os.name == 'nt'):
 else:
     cte_serial_port = '/dev/ttyUSB0'
 
-print "El puerto serie será: "+cte_serial_port
+print "El puerto serie sera: "+cte_serial_port
 
+'''
 ser = serial.Serial(
     port=cte_serial_port,
     baudrate=9600,
@@ -18,8 +19,9 @@ ser = serial.Serial(
     rtscts=False,
     dsrdtr=False
 )
+'''
 
-cte_camsource = 0
+cte_camsource = 1
 cte_verbose = True
 cte_fileprefix = "frame"
 cte_framePath = "./00_acquired/"
@@ -71,11 +73,11 @@ def commandMotor(x,y):
     else:
         # send the commands
         cmdx_str = "2MOV%4d" % (lsx_pos)
-        ser.write(cmdx_str+'\0')
+        #ser.write(cmdx_str+'\0')
         cmdy_str = "1MOV%4d" % (lsy_pos)
-        ser.write(cmdy_str+'\0')
+        #ser.write(cmdy_str+'\0')
         cmdy_str = "3MOV%4d" % (lscomp_pos)
-        ser.write(cmdy_str+'\0')
+        #ser.write(cmdy_str+'\0')
         ret = 0
     return ret,lsx_pos,lsy_pos,lscomp_pos
 
@@ -103,5 +105,6 @@ def motorPositions():
   return m1_fdback, m2_fdback, m3_fdback
 
 def motorClose():
-    ser.close()             # close port
+    #ser.close()             # close port
+    dummy = 0
     
