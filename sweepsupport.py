@@ -7,7 +7,7 @@ if (os.name == 'nt'):
 else:
     cte_serial_port = '/dev/ttyUSB0'
 
-print "El puerto serie sera: "+cte_serial_port
+print "Chosen serial port: "+cte_serial_port
 
 '''
 ser = serial.Serial(
