@@ -6,6 +6,7 @@ Created on Thu May 12 13:13:44 2016
 """
 import os
 import urllib
+import sweepsupport
 
 def import_URL(URL):
     exec urllib.urlopen(URL).read() in globals()
@@ -15,6 +16,8 @@ print "Running on "+os.name
 print "The menu chooser will be downloaded from "+menurl+".py"
 print "The list of avaliable algorithms are here: "+menurl
 import_URL(menurl+".py")
+
+sweepsupport.resetMotor()
 
 if (sweep_id_to_execute != 0):
     sweepurl="http://gatatac.org:5555/sweep_exes/"+str(sweep_id_to_execute)
