@@ -1,11 +1,8 @@
 import cv2
-import os
 import serial
+import sweepconfig
 
-if (os.name == 'nt'):
-    cte_serial_port = 'COM1:'
-else:
-    cte_serial_port = '/dev/ttyUSB0'
+cte_serial_port = sweepconfig.cte_serial_port
 
 print "Chosen serial port: "+cte_serial_port
 
@@ -20,7 +17,8 @@ ser = serial.Serial(
     xonxoff=True
 )
 
-cte_camsource = 0
+cte_camsource = sweepconfig.cte_camsource
+
 cte_verbose = True
 cte_fileprefix = "frame"
 cte_framePath = "./00_acquired/"
