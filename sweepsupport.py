@@ -7,7 +7,7 @@ if (os.name == 'nt'):
 else:
     cte_serial_port = '/dev/ttyUSB0'
 
-print "El puerto serie serA: "+cte_serial_port
+print "Chosen serial port: "+cte_serial_port
 
 ser = serial.Serial(
     port=cte_serial_port,
@@ -20,7 +20,7 @@ ser = serial.Serial(
     xonxoff=True
 )
 
-cte_camsource = 0
+cte_camsource = 1
 cte_verbose = True
 cte_fileprefix = "frame"
 cte_framePath = "./00_acquired/"
