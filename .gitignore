@@ -61,5 +61,5 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
-00_acquired
-/db
+/00_acquired/*.png
+/db/*.db
