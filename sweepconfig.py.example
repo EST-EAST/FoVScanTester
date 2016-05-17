@@ -1,0 +1,16 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 17 17:51:05 2016
+
+@author: txinto
+"""
+
+import os
+
+if (os.name == 'nt'):
+    cte_serial_port = 'COM1:'
+else:
+    cte_serial_port = '/dev/ttyUSB0'
+
+
+cte_camsource = 0
