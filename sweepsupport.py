@@ -69,83 +69,88 @@ def getMotorResponse():
     done=False
     while (done==False):
         char_read=ser.read(1)
-        if (char_read=='\0'):
+        if (char_read=='\10'):
             done=True
         else:
-            current_command+=char_read
+            if (char_read!='\13'):
+                current_command+=char_read
     return current_command
 
+
+def sendMotorCommand(cmd_str):
+    ser.write(cmd_str+'\13')
+    print "Command sent: "+cmd_str
 
 # Commands home and puts the window at the central position.
 def resetMotor():
 
     # Program the motor to warn when the command is done
     cmd_str = "NP"
-    ser.write(cmd_str+'\0')
+    sendMotorCommand(cmd_str)
     print(cmd_str)
     print(getMotorResponse())
 
     # Programming the Home speeds
     cmdx_str = "2V%3d" % (cte_vhx)
-    ser.write(cmdx_str+'\0')
+    sendMotorCommand(cmdx_str)
     print(cmdx_str)
     print(getMotorResponse())
     
     cmdy_str = "1V%3d" % (cte_vhy)
-    ser.write(cmdy_str+'\0')
+    sendMotorCommand(cmdy_str)
     print(cmdy_str)
     print(getMotorResponse())
     
     cmdcomp_str = "3V%3d" % (cte_vhcomp)
-    ser.write(cmdcomp_str+'\0')
+    sendMotorCommand(cmdcomp_str)
     print(cmdcomp_str)
     print(getMotorResponse())
     
     #Execute the home sequence:
     cmdx_str = "2GOHOSEQ"
-    ser.write(cmdx_str+'\0')
+    sendMotorCommand(cmdx_str)
     print(cmdx_str)
     print(getMotorResponse())
     
     cmdy_str = "1GOHOSEQ"
-    ser.write(cmdy_str+'\0')
+    sendMotorCommand(cmdy_str)
     print(cmdy_str)
     print(getMotorResponse())
     
     cmdcomp_str = "3GOHOSEQ"
-    ser.write(cmdcomp_str+'\0')
+    sendMotorCommand(cmdcomp_str)
     print(cmdcomp_str)
     print(getMotorResponse())
     
     # Programming the Index speeds
     cmdx_str = "2V%03d" % (cte_vix)
-    ser.write(cmdx_str+'\0')
+    sendMotorCommand(cmdx_str)
     print(cmdx_str)
     print(getMotorResponse())
     
     cmdy_str = "1V%03d" % (cte_viy)
-    ser.write(cmdy_str+'\0')
+    sendMotorCommand(cmdy_str)
     print(cmdy_str)
     print(getMotorResponse())
     
     cmdcomp_str = "3V%03d" % (cte_vicomp)
-    ser.write(cmdcomp_str+'\0')
+    sendMotorCommand(cmdcomp_str)
     print(cmdcomp_str)
     print(getMotorResponse())
     
     # Find the indexes
     cmdx_str = "2GOIX"
-    ser.write(cmdx_str+'\0')
+    sendMotorCommand(cmdx_str)
     print(cmdx_str)
     print(getMotorResponse())
     
     cmdy_str = "1GOIX"
-    ser.write(cmdy_str+'\0')
+    sendMotorCommand(cmdy_str)
     print(cmdy_str)
     print(getMotorResponse())
     
     cmdcomp_str = "3GOIX"
-    ser.write(cmdcomp_str+'\0')
+    sendMotorCommand(cmdcomp_str)
     print(cmdcomp_str)
     print(getMotorResponse())
     
@@ -156,48 +161,48 @@ def resetMotor():
     
     # Set center position as target for the movement
     cmdx_str = "2LA%05d" % (lsx_pos)
-    ser.write(cmdx_str+'\0')
+    sendMotorCommand(cmdx_str)
     print(cmdx_str)
     print(getMotorResponse())
     
     cmdy_str = "1LA%05d" % (lsy_pos)
-    ser.write(cmdy_str+'\0')
+    sendMotorCommand(cmdy_str)
     print(cmdy_str)
     print(getMotorResponse())
     
     cmdcomp_str = "3LA%05d" % (lscomp_pos)
-    ser.write(cmdcomp_str+'\0')
+    sendMotorCommand(cmdcomp_str)
     print(cmdcomp_str)
     print(getMotorResponse())
     
     cmdx_str = "2V%03d" % (cte_vx)
-    ser.write(cmdx_str+'\0')
+    sendMotorCommand(cmdx_str)
     print(cmdx_str)
     print(getMotorResponse())
     
     cmdy_str = "1V%03d" % (cte_vy)
-    ser.write(cmdy_str+'\0')
+    sendMotorCommand(cmdy_str)
     print(cmdy_str)
     print(getMotorResponse())
     
     cmdcomp_str = "3V%03d" % (cte_vcomp)
-    ser.write(cmdcomp_str+'\0')
+    sendMotorCommand(cmdcomp_str)
     print(cmdcomp_str)
     print(getMotorResponse())
     
     # Move the motor
     cmdx_str = "2M"
-    ser.write(cmdx_str+'\0')
+    sendMotorCommand(cmdx_str)
     print(cmdx_str)
     print(getMotorResponse())
     
     cmdy_str = "1M"
-    ser.write(cmdy_str+'\0')
+    sendMotorCommand(cmdy_str)
     print(cmdy_str)
     print(getMotorResponse())
     
     cmdcomp_str = "3M"
-    ser.write(cmdcomp_str+'\0')
+    sendMotorCommand(cmdcomp_str)
     print(cmdcomp_str)
     print(getMotorResponse())
     
@@ -225,33 +230,33 @@ def commandMotor(x,y):
     else:
         # send the commands
         cmdx_str = "2LA%04d" % (lsx_pos)
-        ser.write(cmdx_str+'\0')
+        sendMotorCommand(cmdx_str)
         print(cmdx_str)
         print(getMotorResponse())
 
         cmdy_str = "1LA%04d" % (lsy_pos)
-        ser.write(cmdy_str+'\0')
+        sendMotorCommand(cmdy_str)
         print(cmdy_str)
         print(getMotorResponse())
 
         cmdcomp_str = "3LA%04d" % (lscomp_pos)
-        ser.write(cmdcomp_str+'\0')
+        sendMotorCommand(cmdcomp_str)
         print(cmdcomp_str)        
         print(getMotorResponse())
 
         # Move the motor
         cmdx_str = "2M"
-        ser.write(cmdx_str+'\0')
+        sendMotorCommand(cmdx_str)
         print(cmdx_str)
         print(getMotorResponse())
 
         cmdy_str = "1M"
-        ser.write(cmdy_str+'\0')
+        sendMotorCommand(cmdy_str)
         print(cmdy_str)
         print(getMotorResponse())
 
         cmdcomp_str = "3M"
-        ser.write(cmdcomp_str+'\0')
+        sendMotorCommand(cmdcomp_str)
         print(cmdcomp_str)
         print(getMotorResponse())
 

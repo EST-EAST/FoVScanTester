@@ -5,16 +5,13 @@ Created on Tue May 17 16:44:56 2016
 @author: Txinto
 """
 
-import os
+
 import serial
+import sweepconfig
 
-if (os.name == 'nt'):
-    cte_serial_port = 'COM2:'
-else:
-    cte_serial_port = '/dev/ttyUSB1'
+cte_serial_port_loopback = sweepconfig.cte_serial_port_loopback
 
-print "Chosen serial port: "+cte_serial_port
-
+print "Chosen serial port: "+cte_serial_port_loopback
 
 cte_stepTime=1000
 cte_timeout = 2000
@@ -24,23 +21,25 @@ def readCommand():
     done=False
     while (done==False):
         char_read=ser.read(1)
-        if (char_read=='\0'):
+        if (char_read=='\13'):
+            print "done: "+current_command
             done=True
         else:
             current_command+=char_read
+            print "acum: "+current_command
     return current_command
 
 def sendResponse(response_lenght):
     response = ""
     for i in range (1,response_lenght+1):
         response += str(i)
-    ser.write(response+'\0')
+    ser.write(response+'\13'+'\10')
 
 def serialClose():
     ser.close()             # close port
     
 ser = serial.Serial(
-    port=cte_serial_port,
+    port=cte_serial_port_loopback,
     baudrate=9600,
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
