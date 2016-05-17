@@ -3,7 +3,7 @@ import os
 import serial
 
 if (os.name == 'nt'):
-    cte_serial_port = 'COM5:'
+    cte_serial_port = 'COM1:'
 else:
     cte_serial_port = '/dev/ttyUSB0'
 
@@ -20,7 +20,7 @@ ser = serial.Serial(
     xonxoff=True
 )
 
-cte_camsource = 1
+cte_camsource = 0
 cte_verbose = True
 cte_fileprefix = "frame"
 cte_framePath = "./00_acquired/"
@@ -66,12 +66,17 @@ lsx_pos = 0.0
 lsy_pos = 0.0
 lscomp_pos = 0.0
 
-def getMotorResponse(response_lenght):
-    charsread=0
-    response = ""
-    while (len(response)<response_lenght):
-        response += ser.read(response_lenght-charsread)
-    return response
+def getMotorResponse():
+    current_command=""
+    done=False
+    while (done==False):
+        char_read=ser.read(1)
+        if (char_read=='\0'):
+            done=True
+        else:
+            current_command+=char_read
+    return current_command
+
 
 # Commands home and puts the window at the central position.
 def resetMotor():
@@ -80,71 +85,71 @@ def resetMotor():
     cmd_str = "NP"
     ser.write(cmd_str+'\0')
     print(cmd_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
 
     # Programming the Home speeds
     cmdx_str = "2V%3d" % (cte_vhx)
     ser.write(cmdx_str+'\0')
     print(cmdx_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdy_str = "1V%3d" % (cte_vhy)
     ser.write(cmdy_str+'\0')
     print(cmdy_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdcomp_str = "3V%3d" % (cte_vhcomp)
     ser.write(cmdcomp_str+'\0')
     print(cmdcomp_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     #Execute the home sequence:
     cmdx_str = "2GOHOSEQ"
     ser.write(cmdx_str+'\0')
     print(cmdx_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdy_str = "1GOHOSEQ"
     ser.write(cmdy_str+'\0')
     print(cmdy_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdcomp_str = "3GOHOSEQ"
     ser.write(cmdcomp_str+'\0')
     print(cmdcomp_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     # Programming the Index speeds
     cmdx_str = "2V%03d" % (cte_vix)
     ser.write(cmdx_str+'\0')
     print(cmdx_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdy_str = "1V%03d" % (cte_viy)
     ser.write(cmdy_str+'\0')
     print(cmdy_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdcomp_str = "3V%03d" % (cte_vicomp)
     ser.write(cmdcomp_str+'\0')
     print(cmdcomp_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     # Find the indexes
     cmdx_str = "2GOIX"
     ser.write(cmdx_str+'\0')
     print(cmdx_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdy_str = "1GOIX"
     ser.write(cmdy_str+'\0')
     print(cmdy_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdcomp_str = "3GOIX"
     ser.write(cmdcomp_str+'\0')
     print(cmdcomp_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     # Calculate the center position of the window over the FoV
     lsx_pos = cte_lsx_zero
@@ -155,48 +160,48 @@ def resetMotor():
     cmdx_str = "2LA%05d" % (lsx_pos)
     ser.write(cmdx_str+'\0')
     print(cmdx_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdy_str = "1LA%05d" % (lsy_pos)
     ser.write(cmdy_str+'\0')
     print(cmdy_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdcomp_str = "3LA%05d" % (lscomp_pos)
     ser.write(cmdcomp_str+'\0')
     print(cmdcomp_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdx_str = "2V%03d" % (cte_vx)
     ser.write(cmdx_str+'\0')
     print(cmdx_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdy_str = "1V%03d" % (cte_vy)
     ser.write(cmdy_str+'\0')
     print(cmdy_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdcomp_str = "3V%03d" % (cte_vcomp)
     ser.write(cmdcomp_str+'\0')
     print(cmdcomp_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     # Move the motor
     cmdx_str = "2M"
     ser.write(cmdx_str+'\0')
     print(cmdx_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdy_str = "1M"
     ser.write(cmdy_str+'\0')
     print(cmdy_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
     cmdcomp_str = "3M"
     ser.write(cmdcomp_str+'\0')
     print(cmdcomp_str)
-    print(getMotorResponse(3))
+    print(getMotorResponse())
     
 
 def commandMotor(x,y):
@@ -224,33 +229,33 @@ def commandMotor(x,y):
         cmdx_str = "2LA%04d" % (lsx_pos)
         ser.write(cmdx_str+'\0')
         print(cmdx_str)
-        print(getMotorResponse(3))
+        print(getMotorResponse())
 
         cmdy_str = "1LA%04d" % (lsy_pos)
         ser.write(cmdy_str+'\0')
         print(cmdy_str)
-        print(getMotorResponse(3))
+        print(getMotorResponse())
 
         cmdcomp_str = "3LA%04d" % (lscomp_pos)
         ser.write(cmdcomp_str+'\0')
         print(cmdcomp_str)        
-        print(getMotorResponse(3))
+        print(getMotorResponse())
 
         # Move the motor
         cmdx_str = "2M"
         ser.write(cmdx_str+'\0')
         print(cmdx_str)
-        print(getMotorResponse(3))
+        print(getMotorResponse())
 
         cmdy_str = "1M"
         ser.write(cmdy_str+'\0')
         print(cmdy_str)
-        print(getMotorResponse(3))
+        print(getMotorResponse())
 
         cmdcomp_str = "3M"
         ser.write(cmdcomp_str+'\0')
         print(cmdcomp_str)
-        print(getMotorResponse(3))
+        print(getMotorResponse())
 
         ret = 0
 
