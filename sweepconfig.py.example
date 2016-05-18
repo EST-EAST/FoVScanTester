@@ -14,3 +14,8 @@ else:
 
 
 cte_camsource = 0
+
+if (os.name == 'nt'):
+    cte_serial_port_loopback = 'COM2:'
+else:
+    cte_serial_port_loopback = '/dev/ttyUSB1'
