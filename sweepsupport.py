@@ -1,6 +1,9 @@
 import cv2
 import serial
 import sweepconfig
+import sys
+sys.path.insert(0, './fsm')
+import FoV
 
 cte_serial_port = sweepconfig.cte_serial_port
 
@@ -16,6 +19,8 @@ ser = serial.Serial(
     dsrdtr=False,
     xonxoff=True
 )
+
+FoV.ser = ser
 
 cte_camsource = sweepconfig.cte_camsource
 
@@ -65,21 +70,26 @@ lsy_pos = 0.0
 lscomp_pos = 0.0
 
 def getMotorResponse():
-    current_command=""
-    done=False
-    while (done==False):
-        char_read=ser.read(1)
-        if (char_read=='\10'):
-            done=True
-        else:
-            if (char_read!='\13'):
-                current_command+=char_read
-    return current_command
+    '''    
+        current_command=""
+        done=False
+        while (done==False):
+            char_read=ser.read(1)
+            if (char_read=='\10'):
+                done=True
+            else:
+                if (char_read!='\13'):
+                    current_command+=char_read
+        return current_command
+    '''
+    return FoV.getCtrlResponse()
 
 
 def sendMotorCommand(cmd_str):
-    ser.write(cmd_str+'\13')
+    #ser.write(cmd_str+'\13')
     print "Command sent: "+cmd_str
+    FoV.command_tx_buf = cmd_str
+    FoV.sendCtrlCommand()
 
 # Commands home and puts the window at the central position.
 def resetMotor():
