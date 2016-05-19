@@ -1,26 +1,32 @@
 import cv2
-import serial
 import sweepconfig
 import sys
 sys.path.insert(0, './fsm')
 import FoV
 
-cte_serial_port = sweepconfig.cte_serial_port
-
-print "Chosen serial port: "+cte_serial_port
-
-ser = serial.Serial(
-    port=cte_serial_port,
-    baudrate=9600,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS,
-    rtscts=False,
-    dsrdtr=False,
-    xonxoff=True
-)
-
-FoV.ser = ser
+if not(sweepconfig.cte_use_socket):
+    import serial
+    cte_serial_port = sweepconfig.cte_serial_port
+    print "Chosen serial port: "+cte_serial_port
+    ser = serial.Serial(
+        port=cte_serial_port,
+        baudrate=9600,
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS,
+        rtscts=False,
+        dsrdtr=False,
+        xonxoff=True
+    )
+    FoV.dre.ser = ser
+else:
+    import socket               # Import socket module
+    
+    sckt = socket.socket()         # Create a socket object
+    sckt.connect((sweepconfig.cte_socket_ip, sweepconfig.cte_socket_port))
+    FoV.dre.ser = sckt
+    
+FoV.dre.cte_use_socket = sweepconfig.cte_use_socket
 
 cte_camsource = sweepconfig.cte_camsource
 
@@ -88,7 +94,7 @@ def getMotorResponse():
 def sendMotorCommand(cmd_str):
     #ser.write(cmd_str+'\13')
     print "Command sent: "+cmd_str
-    FoV.command_tx_buf = cmd_str
+    FoV.dre.command_tx_buf = cmd_str
     FoV.sendCtrlCommand()
 
 # Commands home and puts the window at the central position.
@@ -298,5 +304,8 @@ def motorPositions():
   return m1_fdback, m2_fdback, m3_fdback
 
 def motorClose():
-    ser.close()             # close port
-    
+    if not(sweepconfig.cte_use_socket):
+        ser.close()             # close port
+    else:    
+        sckt.close              # Close the socket when done    
+
