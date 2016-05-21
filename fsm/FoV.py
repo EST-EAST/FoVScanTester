@@ -35,9 +35,6 @@ def decodeM1Cmd(  ):
     dre.m1m=dre.mXm
     dre.m1spd=dre.mXspd
     
-    # Response of position
-    #dre.m1pos=dre.mXpos
-    
     # Recover args from M1
     dre.m1spd=dre.mXspdarg
     dre.m1posarg=dre.mXposarg
@@ -62,9 +59,6 @@ def decodeM2Cmd(  ):
     dre.m2m=dre.mXm
     dre.m2spd=dre.mXspd
     
-    # Response of position
-    #dre.m2pos=dre.mXpos
-    
     # Recover args from M2
     dre.m2spd=dre.mXspdarg
     dre.m2posarg=dre.mXposarg
@@ -88,9 +82,6 @@ def decodeM3Cmd(  ):
     dre.m3reqpos=dre.mXreqpos
     dre.m3m=dre.mXm
     dre.m3spd=dre.mXspd
-    
-    # Response of position
-    #dre.m3pos=dre.mXpos
     
     # Recover args from M1
     dre.m3spd=dre.mXspdarg
@@ -135,7 +126,6 @@ ID_MOVING_INTEGRATOR = 2
 def Moving(  ):
     # set initial state
     state = ID_MOVING_INITIAL
-    print ("Ejecuto el moving")
 
     while( True ):
         # State ID: ID_MOVING_INITIAL
@@ -145,8 +135,7 @@ def Moving(  ):
 
         # State ID: ID_MOVING_INTEGRATOR
         elif( state==ID_MOVING_INTEGRATOR ):
-            print ("Ejecuto el integrador")
-            if( dre.m1posarg > dre.m1pos ):
+            if( dre.m1setpoint > dre.m1pos ):
                 # Transition ID: ID_MOVING_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::incrDelta' begin]
@@ -155,7 +144,7 @@ def Moving(  ):
                 print obtainVarName(dre.m1pos)+":"+str(tmp)+"+"+str(1)+"="+str(dre.m1pos)
                 # ['<global>::incrDelta' end]
 
-            elif( dre.m1pos > dre.m1posarg ):
+            elif( dre.m1pos > dre.m1setpoint ):
                 # Transition ID: ID_MOVING_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::incrDelta' begin]
@@ -176,10 +165,9 @@ def Moving(  ):
 
 # ['M1' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_M1_INITIAL = 3
-ID_M1_FINAL = 4
-ID_M1_WAITING = 5
-ID_M1_MOVING = 6
+ID_M1_INITIAL = 4
+ID_M1_FINAL = 5
+ID_M1_WAITING = 6
 
 def M1(  ):
     # set initial state
@@ -211,44 +199,27 @@ def M1(  ):
                 # ['<global>::setFlag' begin]
                 dre.m1laflag=True
                 # ['<global>::setFlag' end]
-                # ['<global>::sendAnticipatedResponse' begin]
-                if not(dre.cte_use_socket):
-                    dre.ser.write("OK"+'\13'+'\10')
-                else:
-                    dre.ser.sendall("OK"+'\13'+'\10')
-                # ['<global>::sendAnticipatedResponse' end]
-                state = ID_M1_MOVING
+                state = ID_M1_FINAL
 
             elif( ((dre.m1reqpos)==(True)) ):
                 # Transition ID: ID_M1_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::setM1Response' begin]
                 dre.m1resp=str(dre.m1pos)
-		print("MI posicion actual es "+str(dre.m1pos))
                 # ['<global>::setM1Response' end]
+                state = ID_M1_FINAL
+
+            elif( ((dre.m1la)==(True)) ):
+                # Transition ID: ID_M1_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::setVar' begin]
+                dre.m1setpoint=(dre.m1posarg)
+                # ['<global>::setVar' end]
                 state = ID_M1_FINAL
 
             else:
                 # Transition ID: ID_M1_TRANSITION_CONNECTION
                 state = ID_M1_FINAL
-
-        # State ID: ID_M1_MOVING
-        elif( state==ID_M1_MOVING ):
-            # call substate function
-            moving_retval = Moving(  )
-            # Transition ID: ID_M1_TRANSITION_CONNECTION
-            # Actions:
-            # ['<global>::notifyEndMv' begin]
-            if (dre.m1npflag):
-                dre.m1resp = "p"
-            # ['<global>::notifyEndMv' end]
-            # ['<global>::setFlag' begin]
-            dre.m1laflag=False
-            # ['<global>::setFlag' end]
-            # ['<global>::setFlag' begin]
-            dre.m1npflag=False
-            # ['<global>::setFlag' end]
-            state = ID_M1_FINAL
 
         # State ID: ID_M1_FINAL
         elif( state==ID_M1_FINAL ):
@@ -606,6 +577,7 @@ def sendCtrlResponse(  ):
 ID_GETCTRLCOMMAND_INITIAL = 28
 ID_GETCTRLCOMMAND_FINAL = 29
 ID_GETCTRLCOMMAND_READING = 30
+ID_GETCTRLCOMMAND_PREVBUF = 31
 
 def getCtrlCommand(  ):
     # set initial state
@@ -614,13 +586,26 @@ def getCtrlCommand(  ):
     while( True ):
         # State ID: ID_GETCTRLCOMMAND_INITIAL
         if( state==ID_GETCTRLCOMMAND_INITIAL ):
-            # Transition ID: ID_GETCTRLCOMMAND_TRANSITION_CONNECTION
-            # Actions:
-            # ['<global>::resetRxTask' begin]
-            dre.command_rx_buf=""
-            # ['<global>::resetRxTask' end]
-            serialCharRead()
-            state = ID_GETCTRLCOMMAND_READING
+            if( len(dre.rx_buffer)<1 ):
+                # Transition ID: ID_GETCTRLCOMMAND_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::resetRxTask' begin]
+                dre.command_rx_buf=""
+                # ['<global>::resetRxTask' end]
+                serialCharRead()
+                state = ID_GETCTRLCOMMAND_READING
+
+            else:
+                # Transition ID: ID_GETCTRLCOMMAND_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::resetRxTask' begin]
+                dre.command_rx_buf=""
+                # ['<global>::resetRxTask' end]
+                # ['<global>::bufferCharRead' begin]
+                dre.char_read=dre.rx_buffer[0]
+                dre.rx_buffer=dre.rx_buffer[1:]
+                # ['<global>::bufferCharRead' end]
+                state = ID_GETCTRLCOMMAND_PREVBUF
 
         # State ID: ID_GETCTRLCOMMAND_READING
         elif( state==ID_GETCTRLCOMMAND_READING ):
@@ -640,12 +625,38 @@ def getCtrlCommand(  ):
         elif( state==ID_GETCTRLCOMMAND_FINAL ):
             return ID_GETCTRLCOMMAND_FINAL
 
+        # State ID: ID_GETCTRLCOMMAND_PREVBUF
+        elif( state==ID_GETCTRLCOMMAND_PREVBUF ):
+            if( dre.char_read=='\10' or dre.char_read=='\13' ):
+                # Transition ID: ID_GETCTRLCOMMAND_TRANSITION_CONNECTION
+                state = ID_GETCTRLCOMMAND_FINAL
+
+            elif( len(dre.rx_buffer)<1 ):
+                # Transition ID: ID_GETCTRLCOMMAND_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::appendCharToRxBuf' begin]
+                dre.command_rx_buf+=dre.char_read
+                # ['<global>::appendCharToRxBuf' end]
+                serialCharRead()
+                state = ID_GETCTRLCOMMAND_READING
+
+            else:
+                # Transition ID: ID_GETCTRLCOMMAND_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::bufferCharRead' begin]
+                dre.char_read=dre.rx_buffer[0]
+                dre.rx_buffer=dre.rx_buffer[1:]
+                # ['<global>::bufferCharRead' end]
+                # ['<global>::appendCharToRxBuf' begin]
+                dre.command_rx_buf+=dre.char_read
+                # ['<global>::appendCharToRxBuf' end]
+
 # ['getCtrlCommand' end (DON'T REMOVE THIS LINE!)]
 
 # ['sendCtrlCommand' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_SENDCTRLCOMMAND_INITIAL = 31
-ID_SENDCTRLCOMMAND_FINAL = 32
+ID_SENDCTRLCOMMAND_INITIAL = 32
+ID_SENDCTRLCOMMAND_FINAL = 33
 
 def sendCtrlCommand(  ):
     # set initial state
@@ -672,10 +683,10 @@ def sendCtrlCommand(  ):
 
 # ['getCtrlResponse' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_GETCTRLRESPONSE_INITIAL = 33
-ID_GETCTRLRESPONSE_FINAL = 34
-ID_GETCTRLRESPONSE_READING = 35
-ID_GETCTRLRESPONSE_FINISHING = 36
+ID_GETCTRLRESPONSE_INITIAL = 34
+ID_GETCTRLRESPONSE_FINAL = 35
+ID_GETCTRLRESPONSE_READING = 36
+ID_GETCTRLRESPONSE_FINISHING = 37
 
 def getCtrlResponse(  ):
     # set initial state
@@ -724,3 +735,73 @@ def getCtrlResponse(  ):
             return ID_GETCTRLRESPONSE_FINAL
 
 # ['getCtrlResponse' end (DON'T REMOVE THIS LINE!)]
+
+# ['M1Movement' begin (DON'T REMOVE THIS LINE!)]
+# State IDs
+ID_M1MOVEMENT_INITIAL = 0
+ID_M1MOVEMENT_FINAL = 1
+ID_M1MOVEMENT_ENABLE = 2
+ID_M1MOVEMENT_STEPDONE = 3
+
+def M1Movement(  ):
+    # set initial state
+    state = ID_M1MOVEMENT_INITIAL
+
+    while( True ):
+        # State ID: ID_M1MOVEMENT_INITIAL
+        if( state==ID_M1MOVEMENT_INITIAL ):
+            if( ((dre.m1laflag)==(True)) ):
+                # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
+                state = ID_M1MOVEMENT_ENABLE
+
+            else:
+                # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
+                state = ID_M1MOVEMENT_FINAL
+
+        # State ID: ID_M1MOVEMENT_ENABLE
+        elif( state==ID_M1MOVEMENT_ENABLE ):
+            if( dre.m1setpoint > dre.m1pos ):
+                # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::incrDelta' begin]
+                tmp=dre.m1pos
+                dre.m1pos+=+1
+                #print obtainVarName(dre.m1pos)+":"+str(tmp)+"+"+str(+1)+"="+str(dre.m1pos)
+                # ['<global>::incrDelta' end]
+                state = ID_M1MOVEMENT_STEPDONE
+
+            elif( dre.m1pos > dre.m1setpoint ):
+                # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::incrDelta' begin]
+                tmp=dre.m1pos
+                dre.m1pos+=-1
+                #print obtainVarName(dre.m1pos)+":"+str(tmp)+"+"+str(-1)+"="+str(dre.m1pos)
+                # ['<global>::incrDelta' end]
+                state = ID_M1MOVEMENT_STEPDONE
+
+            else:
+                # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::notifyEndMv' begin]
+                if (dre.m1npflag):
+                    sendUntimelyResponse("p")
+                # ['<global>::notifyEndMv' end]
+                # ['<global>::setFlag' begin]
+                dre.m1npflag=False
+                # ['<global>::setFlag' end]
+                # ['<global>::setFlag' begin]
+                dre.m1laflag=False
+                # ['<global>::setFlag' end]
+                state = ID_M1MOVEMENT_FINAL
+
+        # State ID: ID_M1MOVEMENT_STEPDONE
+        elif( state==ID_M1MOVEMENT_STEPDONE ):
+            # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
+            state = ID_M1MOVEMENT_FINAL
+
+        # State ID: ID_M1MOVEMENT_FINAL
+        elif( state==ID_M1MOVEMENT_FINAL ):
+            return ID_M1MOVEMENT_FINAL
+
+# ['M1Movement' end (DON'T REMOVE THIS LINE!)]
