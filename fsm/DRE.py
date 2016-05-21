@@ -44,14 +44,17 @@ class DRE:
     m1gohoseq = False
     m2gohoseq = False
     m3gohoseq = False
+    # Position inquiry
     mXreqpos = False
     m1reqpos = False
     m2reqpos = False
     m3reqpos = False
+    # Speed argument
     mXspdarg = 0
     m1spdarg = 0
     m2spdarg = 0
     m3spdarg = 0
+    # Position argument
     mXposarg = 0
     m1posarg = 0
     m2posarg = 0
