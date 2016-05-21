@@ -11,4 +11,12 @@ def obtainVarName( variable ):
     return a_as_str
     # ['<global>::obtainVarName' end]
 
+def sendUntimelyResponse( resptosend ):
+    # ['<global>::sendUntimelyResponse' begin]
+    if not(dre.cte_use_socket):
+        dre.ser.write(resptosend+'\13'+'\10')
+    else:
+        dre.ser.sendall(resptosend+'\13'+'\10')
+    # ['<global>::sendUntimelyResponse' end]
+
 # ['Common definitions for 'Code items generator'' end (DON'T REMOVE THIS LINE!)]

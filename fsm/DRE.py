@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 class DRE:
+    rx_buffer=""
     command_rx_buf = ""
     char_read = '\0'
     ser = None
@@ -75,3 +76,10 @@ class DRE:
     m3resp = ""
     mXresp = ""
     m1npflag = False
+    m1setpoint=m1pos
+    m2setpoint=m2pos
+    m3setpoint=m3pos
+    m1laflag = False
+    m2laflag = False
+    m3laflag = False
+    m1simstop = False

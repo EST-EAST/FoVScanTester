@@ -5,11 +5,13 @@ Created on Tue May 17 16:44:56 2016
 @author: Txinto
 """
 import sweepconfig
+import errno
 import sys
 sys.path.insert(0, './fsm')
 
 import FoV
 import DRE
+from datetime import datetime
 
 cte_stepTime=1000
 cte_timeout = 2000
@@ -40,52 +42,85 @@ def sendResponse():
 def serialClose():
     ser.close()             # close port
 
+def m1sim(conn):
+    print("Arranco el simulador")  
+    while not(FoV.dre.m1simstop):
+	FoV.dre.ser = conn
+	#print("Voy simulando el motor: "+str(FoV.dre.m1setpoint)+" "+str(FoV.dre.m1pos))
+	FoV.M1Movement()
+    print("Saliendo del simulador")  
+
 #Function for handling connections. This will be used to create threads
-def clientthread(conn):
+def clientthread(conn,idsim):
     import FoV
     
     #Sending message to connected client
     conn.send('Welcome to the server. Type something and hit enter\n') #send only takes string
     FoV.dre.ser = conn
     #infinite loop so that function do not terminate and thread do not end.
-    while True:
-        ''' 
-        #Receiving from client
-        data = conn.recv(1024)
-        reply = 'OK...' + data
-        if not data: 
-            break
-        print data
-        conn.sendall(reply)
-        '''
-        print "Waiting for command"
-        FoV.getCtrlCommand()
-	'''
-        try:
-            print "hiola"
-            print "Arrived command: "+FoV.dre.command_rx_buf
-            print "adios"
-        except: # catch *all* exceptions
-            e = sys.exc_info()[0]
-            print e
-        ''' 
-	print "Arrived command: "+FoV.dre.command_rx_buf   
-        FoV.CmdDispatcher()
-        print "Decoder executed"
-        FoV.M1()
-        print "M1 simulator executed"
-	FoV.dre.response = FoV.dre.m1resp
-	print "M1 Response to send "+FoV.dre.response
-        sendResponse()
-	'''
-	FoV.dre.response = FoV.dre.m1resp
-	print "M2 Respuesta a enviar "+FoV.dre.response
-        sendResponse()
-	FoV.dre.response = FoV.dre.m1resp
-	print "M3 Respuesta a enviar "+FoV.dre.response
-        sendResponse()
-	'''        
-    #came out of loop
+    endthread=False
+    lastconnection = datetime.now()
+    while not(endthread):
+        #print "Waiting for command"
+	# Check if there is data
+	data=""
+	try:
+		data = FoV.dre.ser.recv(1)
+
+	except socket.error as e:
+		print("Voy a ejecutar la excepcion")
+		endthread = True
+        	if e.errno == errno.ECONNRESET:
+            		# Handle disconnection -- close & reopen socket etc.
+			print "Disconnection ({0}): {1}".format(e.errno, e.strerror)
+        	else:
+            		# Other error, re-raise
+			print "Timeout ({0}): {1}".format(e.errno, e.strerror)
+	#print("longitud de data: "+str(len(data))+" : "+str(data))
+	if ((datetime.now()-lastconnection).total_seconds()>10):
+		print("Timeout manual")
+		endthread=True
+	if (not(endthread)):
+		if (len(data)>=1):
+			lastconnection = datetime.now()
+			FoV.dre.rx_buffer=FoV.dre.rx_buffer+str(data)
+			print("Buffer data"+FoV.dre.rx_buffer)
+			FoV.getCtrlCommand()
+			'''
+			try:
+			    print "hiola"
+			    print "Arrived command: "+FoV.dre.command_rx_buf
+			    print "adios"
+			except: # catch *all* exceptions
+			    e = sys.exc_info()[0]
+			    print e
+			''' 
+			print "Arrived command: "+FoV.dre.command_rx_buf   
+			FoV.dre.response=""
+			FoV.CmdDispatcher()
+			print "Decoder executed"
+			if (FoV.dre.m1req):
+				FoV.M1()
+				print "M1 simulator executed"
+				FoV.dre.response = FoV.dre.m1resp
+				print "M1 Response to send "+FoV.dre.response
+				sendResponse()
+			'''
+			if (FoV.dre.m2req):
+				#FoV.M1()
+				print "M2 simulator executed"
+				FoV.dre.response = FoV.dre.m2resp
+				print "M2 Response to send "+FoV.dre.response
+				sendResponse()
+			if (FoV.dre.m3req):
+				#FoV.M1()
+				print "M3 simulator executed"
+				FoV.dre.response = FoV.dre.m3resp
+				print "M3 Response to send "+FoV.dre.response
+				sendResponse()
+			'''
+    print("Cierro la conexion")
+    FoV.dre.m1simstop=True
     conn.close()
 
 ################ MAIN ####################
@@ -120,7 +155,7 @@ else:
         sys.exit()
     print 'Socket bind complete'
     #Start listening on socket
-    sckt.listen(10)
+    sckt.listen(1)
     print 'Socket now listening'
  
 FoV.dre.cte_use_socket = sweepconfig.cte_use_socket
@@ -138,7 +173,10 @@ else:
         conn, addr = sckt.accept()
         print 'Connected with ' + addr[0] + ':' + str(addr[1])
         #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
-        start_new_thread(clientthread ,(conn,))
+	#conn.settimeout(10)
+	FoV.dre.m1simstop=False
+	idsim=start_new_thread(m1sim,(conn,))
+        start_new_thread(clientthread ,(conn,idsim))
     sckt.close
 
     

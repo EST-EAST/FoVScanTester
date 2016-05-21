@@ -259,54 +259,63 @@ def commandMotor(x,y):
 
         cmd_str = str(sweepconfig.cte_motor_x)+"NP"
         sendMotorCommand(cmd_str)
-        print(cmd_str)
-        print(getMotorResponse())
+        print("Cmd: "+ cmd_str)
+	r=getMotorResponse()
+	print("Resp:"+r)
 
         cmdx_str = str(sweepconfig.cte_motor_x)+"LA%04d" % (lsx_pos)
         sendMotorCommand(cmdx_str)
         print(cmdx_str)
-        print(getMotorResponse())
+	r=getMotorResponse()
+	print("Resp:"+r)
 
     	'''
         # Program the motor to warn when the command is done
         cmd_str = str(sweepconfig.cte_motor_y)+"NP"
         sendMotorCommand(cmd_str)
         print(cmd_str)
-        print(getMotorResponse())
+	r=getMotorResponse()
+	print("Resp:"+r)
 
         cmdy_str = str(sweepconfig.cte_motor_y)+"LA%04d" % (lsy_pos)
         sendMotorCommand(cmdy_str)
         print(cmdy_str)
-        print(getMotorResponse())
+	r=getMotorResponse()
+	print("Resp:"+r)
 
         # Program the motor to warn when the command is done
         cmd_str = str(sweepconfig.cte_motor_comp)+"NP"
         sendMotorCommand(cmd_str)
         print(cmd_str)
-        print(getMotorResponse())
+	r=getMotorResponse()
+	print("Resp:"+r)
 
         cmdcomp_str = str(sweepconfig.cte_motor_comp)+"LA%04d" % (lscomp_pos)
         sendMotorCommand(cmdcomp_str)
         print(cmdcomp_str)        
-        print(getMotorResponse())
+	r=getMotorResponse()
+	print("Resp:"+r)
     	'''
 
         # Move the motor
         cmdx_str = str(sweepconfig.cte_motor_x)+"M"
         sendMotorCommand(cmdx_str)
         print(cmdx_str)
-        print(getMotorResponse())
+	r=getMotorResponse()
+	print("Resp:"+r)
 
     	'''
         cmdy_str = str(sweepconfig.cte_motor_y)+"M"
         sendMotorCommand(cmdy_str)
         print("Cmd:"+cmdy_str)
-        print("Resp:"+getMotorResponse())
+	r=getMotorResponse()
+	print("Resp:"+r)
 
         cmdcomp_str = str(sweepconfig.cte_motor_comp)+"M"
         sendMotorCommand(cmdcomp_str)
         print(cmdcomp_str)
-        print(getMotorResponse())
+	r=getMotorResponse()
+	print("Resp:"+r)
     	'''
 
 	# Wait for command responses
@@ -322,7 +331,8 @@ def commandMotor(x,y):
 def stepDone():
     # Wait for command or step time
     # it returns True if nobody presses the ESC
-    key = cv2.waitKey(cte_stepTime)
+    #key = cv2.waitKey(cte_stepTime)
+    key=-1
     if (key==27):
         ## Someone presses the key, should return
         ret=-1
@@ -340,24 +350,29 @@ def motorPositions():
 	# Obtain final positions
 	cmd_str = str(sweepconfig.cte_motor_x)+"POS"
 	sendMotorCommand(cmd_str)
-	print("Cmd:"+cmd_str)
+	print("PosCmd:"+cmd_str)
 	r=getMotorResponse()
-	print("Resp:"+r)
+	print("PosResp:"+r)
 	mx_fdback=int(r)
-
+	'''
 	cmd_str = str(sweepconfig.cte_motor_y)+"POS"
 	sendMotorCommand(cmd_str)
-	print("Cmd:"+cmd_str)
+	print("PosCmd:"+cmd_str)
 	r=getMotorResponse()
-	print("Resp:"+r)
+	print("PosResp:"+r)
 	my_fdback=int(r)
+	'''
+	my_fdback=0
 
+	'''
 	cmd_str = str(sweepconfig.cte_motor_comp)+"POS"
 	sendMotorCommand(cmd_str)
-	print("Cmd:"+cmd_str)
+	print("PosCmd:"+cmd_str)
 	r=getMotorResponse()
-	print("Resp:"+r)
+	print("PosResp:"+r)
 	mcomp_fdback=int(r)
+	'''
+	mcomp_fdback=0
 
 	return mx_fdback, my_fdback, mcomp_fdback
 
