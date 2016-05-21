@@ -19,100 +19,58 @@ def serialCharRead(  ):
 def decodeM1Cmd(  ):
     # ['<global>::decodeM1Cmd' begin]
     # Prepare common decoder with M1 values
-    dre.mXcmd=dre.m1cmd
+    dre.mX=dre.m1
     
     # Call common decoder
     DecodeMotorCmd()
     
-    # Recover commands from M1
-    dre.m1la=dre.mXla
-    dre.m1np=dre.mXnp
-    dre.m1hosp=dre.mXhosp
-    dre.m1goix=dre.mXgoix
-    dre.m1apl=dre.mXapl
-    dre.m1gohoseq=dre.mXgohoseq
-    dre.m1reqpos=dre.mXreqpos
-    dre.m1m=dre.mXm
-    dre.m1spd=dre.mXspd
-    
-    # Recover args from M1
-    dre.m1spd=dre.mXspdarg
-    dre.m1posarg=dre.mXposarg
     # ['<global>::decodeM1Cmd' end]
 
 def decodeM2Cmd(  ):
     # ['<global>::decodeM2Cmd' begin]
     # Prepare common decoder with M2 values
-    dre.mXcmd=dre.m2cmd
+    dre.mX=dre.m2
     
     # Call common decoder
     DecodeMotorCmd()
-    
-    # Recover commands from M2
-    dre.m2la=dre.mXla
-    dre.m2np=dre.mXnp
-    dre.m2hosp=dre.mXhosp
-    dre.m2goix=dre.mXgoix
-    dre.m2apl=dre.mXapl
-    dre.m2gohoseq=dre.mXgohoseq
-    dre.m2reqpos=dre.mXreqpos
-    dre.m2m=dre.mXm
-    dre.m2spd=dre.mXspd
-    
-    # Recover args from M2
-    dre.m2spd=dre.mXspdarg
-    dre.m2posarg=dre.mXposarg
+
     # ['<global>::decodeM2Cmd' end]
 
 def decodeM3Cmd(  ):
     # ['<global>::decodeM3Cmd' begin]
     # Prepare common decoder with M3 values
-    dre.mXcmd=dre.m3cmd
+    dre.mX=dre.m3
     
     # Call common decoder
     DecodeMotorCmd()
     
-    # Recover commands from M1
-    dre.m3la=dre.mXla
-    dre.m3np=dre.mXnp
-    dre.m3hosp=dre.mXhosp
-    dre.m3goix=dre.mXgoix
-    dre.m3apl=dre.mXapl
-    dre.m3gohoseq=dre.mXgohoseq
-    dre.m3reqpos=dre.mXreqpos
-    dre.m3m=dre.mXm
-    dre.m3spd=dre.mXspd
-    
-    # Recover args from M1
-    dre.m3spd=dre.mXspdarg
-    dre.m3posarg=dre.mXposarg
     # ['<global>::decodeM3Cmd' end]
 
 def resetDecoder(  ):
     # ['<global>::resetDecoder' begin]
     # Flush commands from M1
-    dre.mXla=False
-    dre.mXnp=False
-    dre.mXhosp=False
-    dre.mXgoix=False
-    dre.mXapl=False
-    dre.mXgohoseq=False
-    dre.mXreqpos=False
-    dre.mXm=False
-    dre.mXspd=False
+    dre.mX.la=False
+    dre.mX.np=False
+    dre.mX.hosp=False
+    dre.mX.goix=False
+    dre.mX.apl=False
+    dre.mX.gohoseq=False
+    dre.mX.reqpos=False
+    dre.mX.m=False
+    dre.mX.spd=False
     # Flush arguments from M1
-    dre.mXspdarg=0
-    dre.mXposarg=0
+    dre.mX.spdarg=0
+    dre.mX.posarg=0
     # Flush error
-    dre.mXerror=False
+    dre.mX.error=False
     # ['<global>::resetDecoder' end]
 
 def checkCharAtPos( idx, cToCheck, isEqual ):
     # ['<global>::checkCharAtPos' begin]
     if (isEqual):
-        return (dre.mXcmd[idx]==cToCheck)
+        return (dre.mX.cmd[idx]==cToCheck)
     else:
-        return (dre.mXcmd[idx]!=cToCheck)
+        return (dre.mX.cmd[idx]!=cToCheck)
     # ['<global>::checkCharAtPos' end]
 
 # ['Common definitions for 'Hierarchical State Chart generator'' end (DON'T REMOVE THIS LINE!)]
@@ -179,41 +137,41 @@ def M1(  ):
             # Transition ID: ID_M1_TRANSITION_CONNECTION
             # Actions:
             # ['<global>::setM1Response' begin]
-            dre.m1resp="OK"
+            dre.m1.resp="OK"
             # ['<global>::setM1Response' end]
             state = ID_M1_WAITING
 
         # State ID: ID_M1_WAITING
         elif( state==ID_M1_WAITING ):
-            if( ((dre.m1np)==(True)) ):
+            if( ((dre.m1.np)==(True)) ):
                 # Transition ID: ID_M1_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::setFlag' begin]
-                dre.m1npflag=True
+                dre.m1.npflag=True
                 # ['<global>::setFlag' end]
                 state = ID_M1_FINAL
 
-            elif( ((dre.m1m)==(True)) ):
+            elif( ((dre.m1.m)==(True)) ):
                 # Transition ID: ID_M1_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::setFlag' begin]
-                dre.m1laflag=True
+                dre.m1.laflag=True
                 # ['<global>::setFlag' end]
                 state = ID_M1_FINAL
 
-            elif( ((dre.m1reqpos)==(True)) ):
+            elif( ((dre.m1.reqpos)==(True)) ):
                 # Transition ID: ID_M1_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::setM1Response' begin]
-                dre.m1resp=str(dre.m1pos)
+                dre.m1.resp=str(dre.m1.pos)
                 # ['<global>::setM1Response' end]
                 state = ID_M1_FINAL
 
-            elif( ((dre.m1la)==(True)) ):
+            elif( ((dre.m1.la)==(True)) ):
                 # Transition ID: ID_M1_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::setVar' begin]
-                dre.m1setpoint=(dre.m1posarg)
+                dre.m1.setpoint=(dre.m1.posarg)
                 # ['<global>::setVar' end]
                 state = ID_M1_FINAL
 
@@ -268,7 +226,7 @@ def DecodeMotorCmd(  ):
                 # Actions:
                 resetDecoder()
                 # ['<global>::programM' begin]
-                dre.mXm = True
+                dre.mX.m = True
                 # ['<global>::programM' end]
                 state = ID_DECODEMOTORCMD_FINAL
 
@@ -290,7 +248,7 @@ def DecodeMotorCmd(  ):
                 # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::programNP' begin]
-                dre.mXnp=True
+                dre.mX.np=True
                 # ['<global>::programNP' end]
                 state = ID_DECODEMOTORCMD_FINAL
 
@@ -303,7 +261,7 @@ def DecodeMotorCmd(  ):
             # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
             # Actions:
             # ['<global>::decodeError' begin]
-            dre.mXerror=True
+            dre.mX.error=True
             # ['<global>::decodeError' end]
             state = ID_DECODEMOTORCMD_FINAL
 
@@ -317,8 +275,8 @@ def DecodeMotorCmd(  ):
                 # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::programLA' begin]
-                dre.mXla=True
-                dre.mXposarg=int(dre.mXcmd[2:])
+                dre.mX.la=True
+                dre.mX.posarg=int(dre.mX.cmd[2:])
                 # ['<global>::programLA' end]
                 state = ID_DECODEMOTORCMD_FINAL
 
@@ -326,8 +284,8 @@ def DecodeMotorCmd(  ):
                 # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::programLR' begin]
-                dre.mXlr=True
-                dre.mXposarg=int(dre.mXcmd[2:])
+                dre.mX.lr=True
+                dre.mX.posarg=int(dre.mX.cmd[2:])
                 # ['<global>::programLR' end]
                 state = ID_DECODEMOTORCMD_FINAL
 
@@ -351,7 +309,7 @@ def DecodeMotorCmd(  ):
                 # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::programPOS' begin]
-                dre.mXreqpos=True
+                dre.mX.reqpos=True
                 # ['<global>::programPOS' end]
                 state = ID_DECODEMOTORCMD_FINAL
 
@@ -365,8 +323,8 @@ def DecodeMotorCmd(  ):
                 # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::programSP' begin]
-                dre.mXspd = True
-                dre.mXspdarg = int(dre.mXcmd[2:])
+                dre.mX.spd = True
+                dre.mX.spdarg = int(dre.mX.cmd[2:])
                 # ['<global>::programSP' end]
                 state = ID_DECODEMOTORCMD_FINAL
 
@@ -393,35 +351,35 @@ def ProgramMotors(  ):
     while( True ):
         # State ID: ID_PROGRAMMOTORS_INITIAL
         if( state==ID_PROGRAMMOTORS_INITIAL ):
-            if( dre.m1req==True ):
+            if( dre.m1.req==True ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 # Actions:
                 decodeM1Cmd()
                 state = ID_PROGRAMMOTORS_M1DECODED
 
-            elif( dre.m1req==False ):
+            elif( dre.m1.req==False ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 state = ID_PROGRAMMOTORS_M1BYPASS
 
         # State ID: ID_PROGRAMMOTORS_M1DECODED
         elif( state==ID_PROGRAMMOTORS_M1DECODED ):
-            if( dre.m2req==True ):
+            if( dre.m2.req==True ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 # Actions:
                 decodeM2Cmd()
                 state = ID_PROGRAMMOTORS_M2DECODED
 
-            elif( dre.m2req==False ):
+            elif( dre.m2.req==False ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 state = ID_PROGRAMMOTORS_M2BYPASS
 
         # State ID: ID_PROGRAMMOTORS_M2DECODED
         elif( state==ID_PROGRAMMOTORS_M2DECODED ):
-            if( dre.m3req==False ):
+            if( dre.m3.req==False ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 state = ID_PROGRAMMOTORS_FINAL
 
-            elif( dre.m3req==True ):
+            elif( dre.m3.req==True ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 # Actions:
                 decodeM3Cmd()
@@ -438,23 +396,23 @@ def ProgramMotors(  ):
 
         # State ID: ID_PROGRAMMOTORS_M2BYPASS
         elif( state==ID_PROGRAMMOTORS_M2BYPASS ):
-            if( dre.m3req==True ):
+            if( dre.m3.req==True ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 # Actions:
                 decodeM3Cmd()
                 state = ID_PROGRAMMOTORS_M3DECODED
 
-            elif( dre.m3req==False ):
+            elif( dre.m3.req==False ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 state = ID_PROGRAMMOTORS_FINAL
 
         # State ID: ID_PROGRAMMOTORS_M1BYPASS
         elif( state==ID_PROGRAMMOTORS_M1BYPASS ):
-            if( dre.m2req==False ):
+            if( dre.m2.req==False ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 state = ID_PROGRAMMOTORS_M2BYPASS
 
-            elif( dre.m2req==True ):
+            elif( dre.m2.req==True ):
                 # Transition ID: ID_PROGRAMMOTORS_TRANSITION_CONNECTION
                 # Actions:
                 decodeM2Cmd()
@@ -480,12 +438,12 @@ def CmdDispatcher(  ):
             # Actions:
             # ['<global>::resetDispatcher' begin]
             dre.dispatcher_idx=0
-            dre.m1cmd=""
-            dre.m2cmd=""
-            dre.m2cmd=""
-            dre.m1req=False
-            dre.m2req=False
-            dre.m3req=False
+            dre.m1.cmd=""
+            dre.m2.cmd=""
+            dre.m2.cmd=""
+            dre.m1.req=False
+            dre.m2.req=False
+            dre.m3.req=False
             # ['<global>::resetDispatcher' end]
             state = ID_CMDDISPATCHER_DECODEENGINE
 
@@ -495,8 +453,8 @@ def CmdDispatcher(  ):
                 # Transition ID: ID_CMDDISPATCHER_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::setM1Cmd' begin]
-                dre.m1req=True
-                dre.m1cmd=dre.command_rx_buf[1:]
+                dre.m1.req=True
+                dre.m1.cmd=dre.command_rx_buf[1:]
                 # ['<global>::setM1Cmd' end]
                 state = ID_CMDDISPATCHER_PROGRAMMOTORS
 
@@ -504,8 +462,8 @@ def CmdDispatcher(  ):
                 # Transition ID: ID_CMDDISPATCHER_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::setM2Cmd' begin]
-                dre.m2req=True
-                dre.m2cmd=dre.command_rx_buf[1:]
+                dre.m2.req=True
+                dre.m2.cmd=dre.command_rx_buf[1:]
                 # ['<global>::setM2Cmd' end]
                 state = ID_CMDDISPATCHER_PROGRAMMOTORS
 
@@ -513,8 +471,8 @@ def CmdDispatcher(  ):
                 # Transition ID: ID_CMDDISPATCHER_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::setM3Cmd' begin]
-                dre.m3req=True
-                dre.m3cmd=dre.command_rx_buf[1:]
+                dre.m3.req=True
+                dre.m3.cmd=dre.command_rx_buf[1:]
                 # ['<global>::setM3Cmd' end]
                 state = ID_CMDDISPATCHER_PROGRAMMOTORS
 
@@ -522,12 +480,12 @@ def CmdDispatcher(  ):
                 # Transition ID: ID_CMDDISPATCHER_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::setAllMotorsCmd' begin]
-                dre.m1req=True
-                dre.m2req=True
-                dre.m3req=True
-                dre.m1cmd=dre.command_rx_buf
-                dre.m2cmd=dre.command_rx_buf
-                dre.m3cmd=dre.command_rx_buf
+                dre.m1.req=True
+                dre.m2.req=True
+                dre.m3.req=True
+                dre.m1.cmd=dre.command_rx_buf
+                dre.m2.cmd=dre.command_rx_buf
+                dre.m3.cmd=dre.command_rx_buf
                 # ['<global>::setAllMotorsCmd' end]
                 state = ID_CMDDISPATCHER_PROGRAMMOTORS
 
@@ -750,7 +708,7 @@ def M1Movement(  ):
     while( True ):
         # State ID: ID_M1MOVEMENT_INITIAL
         if( state==ID_M1MOVEMENT_INITIAL ):
-            if( ((dre.m1laflag)==(True)) ):
+            if( ((dre.m1.laflag)==(True)) ):
                 # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
                 state = ID_M1MOVEMENT_ENABLE
 
@@ -760,23 +718,23 @@ def M1Movement(  ):
 
         # State ID: ID_M1MOVEMENT_ENABLE
         elif( state==ID_M1MOVEMENT_ENABLE ):
-            if( dre.m1setpoint > dre.m1pos ):
+            if( dre.m1.setpoint > dre.m1.pos ):
                 # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::incrDelta' begin]
-                tmp=dre.m1pos
-                dre.m1pos+=+1
-                #print obtainVarName(dre.m1pos)+":"+str(tmp)+"+"+str(+1)+"="+str(dre.m1pos)
+                tmp=dre.m1.pos
+                dre.m1.pos+=+1
+                #print obtainVarName(dre.m1.pos)+":"+str(tmp)+"+"+str(+1)+"="+str(dre.m1.pos)
                 # ['<global>::incrDelta' end]
                 state = ID_M1MOVEMENT_STEPDONE
 
-            elif( dre.m1pos > dre.m1setpoint ):
+            elif( dre.m1.pos > dre.m1.setpoint ):
                 # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::incrDelta' begin]
-                tmp=dre.m1pos
-                dre.m1pos+=-1
-                #print obtainVarName(dre.m1pos)+":"+str(tmp)+"+"+str(-1)+"="+str(dre.m1pos)
+                tmp=dre.m1.pos
+                dre.m1.pos+=-1
+                #print obtainVarName(dre.m1.pos)+":"+str(tmp)+"+"+str(-1)+"="+str(dre.m1.pos)
                 # ['<global>::incrDelta' end]
                 state = ID_M1MOVEMENT_STEPDONE
 
@@ -784,14 +742,14 @@ def M1Movement(  ):
                 # Transition ID: ID_M1MOVEMENT_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::notifyEndMv' begin]
-                if (dre.m1npflag):
+                if (dre.m1.npflag):
                     sendUntimelyResponse("p")
                 # ['<global>::notifyEndMv' end]
                 # ['<global>::setFlag' begin]
-                dre.m1npflag=False
+                dre.m1.npflag=False
                 # ['<global>::setFlag' end]
                 # ['<global>::setFlag' begin]
-                dre.m1laflag=False
+                dre.m1.laflag=False
                 # ['<global>::setFlag' end]
                 state = ID_M1MOVEMENT_FINAL
 

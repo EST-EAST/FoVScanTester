@@ -1,85 +1,41 @@
 # -*- coding: utf-8 -*-
 
+class Motor:
+    en = False
+    cmd = ""
+    req = False
+    resp = ""
+
+    la = False
+    np = False
+    reqpos = False
+    m = False
+    spd = False
+
+    spdarg = 0
+    posarg = 0
+
+    pos = 0
+    setpoint = pos
+
+    npflag = False
+    laflag = False
+    simstop = False
+
+    hosp = False
+    goix = False
+    apl = False
+    gohoseq = False
+    
 class DRE:
+    m1 = Motor()
+    m2 = Motor()
+    m3 = Motor()
+    mX = m1
     rx_buffer=""
     command_rx_buf = ""
     char_read = '\0'
     ser = None
     command_tx_buf = ""
-    m1en = False
-    m2en = False
-    m3en = False
-    m1pos = 0
-    m2pos = 0
-    m3pos = 0
-    m1cmd = ""
-    m2cmd = ""
-    m3cmd = ""
-    m1req = False
-    m2req = False
-    m3req = False
-    mXcmd = ""
-    mXen = False
-    mXpos = 0
-    mXla = False
-    m1la = False
-    m2la = False
-    m3la = False
-    mXnp = False
-    m1np = False
-    m2np = False
-    m3np = False
-    mXhosp = False
-    m1hosp = False
-    m2hosp = False
-    m3hosp = False
-    mXgoix = False
-    m1goix = False
-    m2goix = False
-    m3goix = False
-    mXapl = False
-    m1apl = False
-    m2apl = False
-    m3apl = False
-    mXgohoseq = False
-    m1gohoseq = False
-    m2gohoseq = False
-    m3gohoseq = False
-    # Position inquiry
-    mXreqpos = False
-    m1reqpos = False
-    m2reqpos = False
-    m3reqpos = False
-    # Speed argument
-    mXspdarg = 0
-    m1spdarg = 0
-    m2spdarg = 0
-    m3spdarg = 0
-    # Position argument
-    mXposarg = 0
-    m1posarg = 0
-    m2posarg = 0
-    m3posarg = 0
-    mXm = False
-    m1m = False
-    m2m = False
-    m3m = False
-    mXerror = False
-    mXspd = False
-    m1spd = False
-    m2spd = False
-    m3spd = False
     cte_use_socket = False
     response = "Wey"
-    m1resp = ""
-    m2resp = ""
-    m3resp = ""
-    mXresp = ""
-    m1npflag = False
-    m1setpoint=m1pos
-    m2setpoint=m2pos
-    m3setpoint=m3pos
-    m1laflag = False
-    m2laflag = False
-    m3laflag = False
-    m1simstop = False
