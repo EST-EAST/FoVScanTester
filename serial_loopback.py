@@ -35,6 +35,7 @@ def readCommand():
 def sendResponse():
     FoV.dre.command_tx_buf = FoV.dre.response
     FoV.sendCtrlResponse()
+    FoV.dre.response=""
 
 def serialClose():
     ser.close()             # close port
@@ -59,6 +60,7 @@ def clientthread(conn):
         '''
         print "Waiting for command"
         FoV.getCtrlCommand()
+	'''
         try:
             print "hiola"
             print "Arrived command: "+FoV.dre.command_rx_buf
@@ -66,13 +68,23 @@ def clientthread(conn):
         except: # catch *all* exceptions
             e = sys.exc_info()[0]
             print e
-            
+        ''' 
+	print "Arrived command: "+FoV.dre.command_rx_buf   
         FoV.CmdDispatcher()
         print "Decoder executed"
         FoV.M1()
         print "M1 simulator executed"
+	FoV.dre.response = FoV.dre.m1resp
+	print "M1 Response to send "+FoV.dre.response
         sendResponse()
-        
+	'''
+	FoV.dre.response = FoV.dre.m1resp
+	print "M2 Respuesta a enviar "+FoV.dre.response
+        sendResponse()
+	FoV.dre.response = FoV.dre.m1resp
+	print "M3 Respuesta a enviar "+FoV.dre.response
+        sendResponse()
+	'''        
     #came out of loop
     conn.close()
 
