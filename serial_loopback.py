@@ -42,11 +42,11 @@ def sendResponse():
 def serialClose():
     ser.close()             # close port
 
-def m1sim(conn):
+def mXsim(mX,conn):
     print("Arranco el simulador")  
-    while not(FoV.dre.m1simstop):
+    while not(mX.simstop):
 	FoV.dre.ser = conn
-	#print("Voy simulando el motor: "+str(FoV.dre.m1setpoint)+" "+str(FoV.dre.m1pos))
+	#print("Voy simulando el motor: "+str(FoV.dre.m1.setpoint)+" "+str(FoV.dre.m1.pos))
 	FoV.M1Movement()
     print("Saliendo del simulador")  
 
@@ -99,28 +99,28 @@ def clientthread(conn,idsim):
 			FoV.dre.response=""
 			FoV.CmdDispatcher()
 			print "Decoder executed"
-			if (FoV.dre.m1req):
+			if (FoV.dre.m1.req):
 				FoV.M1()
 				print "M1 simulator executed"
-				FoV.dre.response = FoV.dre.m1resp
+				FoV.dre.response = FoV.dre.m1.resp
 				print "M1 Response to send "+FoV.dre.response
 				sendResponse()
 			'''
-			if (FoV.dre.m2req):
+			if (FoV.dre.m2.req):
 				#FoV.M1()
 				print "M2 simulator executed"
-				FoV.dre.response = FoV.dre.m2resp
+				FoV.dre.response = FoV.dre.m2.resp
 				print "M2 Response to send "+FoV.dre.response
 				sendResponse()
-			if (FoV.dre.m3req):
+			if (FoV.dre.m3.req):
 				#FoV.M1()
 				print "M3 simulator executed"
-				FoV.dre.response = FoV.dre.m3resp
+				FoV.dre.response = FoV.dre.m3.resp
 				print "M3 Response to send "+FoV.dre.response
 				sendResponse()
 			'''
     print("Cierro la conexion")
-    FoV.dre.m1simstop=True
+    FoV.dre.m1.simstop=True
     conn.close()
 
 ################ MAIN ####################
@@ -174,8 +174,8 @@ else:
         print 'Connected with ' + addr[0] + ':' + str(addr[1])
         #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
 	#conn.settimeout(10)
-	FoV.dre.m1simstop=False
-	idsim=start_new_thread(m1sim,(conn,))
+	FoV.dre.m1.simstop=False
+	idsim=start_new_thread(mXsim,(FoV.dre.m1,conn,))
         start_new_thread(clientthread ,(conn,idsim))
     sckt.close
 

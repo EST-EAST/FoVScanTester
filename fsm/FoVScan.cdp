@@ -1018,12 +1018,12 @@ else:&#xD;
       <property name="name" type="string">resetDispatcher</property>
       <property name="description" type="string">Resets the comand dispatcher</property>
       <property name="code" type="string">dre.dispatcher_idx=0
-dre.m1cmd=""
-dre.m2cmd=""
-dre.m2cmd=""
-dre.m1req=False
-dre.m2req=False
-dre.m3req=False</property>
+dre.m1.cmd=""
+dre.m2.cmd=""
+dre.m2.cmd=""
+dre.m1.req=False
+dre.m2.req=False
+dre.m3.req=False</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::resetDispatcher#27</property>
       <property name="inline" type="bool">1</property>
@@ -1037,12 +1037,12 @@ dre.m3req=False</property>
       <property name="id" type="long">39</property>
       <property name="name" type="string">setAllMotorsCmd</property>
       <property name="description" type="string">Sets the m1cmd</property>
-      <property name="code" type="string">dre.m1req=True
-dre.m2req=True
-dre.m3req=True
-dre.m1cmd=dre.command_rx_buf
-dre.m2cmd=dre.command_rx_buf
-dre.m3cmd=dre.command_rx_buf</property>
+      <property name="code" type="string">dre.m1.req=True
+dre.m2.req=True
+dre.m3.req=True
+dre.m1.cmd=dre.command_rx_buf
+dre.m2.cmd=dre.command_rx_buf
+dre.m3.cmd=dre.command_rx_buf</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::setAllMotorsCmd#39</property>
       <property name="inline" type="bool">1</property>
@@ -1056,8 +1056,8 @@ dre.m3cmd=dre.command_rx_buf</property>
       <property name="id" type="long">43</property>
       <property name="name" type="string">setM1Cmd</property>
       <property name="description" type="string">Sets the command to M1</property>
-      <property name="code" type="string">dre.m1req=True
-dre.m1cmd=dre.command_rx_buf[1:]</property>
+      <property name="code" type="string">dre.m1.req=True
+dre.m1.cmd=dre.command_rx_buf[1:]</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::setM1Cmd#43</property>
       <property name="inline" type="bool">1</property>
@@ -1071,8 +1071,8 @@ dre.m1cmd=dre.command_rx_buf[1:]</property>
       <property name="id" type="long">44</property>
       <property name="name" type="string">setM2Cmd</property>
       <property name="description" type="string">Sets current command to M2</property>
-      <property name="code" type="string">dre.m2req=True
-dre.m2cmd=dre.command_rx_buf[1:]</property>
+      <property name="code" type="string">dre.m2.req=True
+dre.m2.cmd=dre.command_rx_buf[1:]</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::setM2Cmd#44</property>
       <property name="inline" type="bool">1</property>
@@ -1086,8 +1086,8 @@ dre.m2cmd=dre.command_rx_buf[1:]</property>
       <property name="id" type="long">45</property>
       <property name="name" type="string">setM3Cmd</property>
       <property name="description" type="string">Sets the command for M3 motor</property>
-      <property name="code" type="string">dre.m3req=True
-dre.m3cmd=dre.command_rx_buf[1:]</property>
+      <property name="code" type="string">dre.m3.req=True
+dre.m3.cmd=dre.command_rx_buf[1:]</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::setM3Cmd#45</property>
       <property name="inline" type="bool">1</property>
@@ -1102,25 +1102,25 @@ dre.m3cmd=dre.command_rx_buf[1:]</property>
       <property name="name" type="string">decodeM1Cmd</property>
       <property name="description" type="string">Execute the command decoder with M1</property>
       <property name="code" type="string"># Prepare common decoder with M1 values
-dre.mXcmd=dre.m1cmd
+dre.mX.cmd=dre.m1.cmd
 
 # Call common decoder
 DecodeMotorCmd()
 
 # Recover commands from M1
-dre.m1la=dre.mXla
-dre.m1np=dre.mXnp
-dre.m1hosp=dre.mXhosp
-dre.m1goix=dre.mXgoix
-dre.m1apl=dre.mXapl
-dre.m1gohoseq=dre.mXgohoseq
-dre.m1reqpos=dre.mXreqpos
-dre.m1m=dre.mXm
-dre.m1spd=dre.mXspd
+dre.m1.la=dre.mX.la
+dre.m1.np=dre.mX.np
+dre.m1.hosp=dre.mX.hosp
+dre.m1.goix=dre.mX.goix
+dre.m1.apl=dre.mX.apl
+dre.m1.gohoseq=dre.mX.gohoseq
+dre.m1.reqpos=dre.mX.reqpos
+dre.m1.m=dre.mX.m
+dre.m1.spd=dre.mX.spd
 
 # Recover args from M1
-dre.m1spd=dre.mXspdarg
-dre.m1posarg=dre.mXposarg</property>
+dre.m1.spd=dre.mX.spdarg
+dre.m1.posarg=dre.mX.posarg</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::decodeM1Cmd#48</property>
       <property name="inline" type="bool">0</property>
@@ -1135,25 +1135,25 @@ dre.m1posarg=dre.mXposarg</property>
       <property name="name" type="string">decodeM2Cmd</property>
       <property name="description" type="string">Decode the M2 cmd</property>
       <property name="code" type="string"># Prepare common decoder with M2 values
-dre.mXcmd=dre.m2cmd
+dre.mX.cmd=dre.m2.cmd
 
 # Call common decoder
 DecodeMotorCmd()
 
 # Recover commands from M2
-dre.m2la=dre.mXla
-dre.m2np=dre.mXnp
-dre.m2hosp=dre.mXhosp
-dre.m2goix=dre.mXgoix
-dre.m2apl=dre.mXapl
-dre.m2gohoseq=dre.mXgohoseq
-dre.m2reqpos=dre.mXreqpos
-dre.m2m=dre.mXm
-dre.m2spd=dre.mXspd
+dre.m2.la=dre.mX.la
+dre.m2.np=dre.mX.np
+dre.m2.hosp=dre.mX.hosp
+dre.m2.goix=dre.mX.goix
+dre.m2.apl=dre.mX.apl
+dre.m2.gohoseq=dre.mX.gohoseq
+dre.m2.reqpos=dre.mX.reqpos
+dre.m2.m=dre.mX.m
+dre.m2.spd=dre.mX.spd
 
 # Recover args from M2
-dre.m2spd=dre.mXspdarg
-dre.m2posarg=dre.mXposarg</property>
+dre.m2.spd=dre.mX.spdarg
+dre.m2.posarg=dre.mX.posarg</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::decodeM2Cmd#51</property>
       <property name="inline" type="bool">0</property>
@@ -1168,25 +1168,25 @@ dre.m2posarg=dre.mXposarg</property>
       <property name="name" type="string">decodeM3Cmd</property>
       <property name="description" type="string">Decode the M3 command</property>
       <property name="code" type="string"># Prepare common decoder with M3 values
-dre.mXcmd=dre.m3cmd
+dre.mX.cmd=dre.m3.cmd
 
 # Call common decoder
 DecodeMotorCmd()
 
 # Recover commands from M1
-dre.m3la=dre.mXla
-dre.m3np=dre.mXnp
-dre.m3hosp=dre.mXhosp
-dre.m3goix=dre.mXgoix
-dre.m3apl=dre.mXapl
-dre.m3gohoseq=dre.mXgohoseq
-dre.m3reqpos=dre.mXreqpos
-dre.m3m=dre.mXm
-dre.m3spd=dre.mXspd
+dre.m3.la=dre.mX.la
+dre.m3.np=dre.mX.np
+dre.m3.hosp=dre.mX.hosp
+dre.m3.goix=dre.mX.goix
+dre.m3.apl=dre.mX.apl
+dre.m3.gohoseq=dre.mX.gohoseq
+dre.m3.reqpos=dre.mX.reqpos
+dre.m3.m=dre.mX.m
+dre.m3.spd=dre.mX.spd
 
 # Recover args from M1
-dre.m3spd=dre.mXspdarg
-dre.m3posarg=dre.mXposarg</property>
+dre.m3.spd=dre.mX.spdarg
+dre.m3.posarg=dre.mX.posarg</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::decodeM3Cmd#52</property>
       <property name="inline" type="bool">0</property>
@@ -1201,20 +1201,20 @@ dre.m3posarg=dre.mXposarg</property>
       <property name="name" type="string">resetDecoder</property>
       <property name="description" type="string">Reset the decoder variables before decoding the new command.</property>
       <property name="code" type="string"># Flush commands from M1
-dre.mXla=False
-dre.mXnp=False
-dre.mXhosp=False
-dre.mXgoix=False
-dre.mXapl=False
-dre.mXgohoseq=False
-dre.mXreqpos=False
-dre.mXm=False
-dre.mXspd=False
+dre.mX.la=False
+dre.mX.np=False
+dre.mX.hosp=False
+dre.mX.goix=False
+dre.mX.apl=False
+dre.mX.gohoseq=False
+dre.mX.reqpos=False
+dre.mX.m=False
+dre.mX.spd=False
 # Flush arguments from M1
-dre.mXspdarg=0
-dre.mXposarg=0
+dre.mX.spdarg=0
+dre.mX.posarg=0
 # Flush error
-dre.mXerror=False</property>
+dre.mX.error=False</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::resetDecoder#101</property>
       <property name="inline" type="bool">0</property>
@@ -1228,7 +1228,7 @@ dre.mXerror=False</property>
       <property name="id" type="long">102</property>
       <property name="name" type="string">programNP</property>
       <property name="description" type="string">Program an NP action over the current Mx</property>
-      <property name="code" type="string">dre.mXnp=True</property>
+      <property name="code" type="string">dre.mX.np=True</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::programNP#102</property>
       <property name="inline" type="bool">1</property>
@@ -1242,7 +1242,7 @@ dre.mXerror=False</property>
       <property name="id" type="long">104</property>
       <property name="name" type="string">decodeError</property>
       <property name="description" type="string">There is an error in the command</property>
-      <property name="code" type="string">dre.mXerror=True</property>
+      <property name="code" type="string">dre.mX.error=True</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::decodeError#104</property>
       <property name="inline" type="bool">1</property>
@@ -1256,8 +1256,8 @@ dre.mXerror=False</property>
       <property name="id" type="long">128</property>
       <property name="name" type="string">programLA</property>
       <property name="description" type="string">Decode a LA function</property>
-      <property name="code" type="string">dre.mXla=True
-dre.mXposarg=int(dre.mXcmd[2:])</property>
+      <property name="code" type="string">dre.mX.la=True
+dre.mX.posarg=int(dre.mX.cmd[2:])</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::programLA#128</property>
       <property name="inline" type="bool">1</property>
@@ -1271,8 +1271,8 @@ dre.mXposarg=int(dre.mXcmd[2:])</property>
       <property name="id" type="long">129</property>
       <property name="name" type="string">programLR</property>
       <property name="description" type="string">Decode a LR command</property>
-      <property name="code" type="string">dre.mXlr=True
-dre.mXposarg=int(dre.mXcmd[2:])</property>
+      <property name="code" type="string">dre.mX.lr=True
+dre.mX.posarg=int(dre.mX.cmd[2:])</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::programLR#129</property>
       <property name="inline" type="bool">1</property>
@@ -1286,7 +1286,7 @@ dre.mXposarg=int(dre.mXcmd[2:])</property>
       <property name="id" type="long">130</property>
       <property name="name" type="string">programPOS</property>
       <property name="description" type="string">Decode pos command</property>
-      <property name="code" type="string">dre.mXreqpos=True</property>
+      <property name="code" type="string">dre.mX.reqpos=True</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::programPOS#130</property>
       <property name="inline" type="bool">1</property>
@@ -1300,7 +1300,7 @@ dre.mXposarg=int(dre.mXcmd[2:])</property>
       <property name="id" type="long">131</property>
       <property name="name" type="string">programM</property>
       <property name="description" type="string">Program M command</property>
-      <property name="code" type="string">dre.mXm = True</property>
+      <property name="code" type="string">dre.mX.m = True</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::programM#131</property>
       <property name="inline" type="bool">1</property>
@@ -1314,8 +1314,8 @@ dre.mXposarg=int(dre.mXcmd[2:])</property>
       <property name="id" type="long">132</property>
       <property name="name" type="string">programSP</property>
       <property name="description" type="string">SP command decode</property>
-      <property name="code" type="string">dre.mXspd = True
-dre.mXspdarg = int(dre.mXcmd[2:])</property>
+      <property name="code" type="string">dre.mX.spd = True
+dre.mX.spdarg = int(dre.mX.cmd[2:])</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::programSP#132</property>
       <property name="inline" type="bool">1</property>
@@ -1406,7 +1406,7 @@ var+=delta&#xD;
       <property name="id" type="long">163</property>
       <property name="name" type="string">notifyEndMv</property>
       <property name="description" type="string">Notifies (if needed) the end of the movement</property>
-      <property name="code" type="string">if (dre.m1npflag):&#xD;
+      <property name="code" type="string">if (dre.m1.npflag):&#xD;
     sendUntimelyResponse("p")</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::notifyEndMv#163</property>
@@ -1421,7 +1421,7 @@ var+=delta&#xD;
       <property name="id" type="long">164</property>
       <property name="name" type="string">setM1Response</property>
       <property name="description" type="string">Sets a response to the controlling device</property>
-      <property name="code" type="string">dre.m1resp=resptosend</property>
+      <property name="code" type="string">dre.m1.resp=resptosend</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::setM1Response#164&lt;resptosend:Integer&gt;</property>
       <property name="inline" type="bool">1</property>
@@ -1624,9 +1624,9 @@ dre.rx_buffer=dre.rx_buffer[1:]</property>
       <property name="name" type="string">checkCharAtPos</property>
       <property name="description" type="string">Check if a character at a given position is (or is not) equal to the given one.</property>
       <property name="code" type="string">if (isEqual):
-    return (dre.mXcmd[idx]==cToCheck)
+    return (dre.mX.cmd[idx]==cToCheck)
 else:
-    return (dre.mXcmd[idx]!=cToCheck)</property>
+    return (dre.mX.cmd[idx]!=cToCheck)</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::checkCharAtPos#97&lt;idx:Integer&gt;&lt;cToCheck:Integer&gt;&lt;isEqual:Integer&gt;</property>
       <property name="inline" type="bool">0</property>
@@ -2310,7 +2310,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m1req</item>
+                              <item key="mXreq">dre.m1.req</item>
                               <item key="exists">True</item>
                             </property>
                           </object>
@@ -2334,7 +2334,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">18</property>
                           <property name="relative_position" type="realpoint">-89.000000,3.000000</property>
                           <property name="size" type="realpoint">400.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m1req, True) / [decodeM1Cmd()] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m1.req, True) / [decodeM1Cmd()] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -2355,7 +2355,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m2req</item>
+                              <item key="mXreq">dre.m2.req</item>
                               <item key="exists">True</item>
                             </property>
                           </object>
@@ -2376,7 +2376,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">20</property>
                           <property name="relative_position" type="realpoint">-131.000000,-7.000000</property>
                           <property name="size" type="realpoint">400.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m2req, True) / [decodeM2Cmd()] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m2.req, True) / [decodeM2Cmd()] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -2397,7 +2397,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m2req</item>
+                              <item key="mXreq">dre.m2.req</item>
                               <item key="exists">False</item>
                             </property>
                           </object>
@@ -2414,7 +2414,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">22</property>
                           <property name="relative_position" type="realpoint">-88.000000,-7.000000</property>
                           <property name="size" type="realpoint">284.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m2req, False) / [] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m2.req, False) / [] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -2435,7 +2435,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m2req</item>
+                              <item key="mXreq">dre.m2.req</item>
                               <item key="exists">False</item>
                             </property>
                           </object>
@@ -2452,7 +2452,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">24</property>
                           <property name="relative_position" type="realpoint">-88.000000,-7.000000</property>
                           <property name="size" type="realpoint">284.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m2req, False) / [] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m2.req, False) / [] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -2473,7 +2473,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m3req</item>
+                              <item key="mXreq">dre.m3.req</item>
                               <item key="exists">True</item>
                             </property>
                           </object>
@@ -2494,7 +2494,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">26</property>
                           <property name="relative_position" type="realpoint">-155.000000,-17.000000</property>
                           <property name="size" type="realpoint">400.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m3req, True) / [decodeM3Cmd()] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m3.req, True) / [decodeM3Cmd()] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -2515,7 +2515,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m3req</item>
+                              <item key="mXreq">dre.m3.req</item>
                               <item key="exists">False</item>
                             </property>
                           </object>
@@ -2533,7 +2533,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">28</property>
                           <property name="relative_position" type="realpoint">-118.000000,-77.000000</property>
                           <property name="size" type="realpoint">284.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m3req, False) / [] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m3.req, False) / [] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -2554,7 +2554,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m3req</item>
+                              <item key="mXreq">dre.m3.req</item>
                               <item key="exists">True</item>
                             </property>
                           </object>
@@ -2578,7 +2578,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">30</property>
                           <property name="relative_position" type="realpoint">-85.000000,13.000000</property>
                           <property name="size" type="realpoint">400.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m3req, True) / [decodeM3Cmd()] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m3.req, True) / [decodeM3Cmd()] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -2599,7 +2599,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m3req</item>
+                              <item key="mXreq">dre.m3.req</item>
                               <item key="exists">False</item>
                             </property>
                           </object>
@@ -2614,7 +2614,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">32</property>
                           <property name="relative_position" type="realpoint">-98.000000,-7.000000</property>
                           <property name="size" type="realpoint">284.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m3req, False) / [] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m3.req, False) / [] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -2635,7 +2635,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m2req</item>
+                              <item key="mXreq">dre.m2.req</item>
                               <item key="exists">True</item>
                             </property>
                           </object>
@@ -2656,7 +2656,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">34</property>
                           <property name="relative_position" type="realpoint">-115.000000,3.000000</property>
                           <property name="size" type="realpoint">400.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m2req, True) / [decodeM2Cmd()] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m2.req, True) / [decodeM2Cmd()] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -2677,7 +2677,7 @@ False if the flag must be False to return True</property>
                             <property name="original_code" type="string">&lt;global&gt;::newReq#46&lt;mXreq:Integer&gt;&lt;exists:Integer&gt;</property>
                             <property name="scope" type="string">&lt;global&gt;</property>
                             <property name="call_parameters" type="mapstring">
-                              <item key="mXreq">dre.m1req</item>
+                              <item key="mXreq">dre.m1.req</item>
                               <item key="exists">False</item>
                             </property>
                           </object>
@@ -2691,7 +2691,7 @@ False if the flag must be False to return True</property>
                           <property name="id" type="long">36</property>
                           <property name="relative_position" type="realpoint">-88.000000,3.000000</property>
                           <property name="size" type="realpoint">284.000000,18.000000</property>
-                          <property name="text" type="string">&lt;&lt; newReq(dre.m1req, False) / [] &gt;&gt;</property>
+                          <property name="text" type="string">&lt;&lt; newReq(dre.m1.req, False) / [] &gt;&gt;</property>
                           <property name="label_type" type="int">3</property>
                         </object>
                       </property>
@@ -3723,7 +3723,7 @@ False if the flag must be False to return True</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="SetOrUnset">True</item>
-                  <item key="flag">dre.m1np</item>
+                  <item key="flag">dre.m1.np</item>
                 </property>
               </object>
               <object type="udActionLinkItem">
@@ -3734,7 +3734,7 @@ False if the flag must be False to return True</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="value">True</item>
-                  <item key="flag">dre.m1npflag</item>
+                  <item key="flag">dre.m1.npflag</item>
                 </property>
               </object>
             </object>
@@ -3752,7 +3752,7 @@ False if the flag must be False to return True</property>
               <property name="id" type="long">15</property>
               <property name="relative_position" type="realpoint">-135.000000,-17.000000</property>
               <property name="size" type="realpoint">516.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m1np, True) / [setFlag(dre.m1npflag, True)] &gt;&gt;</property>
+              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m1.np, True) / [setFlag(dre.m1.npflag, True)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -3808,7 +3808,7 @@ False if the flag must be False to return True</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="SetOrUnset">True</item>
-                  <item key="flag">dre.m1la</item>
+                  <item key="flag">dre.m1.la</item>
                 </property>
               </object>
               <object type="udActionLinkItem">
@@ -3818,8 +3818,8 @@ False if the flag must be False to return True</property>
                 <property name="original_code" type="string">&lt;global&gt;::setVar#85&lt;varToSet:Integer&gt;&lt;valueToSet:Integer&gt;</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
-                  <item key="valueToSet">dre.m1posarg</item>
-                  <item key="varToSet">dre.m1setpoint</item>
+                  <item key="valueToSet">dre.m1.posarg</item>
+                  <item key="varToSet">dre.m1.setpoint</item>
                 </property>
               </object>
             </object>
@@ -3835,7 +3835,7 @@ False if the flag must be False to return True</property>
               <property name="id" type="long">23</property>
               <property name="relative_position" type="realpoint">-283.000000,-9.000000</property>
               <property name="size" type="realpoint">566.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; checkFlag(dre.m1la, True) / [setVar(dre.m1setpoint, dre.m1posarg)] &gt;&gt;</property>
+              <property name="text" type="string">&lt;&lt; checkFlag(dre.m1.la, True) / [setVar(dre.m1.setpoint, dre.m1.posarg)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -3885,7 +3885,7 @@ False if the flag must be False to return True</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="SetOrUnset">True</item>
-                  <item key="flag">dre.m1reqpos</item>
+                  <item key="flag">dre.m1.reqpos</item>
                 </property>
               </object>
               <object type="udActionLinkItem">
@@ -3895,7 +3895,7 @@ False if the flag must be False to return True</property>
                 <property name="original_code" type="string">&lt;global&gt;::setM1Response#164&lt;resptosend:Integer&gt;</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
-                  <item key="resptosend">str(dre.m1pos)</item>
+                  <item key="resptosend">str(dre.m1.pos)</item>
                 </property>
               </object>
             </object>
@@ -3913,7 +3913,7 @@ False if the flag must be False to return True</property>
               <property name="id" type="long">21</property>
               <property name="relative_position" type="realpoint">-150.000000,33.000000</property>
               <property name="size" type="realpoint">583.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; 3 : checkFlag(dre.m1reqpos, True) / [setM1Response(str(dre.m1pos))] &gt;&gt;</property>
+              <property name="text" type="string">&lt;&lt; 3 : checkFlag(dre.m1.reqpos, True) / [setM1Response(str(dre.m1.pos))] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -3936,7 +3936,7 @@ False if the flag must be False to return True</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="SetOrUnset">True</item>
-                  <item key="flag">dre.m1m</item>
+                  <item key="flag">dre.m1.m</item>
                 </property>
               </object>
               <object type="udActionLinkItem">
@@ -3947,7 +3947,7 @@ False if the flag must be False to return True</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="value">True</item>
-                  <item key="flag">dre.m1laflag</item>
+                  <item key="flag">dre.m1.laflag</item>
                 </property>
               </object>
             </object>
@@ -3964,7 +3964,7 @@ False if the flag must be False to return True</property>
               <property name="id" type="long">19</property>
               <property name="relative_position" type="realpoint">-232.000000,23.000000</property>
               <property name="size" type="realpoint">507.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; 2 : checkFlag(dre.m1m, True) / [setFlag(dre.m1laflag, True)] &gt;&gt;</property>
+              <property name="text" type="string">&lt;&lt; 2 : checkFlag(dre.m1.m, True) / [setFlag(dre.m1.laflag, True)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -4024,8 +4024,8 @@ False if the flag must be False to return True</property>
                 <property name="original_code" type="string">&lt;global&gt;::greaterThan#157&lt;first:Integer&gt;&lt;second:Integer&gt;</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
-                  <item key="first">dre.m1pos</item>
-                  <item key="second">dre.m1setpoint</item>
+                  <item key="first">dre.m1.pos</item>
+                  <item key="second">dre.m1.setpoint</item>
                 </property>
               </object>
               <object type="udActionLinkItem">
@@ -4035,7 +4035,7 @@ False if the flag must be False to return True</property>
                 <property name="original_code" type="string">&lt;global&gt;::incrDelta#160&lt;var:Integer&gt;&lt;delta:Integer&gt;</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
-                  <item key="var">dre.m1pos</item>
+                  <item key="var">dre.m1.pos</item>
                   <item key="delta">-1</item>
                 </property>
               </object>
@@ -4054,7 +4054,7 @@ False if the flag must be False to return True</property>
               <property name="id" type="long">8</property>
               <property name="relative_position" type="realpoint">-350.000000,-39.000000</property>
               <property name="size" type="realpoint">600.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; 2 : greaterThan(dre.m1pos, dre.m1setpoint) / [incrDelta(dre.m1pos, -1)] &gt;&gt;</property>
+              <property name="text" type="string">&lt;&lt; 2 : greaterThan(dre.m1.pos, dre.m1.setpoint) / [incrDelta(dre.m1.pos, -1)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -4124,7 +4124,7 @@ False if the flag must be False to return True</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="SetOrUnset">True</item>
-                  <item key="flag">dre.m1laflag</item>
+                  <item key="flag">dre.m1.laflag</item>
                 </property>
               </object>
             </object>
@@ -4137,7 +4137,7 @@ False if the flag must be False to return True</property>
               <property name="id" type="long">14</property>
               <property name="relative_position" type="realpoint">-166.000000,-9.000000</property>
               <property name="size" type="realpoint">332.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m1laflag, True) / [] &gt;&gt;</property>
+              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m1.laflag, True) / [] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -4215,7 +4215,7 @@ False if the flag must be False to return True</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="value">False</item>
-                  <item key="flag">dre.m1npflag</item>
+                  <item key="flag">dre.m1.npflag</item>
                 </property>
               </object>
               <object type="udActionLinkItem">
@@ -4226,7 +4226,7 @@ False if the flag must be False to return True</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="value">False</item>
-                  <item key="flag">dre.m1laflag</item>
+                  <item key="flag">dre.m1.laflag</item>
                 </property>
               </object>
             </object>
@@ -4243,7 +4243,7 @@ False if the flag must be False to return True</property>
               <property name="id" type="long">20</property>
               <property name="relative_position" type="realpoint">-227.000000,-19.000000</property>
               <property name="size" type="realpoint">625.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt;  / [notifyEndMv(), setFlag(dre.m1npflag, False), setFlag(dre.m1laflag, False)] &gt;&gt;</property>
+              <property name="text" type="string">&lt;&lt;  / [notifyEndMv(), setFlag(dre.m1.npflag, False), setFlag(dre.m1.laflag, False)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -4265,8 +4265,8 @@ False if the flag must be False to return True</property>
                 <property name="original_code" type="string">&lt;global&gt;::greaterThan#157&lt;first:Integer&gt;&lt;second:Integer&gt;</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
-                  <item key="first">dre.m1setpoint</item>
-                  <item key="second">dre.m1pos</item>
+                  <item key="first">dre.m1.setpoint</item>
+                  <item key="second">dre.m1.pos</item>
                 </property>
               </object>
               <object type="udActionLinkItem">
@@ -4276,7 +4276,7 @@ False if the flag must be False to return True</property>
                 <property name="original_code" type="string">&lt;global&gt;::incrDelta#160&lt;var:Integer&gt;&lt;delta:Integer&gt;</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
-                  <item key="var">dre.m1pos</item>
+                  <item key="var">dre.m1.pos</item>
                   <item key="delta">+1</item>
                 </property>
               </object>
@@ -4295,7 +4295,7 @@ False if the flag must be False to return True</property>
               <property name="id" type="long">6</property>
               <property name="relative_position" type="realpoint">-338.000000,11.000000</property>
               <property name="size" type="realpoint">608.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; 1 : greaterThan(dre.m1setpoint, dre.m1pos) / [incrDelta(dre.m1pos, +1)] &gt;&gt;</property>
+              <property name="text" type="string">&lt;&lt; 1 : greaterThan(dre.m1.setpoint, dre.m1.pos) / [incrDelta(dre.m1.pos, +1)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
