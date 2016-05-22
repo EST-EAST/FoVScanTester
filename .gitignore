@@ -66,3 +66,5 @@ target/
 /sweepconfig.py
 
 /doc/commands.txt
+
+/nbproject/private
