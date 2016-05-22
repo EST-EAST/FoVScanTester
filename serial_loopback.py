@@ -45,6 +45,13 @@ def m2sim(conn):
 	#print("Voy simulando el motor: "+str(FoV.dre.m2.setpoint)+" "+str(FoV.dre.m2.pos))
 	FoV.M2Sim()
 	print("Saliendo del simulador") 
+
+def m3sim(conn):
+	print("Arranco el simulador")  
+	FoV.dre.ser = conn
+	#print("Voy simulando el motor: "+str(FoV.dre.m2.setpoint)+" "+str(FoV.dre.m2.pos))
+	FoV.M3Sim()
+	print("Saliendo del simulador") 
         
 #Function for handling connections. This will be used to create threads
 def clientthread(conn):
@@ -106,17 +113,16 @@ def clientthread(conn):
 				FoV.dre.response = FoV.dre.m2.resp
 				print "M2 Response to send "+FoV.dre.response
 				sendResponse()
-                        '''
 			if (FoV.dre.m3.req):
-				#FoV.M1()
+				FoV.M3()
 				print "M3 simulator executed"
 				FoV.dre.response = FoV.dre.m3.resp
 				print "M3 Response to send "+FoV.dre.response
 				sendResponse()
-			'''
     print("Cierro la conexion")
     FoV.dre.m1.simstop=True
     FoV.dre.m2.simstop=True
+    FoV.dre.m3.simstop=True
     conn.close()
 
 ################ MAIN ####################
@@ -174,5 +180,7 @@ else:
 	idsim=start_new_thread(m1sim,(conn,))
 	FoV.dre.m2.simstop=False
 	idsim=start_new_thread(m2sim,(conn,))
+	FoV.dre.m3.simstop=False
+	idsim=start_new_thread(m3sim,(conn,))
         start_new_thread(clientthread ,(conn,))
     sckt.close

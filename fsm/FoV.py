@@ -120,9 +120,9 @@ def Moving(  ):
 
 # ['M1' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_M1_INITIAL = 11
-ID_M1_FINAL = 12
-ID_M1_WAITING = 13
+ID_M1_INITIAL = 18
+ID_M1_FINAL = 19
+ID_M1_WAITING = 20
 
 def M1(  ):
     # set initial state
@@ -184,14 +184,14 @@ def M1(  ):
 
 # ['DecodeMotorCmd' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_DECODEMOTORCMD_INITIAL = 14
-ID_DECODEMOTORCMD_FINAL = 15
-ID_DECODEMOTORCMD_ERROR = 16
-ID_DECODEMOTORCMD_NRECEIVED = 17
-ID_DECODEMOTORCMD_LRECEIVED = 18
-ID_DECODEMOTORCMD_SRECEIVED = 19
-ID_DECODEMOTORCMD_PRECEIVED = 20
-ID_DECODEMOTORCMD_PORECEIVED = 21
+ID_DECODEMOTORCMD_INITIAL = 21
+ID_DECODEMOTORCMD_FINAL = 22
+ID_DECODEMOTORCMD_ERROR = 23
+ID_DECODEMOTORCMD_NRECEIVED = 24
+ID_DECODEMOTORCMD_LRECEIVED = 25
+ID_DECODEMOTORCMD_SRECEIVED = 26
+ID_DECODEMOTORCMD_PRECEIVED = 27
+ID_DECODEMOTORCMD_PORECEIVED = 28
 
 def DecodeMotorCmd(  ):
     # set initial state
@@ -333,13 +333,13 @@ def DecodeMotorCmd(  ):
 
 # ['ProgramMotors' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_PROGRAMMOTORS_INITIAL = 22
-ID_PROGRAMMOTORS_FINAL = 23
-ID_PROGRAMMOTORS_M2BYPASS = 24
-ID_PROGRAMMOTORS_M1BYPASS = 25
-ID_PROGRAMMOTORS_M2DECODED = 26
-ID_PROGRAMMOTORS_M3DECODED = 27
-ID_PROGRAMMOTORS_M1DECODED = 28
+ID_PROGRAMMOTORS_INITIAL = 29
+ID_PROGRAMMOTORS_FINAL = 30
+ID_PROGRAMMOTORS_M2BYPASS = 31
+ID_PROGRAMMOTORS_M1BYPASS = 32
+ID_PROGRAMMOTORS_M2DECODED = 33
+ID_PROGRAMMOTORS_M3DECODED = 34
+ID_PROGRAMMOTORS_M1DECODED = 35
 
 def ProgramMotors(  ):
     # set initial state
@@ -419,10 +419,10 @@ def ProgramMotors(  ):
 
 # ['CmdDispatcher' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_CMDDISPATCHER_INITIAL = 29
-ID_CMDDISPATCHER_FINAL = 30
-ID_CMDDISPATCHER_DECODEENGINE = 31
-ID_CMDDISPATCHER_PROGRAMMOTORS = 32
+ID_CMDDISPATCHER_INITIAL = 36
+ID_CMDDISPATCHER_FINAL = 37
+ID_CMDDISPATCHER_DECODEENGINE = 38
+ID_CMDDISPATCHER_PROGRAMMOTORS = 39
 
 def CmdDispatcher(  ):
     # set initial state
@@ -501,8 +501,8 @@ def CmdDispatcher(  ):
 
 # ['sendCtrlResponse' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_SENDCTRLRESPONSE_INITIAL = 33
-ID_SENDCTRLRESPONSE_FINAL = 34
+ID_SENDCTRLRESPONSE_INITIAL = 40
+ID_SENDCTRLRESPONSE_FINAL = 41
 
 def sendCtrlResponse(  ):
     # set initial state
@@ -529,10 +529,10 @@ def sendCtrlResponse(  ):
 
 # ['getCtrlCommand' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_GETCTRLCOMMAND_INITIAL = 35
-ID_GETCTRLCOMMAND_FINAL = 36
-ID_GETCTRLCOMMAND_READING = 37
-ID_GETCTRLCOMMAND_PREVBUF = 38
+ID_GETCTRLCOMMAND_INITIAL = 42
+ID_GETCTRLCOMMAND_FINAL = 43
+ID_GETCTRLCOMMAND_READING = 44
+ID_GETCTRLCOMMAND_PREVBUF = 45
 
 def getCtrlCommand(  ):
     # set initial state
@@ -610,8 +610,8 @@ def getCtrlCommand(  ):
 
 # ['sendCtrlCommand' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_SENDCTRLCOMMAND_INITIAL = 39
-ID_SENDCTRLCOMMAND_FINAL = 40
+ID_SENDCTRLCOMMAND_INITIAL = 46
+ID_SENDCTRLCOMMAND_FINAL = 47
 
 def sendCtrlCommand(  ):
     # set initial state
@@ -638,10 +638,10 @@ def sendCtrlCommand(  ):
 
 # ['getCtrlResponse' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_GETCTRLRESPONSE_INITIAL = 41
-ID_GETCTRLRESPONSE_FINAL = 42
-ID_GETCTRLRESPONSE_READING = 43
-ID_GETCTRLRESPONSE_FINISHING = 44
+ID_GETCTRLRESPONSE_INITIAL = 48
+ID_GETCTRLRESPONSE_FINAL = 49
+ID_GETCTRLRESPONSE_READING = 50
+ID_GETCTRLRESPONSE_FINISHING = 51
 
 def getCtrlResponse(  ):
     # set initial state
@@ -763,10 +763,10 @@ def M1Movement(  ):
 
 # ['M1Sim' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_M1SIM_INITIAL = 7
-ID_M1SIM_FINAL = 8
-ID_M1SIM_IDLE = 9
-ID_M1SIM_MOVING = 10
+ID_M1SIM_INITIAL = 14
+ID_M1SIM_FINAL = 15
+ID_M1SIM_IDLE = 16
+ID_M1SIM_MOVING = 17
 
 def M1Sim(  ):
     # set initial state
@@ -831,10 +831,10 @@ def M1Sim(  ):
 
 # ['M2Sim' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_M2SIM_INITIAL = 0
-ID_M2SIM_FINAL = 1
-ID_M2SIM_IDLE = 2
-ID_M2SIM_MOVING = 3
+ID_M2SIM_INITIAL = 7
+ID_M2SIM_FINAL = 8
+ID_M2SIM_IDLE = 9
+ID_M2SIM_MOVING = 10
 
 def M2Sim(  ):
     # set initial state
@@ -899,9 +899,9 @@ def M2Sim(  ):
 
 # ['M2' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_M2_INITIAL = 4
-ID_M2_FINAL = 5
-ID_M2_WAITING = 6
+ID_M2_INITIAL = 11
+ID_M2_FINAL = 12
+ID_M2_WAITING = 13
 
 def M2(  ):
     # set initial state
@@ -960,3 +960,135 @@ def M2(  ):
             return ID_M2_FINAL
 
 # ['M2' end (DON'T REMOVE THIS LINE!)]
+
+# ['M3Sim' begin (DON'T REMOVE THIS LINE!)]
+# State IDs
+ID_M3SIM_INITIAL = 0
+ID_M3SIM_FINAL = 1
+ID_M3SIM_IDLE = 2
+ID_M3SIM_MOVING = 3
+
+def M3Sim(  ):
+    # set initial state
+    state = ID_M3SIM_INITIAL
+
+    while( True ):
+        # State ID: ID_M3SIM_INITIAL
+        if( state==ID_M3SIM_INITIAL ):
+            # Transition ID: ID_M3SIM_TRANSITION_CONNECTION
+            state = ID_M3SIM_IDLE
+
+        # State ID: ID_M3SIM_IDLE
+        elif( state==ID_M3SIM_IDLE ):
+            if( ((dre.m3.laflag)==(True)) ):
+                # Transition ID: ID_M3SIM_TRANSITION_CONNECTION
+                state = ID_M3SIM_MOVING
+
+            elif( ((dre.m3.simstop)==(True)) ):
+                # Transition ID: ID_M3SIM_TRANSITION_CONNECTION
+                state = ID_M3SIM_FINAL
+
+        # State ID: ID_M3SIM_FINAL
+        elif( state==ID_M3SIM_FINAL ):
+            return ID_M3SIM_FINAL
+
+        # State ID: ID_M3SIM_MOVING
+        elif( state==ID_M3SIM_MOVING ):
+            if( dre.m3.setpoint > dre.m3.pos ):
+                # Transition ID: ID_M3SIM_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::incrDelta' begin]
+                tmp=dre.m3.pos
+                dre.m3.pos+=1
+                #print obtainVarName(dre.m3.pos)+":"+str(tmp)+"+"+str(1)+"="+str(dre.m3.pos)
+                # ['<global>::incrDelta' end]
+
+            elif( dre.m3.pos > dre.m3.setpoint ):
+                # Transition ID: ID_M3SIM_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::incrDelta' begin]
+                tmp=dre.m3.pos
+                dre.m3.pos+=-1
+                #print obtainVarName(dre.m3.pos)+":"+str(tmp)+"+"+str(-1)+"="+str(dre.m3.pos)
+                # ['<global>::incrDelta' end]
+
+            else:
+                # Transition ID: ID_M3SIM_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::NotifyEndM3Mv' begin]
+                if (dre.m3.npflag):
+                    sendUntimelyResponse("p")
+                # ['<global>::NotifyEndM3Mv' end]
+                # ['<global>::setFlag' begin]
+                dre.m3.npflag=False
+                # ['<global>::setFlag' end]
+                # ['<global>::setFlag' begin]
+                dre.m3.laflag=False
+                # ['<global>::setFlag' end]
+                state = ID_M3SIM_IDLE
+
+# ['M3Sim' end (DON'T REMOVE THIS LINE!)]
+
+# ['M3' begin (DON'T REMOVE THIS LINE!)]
+# State IDs
+ID_M3_INITIAL = 4
+ID_M3_FINAL = 5
+ID_M3_WAITING = 6
+
+def M3(  ):
+    # set initial state
+    state = ID_M3_INITIAL
+
+    while( True ):
+        # State ID: ID_M3_INITIAL
+        if( state==ID_M3_INITIAL ):
+            # Transition ID: ID_M3_TRANSITION_CONNECTION
+            # Actions:
+            # ['<global>::setM3Response' begin]
+            dre.m3.resp="OK"
+            # ['<global>::setM3Response' end]
+            state = ID_M3_WAITING
+
+        # State ID: ID_M3_WAITING
+        elif( state==ID_M3_WAITING ):
+            if( ((dre.m3.np)==(True)) ):
+                # Transition ID: ID_M3_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::setFlag' begin]
+                dre.m3.npflag=True
+                # ['<global>::setFlag' end]
+                state = ID_M3_FINAL
+
+            elif( ((dre.m3.m)==(True)) ):
+                # Transition ID: ID_M3_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::setFlag' begin]
+                dre.m3.laflag=True
+                # ['<global>::setFlag' end]
+                state = ID_M3_FINAL
+
+            elif( ((dre.m3.reqpos)==(True)) ):
+                # Transition ID: ID_M3_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::setM3Response' begin]
+                dre.m3.resp=str(dre.m3.pos)
+                # ['<global>::setM3Response' end]
+                state = ID_M3_FINAL
+
+            elif( ((dre.m3.la)==(True)) ):
+                # Transition ID: ID_M3_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::setVar' begin]
+                dre.m3.setpoint=(dre.m3.posarg)
+                # ['<global>::setVar' end]
+                state = ID_M3_FINAL
+
+            else:
+                # Transition ID: ID_M3_TRANSITION_CONNECTION
+                state = ID_M3_FINAL
+
+        # State ID: ID_M3_FINAL
+        elif( state==ID_M3_FINAL ):
+            return ID_M3_FINAL
+
+# ['M3' end (DON'T REMOVE THIS LINE!)]
