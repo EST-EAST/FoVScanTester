@@ -19,19 +19,6 @@ cte_timeout = 2000
 ############ FUNCTIONS ##########################
 
 def readCommand():
-    '''
-    current_command=""
-    done=False
-    while (done==False):
-        char_read=sim_ser.read(1)
-        if (char_read=='\13'):
-            print "done: "+current_command
-            done=True
-        else:
-            current_command+=char_read
-            print "acum: "+current_command
-    return current_command
-    '''
     return FoV.getCtrlCommand()
 
 def sendResponse():
@@ -42,15 +29,22 @@ def sendResponse():
 def serialClose():
     ser.close()             # close port
 
-def mXsim(mX,conn):
+def m1sim(conn):
 	print("Arranco el simulador")  
 	FoV.dre.ser = conn
 	#print("Voy simulando el motor: "+str(FoV.dre.m1.setpoint)+" "+str(FoV.dre.m1.pos))
 	FoV.M1Sim()
 	print("Saliendo del simulador")  
 
+def m2sim(conn):
+	print("Arranco el simulador")  
+	FoV.dre.ser = conn
+	#print("Voy simulando el motor: "+str(FoV.dre.m2.setpoint)+" "+str(FoV.dre.m2.pos))
+	FoV.M2Sim()
+	print("Saliendo del simulador") 
+        
 #Function for handling connections. This will be used to create threads
-def clientthread(conn,idsim):
+def clientthread(conn):
     import FoV
     
     #Sending message to connected client
@@ -103,14 +97,14 @@ def clientthread(conn,idsim):
 				print "M1 simulator executed"
 				FoV.dre.response = FoV.dre.m1.resp
 				print "M1 Response to send "+FoV.dre.response
-				sendResponse()
-			'''
+				sendResponse()			
 			if (FoV.dre.m2.req):
-				#FoV.M1()
+				FoV.M2()
 				print "M2 simulator executed"
 				FoV.dre.response = FoV.dre.m2.resp
 				print "M2 Response to send "+FoV.dre.response
 				sendResponse()
+                        '''
 			if (FoV.dre.m3.req):
 				#FoV.M1()
 				print "M3 simulator executed"
@@ -120,6 +114,7 @@ def clientthread(conn,idsim):
 			'''
     print("Cierro la conexion")
     FoV.dre.m1.simstop=True
+    FoV.dre.m2.simstop=True
     conn.close()
 
 ################ MAIN ####################
@@ -174,8 +169,8 @@ else:
         #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
 	#conn.settimeout(10)
 	FoV.dre.m1.simstop=False
-	idsim=start_new_thread(mXsim,(FoV.dre.m1,conn,))
-        start_new_thread(clientthread ,(conn,idsim))
+	idsim=start_new_thread(m1sim,(conn,))
+	FoV.dre.m2.simstop=False
+	idsim=start_new_thread(m2sim,(conn,))
+        start_new_thread(clientthread ,(conn,))
     sckt.close
-
-    
