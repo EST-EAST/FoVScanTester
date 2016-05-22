@@ -14,16 +14,19 @@ import DRE
 from datetime import datetime
 
 cte_stepTime=1000
-cte_timeout = 2000
+cte_timeout = 10
 
 ############ FUNCTIONS ##########################
 
 def readCommand():
-    return FoV.getCtrlCommand()
+    ret=FoV.getCtrlCommand()
+    FoV.dre.lastconnection = datetime.now()
+    return ret
 
 def sendResponse():
     FoV.dre.command_tx_buf = FoV.dre.response
     FoV.sendCtrlResponse()
+    FoV.dre.lastconnection = datetime.now()
     FoV.dre.response=""
 
 def serialClose():
@@ -52,7 +55,7 @@ def clientthread(conn):
     FoV.dre.ser = conn
     #infinite loop so that function do not terminate and thread do not end.
     endthread=False
-    lastconnection = datetime.now()
+    FoV.dre.lastconnection = datetime.now()
     while not(endthread):
         #print "Waiting for command"
 	# Check if there is data
@@ -70,15 +73,14 @@ def clientthread(conn):
             		# Other error, re-raise
 			print "Timeout ({0}): {1}".format(e.errno, e.strerror)
 	#print("longitud de data: "+str(len(data))+" : "+str(data))
-	if ((datetime.now()-lastconnection).total_seconds()>10):
+	if ((datetime.now()-FoV.dre.lastconnection).total_seconds()>cte_timeout):
 		print("Timeout manual")
 		endthread=True
 	if (not(endthread)):
 		if (len(data)>=1):
-			lastconnection = datetime.now()
 			FoV.dre.rx_buffer=FoV.dre.rx_buffer+str(data)
 			print("Buffer data"+FoV.dre.rx_buffer)
-			FoV.getCtrlCommand()
+			readCommand()
 			'''
 			try:
 			    print "hiola"

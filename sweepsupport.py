@@ -54,8 +54,6 @@ cte_lscomp_max = +(2000)*18  # End of LS travel in upper units
 cte_lscomp_scale = 2000*1000     # LS units / mm * 1000 mm / 1 m
 cte_lscomp_zero = +(2000)*9      # LS units coincidence with 0 mm (center) 
 
-cte_timeout = 2000
-
 # Home speeds
 cte_vhx = 100
 cte_vhy = 100
@@ -284,34 +282,53 @@ def commandMotor(x,y):
 	print("Resp:"+r)
     	'''
 
+        numberOfPReceived=0
         # Move the motor
         cmdx_str = str(sweepconfig.cte_motor_x)+"M"
         sendMotorCommand(cmdx_str)
         print(cmdx_str)
 	r=getMotorResponse()
 	print("Resp:"+r)
-
+        if (r=="p"):
+            numberOfPReceived+=1
+        print("Number of P: "+str(numberOfPReceived))
+        
         cmdy_str = str(sweepconfig.cte_motor_y)+"M"
         sendMotorCommand(cmdy_str)
         print("Cmd:"+cmdy_str)
 	r=getMotorResponse()
 	print("Resp:"+r)
-
+        if (r=="p"):
+            numberOfPReceived+=1        
+        print("Number of P: "+str(numberOfPReceived))
     	'''
         cmdcomp_str = str(sweepconfig.cte_motor_comp)+"M"
         sendMotorCommand(cmdcomp_str)
         print(cmdcomp_str)
 	r=getMotorResponse()
 	print("Resp:"+r)
+        if (r=="p"):
+            numberOfPReceived+=1        
     	'''
 
 	# Wait for command responses
 	print("Waiting Motors to finish")
-        print("First resp:"+getMotorResponse())
-        print("Second resp:"+getMotorResponse())
+	r=getMotorResponse()
+	print("Resp:"+r)
+        if (r=="p"):
+            numberOfPReceived+=1        
+        print("Number of P: "+str(numberOfPReceived))
+	r=getMotorResponse()
+	print("Resp:"+r)
+        if (r=="p"):
+            numberOfPReceived+=1        
+        print("Number of P: "+str(numberOfPReceived))
         #print("Second resp:"+getMotorResponse())
-
-        ret = 0
+        if (numberOfPReceived==2):
+            ret = 0
+        else:
+            ret = -1
+        print("Number of P: "+str(numberOfPReceived))
 
     return ret,lsx_pos,lsy_pos,lscomp_pos
 
