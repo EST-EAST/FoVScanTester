@@ -23,7 +23,6 @@ def decodeM1Cmd(  ):
     
     # Call common decoder
     DecodeMotorCmd()
-    
     # ['<global>::decodeM1Cmd' end]
 
 def decodeM2Cmd(  ):
@@ -33,7 +32,6 @@ def decodeM2Cmd(  ):
     
     # Call common decoder
     DecodeMotorCmd()
-
     # ['<global>::decodeM2Cmd' end]
 
 def decodeM3Cmd(  ):
@@ -43,7 +41,6 @@ def decodeM3Cmd(  ):
     
     # Call common decoder
     DecodeMotorCmd()
-    
     # ['<global>::decodeM3Cmd' end]
 
 def resetDecoder(  ):
@@ -696,10 +693,10 @@ def getCtrlResponse(  ):
 
 # ['M1Movement' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_M1MOVEMENT_INITIAL = 0
-ID_M1MOVEMENT_FINAL = 1
-ID_M1MOVEMENT_ENABLE = 2
-ID_M1MOVEMENT_STEPDONE = 3
+ID_M1MOVEMENT_INITIAL = 4
+ID_M1MOVEMENT_FINAL = 5
+ID_M1MOVEMENT_STEPDONE = 6
+ID_M1MOVEMENT_ENABLE = 7
 
 def M1Movement(  ):
     # set initial state
@@ -763,3 +760,71 @@ def M1Movement(  ):
             return ID_M1MOVEMENT_FINAL
 
 # ['M1Movement' end (DON'T REMOVE THIS LINE!)]
+
+# ['M1Sim' begin (DON'T REMOVE THIS LINE!)]
+# State IDs
+ID_M1SIM_INITIAL = 0
+ID_M1SIM_FINAL = 1
+ID_M1SIM_IDLE = 2
+ID_M1SIM_MOVING = 3
+
+def M1Sim(  ):
+    # set initial state
+    state = ID_M1SIM_INITIAL
+
+    while( True ):
+        # State ID: ID_M1SIM_INITIAL
+        if( state==ID_M1SIM_INITIAL ):
+            # Transition ID: ID_M1SIM_TRANSITION_CONNECTION
+            state = ID_M1SIM_IDLE
+
+        # State ID: ID_M1SIM_IDLE
+        elif( state==ID_M1SIM_IDLE ):
+            if( ((dre.m1.laflag)==(True)) ):
+                # Transition ID: ID_M1SIM_TRANSITION_CONNECTION
+                state = ID_M1SIM_MOVING
+
+            elif( ((dre.m1.simstop)==(True)) ):
+                # Transition ID: ID_M1SIM_TRANSITION_CONNECTION
+                state = ID_M1SIM_FINAL
+
+        # State ID: ID_M1SIM_MOVING
+        elif( state==ID_M1SIM_MOVING ):
+            if( dre.m1.pos > dre.m1.setpoint ):
+                # Transition ID: ID_M1SIM_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::incrDelta' begin]
+                tmp=dre.m1.pos
+                dre.m1.pos+=-1
+                #print obtainVarName(dre.m1.pos)+":"+str(tmp)+"+"+str(-1)+"="+str(dre.m1.pos)
+                # ['<global>::incrDelta' end]
+
+            elif( dre.m1.setpoint > dre.m1.pos ):
+                # Transition ID: ID_M1SIM_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::incrDelta' begin]
+                tmp=dre.m1.pos
+                dre.m1.pos+=1
+                #print obtainVarName(dre.m1.pos)+":"+str(tmp)+"+"+str(1)+"="+str(dre.m1.pos)
+                # ['<global>::incrDelta' end]
+
+            else:
+                # Transition ID: ID_M1SIM_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::notifyEndMv' begin]
+                if (dre.m1.npflag):
+                    sendUntimelyResponse("p")
+                # ['<global>::notifyEndMv' end]
+                # ['<global>::setFlag' begin]
+                dre.m1.npflag=False
+                # ['<global>::setFlag' end]
+                # ['<global>::setFlag' begin]
+                dre.m1.laflag=False
+                # ['<global>::setFlag' end]
+                state = ID_M1SIM_IDLE
+
+        # State ID: ID_M1SIM_FINAL
+        elif( state==ID_M1SIM_FINAL ):
+            return ID_M1SIM_FINAL
+
+# ['M1Sim' end (DON'T REMOVE THIS LINE!)]

@@ -43,12 +43,11 @@ def serialClose():
     ser.close()             # close port
 
 def mXsim(mX,conn):
-    print("Arranco el simulador")  
-    while not(mX.simstop):
+	print("Arranco el simulador")  
 	FoV.dre.ser = conn
 	#print("Voy simulando el motor: "+str(FoV.dre.m1.setpoint)+" "+str(FoV.dre.m1.pos))
-	FoV.M1Movement()
-    print("Saliendo del simulador")  
+	FoV.M1Sim()
+	print("Saliendo del simulador")  
 
 #Function for handling connections. This will be used to create threads
 def clientthread(conn,idsim):
