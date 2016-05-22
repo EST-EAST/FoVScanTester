@@ -4726,7 +4726,7 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
       <property name="name" type="string">M2</property>
       <property name="description" type="string">Diagram's description...</property>
       <property name="diagram_type" type="string">State Chart</property>
-      <property name="generate_code" type="bool">0</property>
+      <property name="generate_code" type="bool">1</property>
       <property name="output_file" type="string">&lt;default&gt;</property>
       <property name="active_generator" type="string">udHStateChartGenerator</property>
       <property name="active_algorithm" type="string">udElifAlgorithm</property>

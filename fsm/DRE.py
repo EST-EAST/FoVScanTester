@@ -28,6 +28,7 @@ class Motor:
     gohoseq = False
     
 class DRE:
+    lastconnection = None
     m1 = Motor()
     m2 = Motor()
     m3 = Motor()
