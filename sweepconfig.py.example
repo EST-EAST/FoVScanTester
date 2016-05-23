@@ -39,8 +39,17 @@ cte_motor_comp_xport = 24
 
 #### Camera configuration
 
-cte_use_cam = True
+cte_use_cvcam = False
 
-if cte_use_cam:
-	cte_camsource = 0
- 
+if cte_use_cvcam:
+    cte_camsource = 0
+
+cte_use_photocam = True
+
+if cte_use_photocam:
+    #cte_cameractrl_path = "C:\\Program Files (x86)\\digiCamControl\\"
+    cte_cameractrl_path = ""
+    cte_cameractrl_command = "CameraControlCmd.exe"
+    cte_cameractrl_capturecmd = "/capture"
+    cte_cameractrl_filenamecmd = "/filename"
+    cte_cameractrl_filename_root = "FoV"

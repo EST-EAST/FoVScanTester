@@ -68,3 +68,14 @@ target/
 /doc/commands.txt
 
 /nbproject/private
+/CameraControl.Core.dll
+/CameraControl.Devices.dll
+/CameraControl.PluginManager.exe
+/CameraControl.exe
+/CameraControlCmd.exe
+/CameraControlRemoteCmd.exe
+/Canon.Eos.Framework.dll
+/Interop.PortableDeviceApiLib.dll
+/Interop.PortableDeviceTypesLib.dll
+/PortableDeviceLib.dll
+/log4net.dll

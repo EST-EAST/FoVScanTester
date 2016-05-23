@@ -1,8 +1,10 @@
-import cv2
 import sweepconfig
 import sys
 sys.path.insert(0, './fsm')
 import FoV
+
+if sweepconfig.cte_use_cvcam:
+    import cv2
 
 if not(sweepconfig.cte_use_socket):
     import serial
@@ -28,7 +30,8 @@ else:
     
 FoV.dre.cte_use_socket = sweepconfig.cte_use_socket
 
-cte_camsource = sweepconfig.cte_camsource
+if sweepconfig.cte_use_cvcam:
+    cte_camsource = sweepconfig.cte_camsource
 
 cte_verbose = True
 cte_fileprefix = "frame"
