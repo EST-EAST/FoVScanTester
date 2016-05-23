@@ -231,48 +231,48 @@ def commandMotor(x,y):
         cmd_str = str(sweepconfig.cte_motor_x)+"NP"
         sendMotorCommand(cmd_str)
         print("Cmd: "+ cmd_str)
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
 
         cmdx_str = str(sweepconfig.cte_motor_x)+"LA%04d" % (lsx_pos)
         sendMotorCommand(cmdx_str)
         print(cmdx_str)
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
 
         # Program the motor to warn when the command is done
         cmd_str = str(sweepconfig.cte_motor_y)+"NP"
         sendMotorCommand(cmd_str)
         print(cmd_str)
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
 
         cmdy_str = str(sweepconfig.cte_motor_y)+"LA%04d" % (lsy_pos)
         sendMotorCommand(cmdy_str)
         print(cmdy_str)
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
 
         # Program the motor to warn when the command is done
         cmd_str = str(sweepconfig.cte_motor_comp)+"NP"
         sendMotorCommand(cmd_str)
         print(cmd_str)
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
 
         cmdcomp_str = str(sweepconfig.cte_motor_comp)+"LA%04d" % (lscomp_pos)
         sendMotorCommand(cmdcomp_str)
         print(cmdcomp_str)        
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
 
         numberOfPReceived=0
         # Move the motor
         cmdx_str = str(sweepconfig.cte_motor_x)+"M"
         sendMotorCommand(cmdx_str)
         print(cmdx_str)
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
         if (r=="p"):
             numberOfPReceived+=1
         print("Number of P: "+str(numberOfPReceived))
@@ -280,8 +280,8 @@ def commandMotor(x,y):
         cmdy_str = str(sweepconfig.cte_motor_y)+"M"
         sendMotorCommand(cmdy_str)
         print("Cmd:"+cmdy_str)
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
         if (r=="p"):
             numberOfPReceived+=1        
         print("Number of P: "+str(numberOfPReceived))
@@ -289,29 +289,29 @@ def commandMotor(x,y):
         cmdcomp_str = str(sweepconfig.cte_motor_comp)+"M"
         sendMotorCommand(cmdcomp_str)
         print("Cmd:"+cmdcomp_str)
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
         if (r=="p"):
             numberOfPReceived+=1        
         print("Number of P: "+str(numberOfPReceived))
 
-	# Wait for command responses
-	print("Waiting Motors to finish")
+        # Wait for command responses
+        print("Waiting Motors to finish")
         
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
         if (r=="p"):
             numberOfPReceived+=1        
         print("Number of P: "+str(numberOfPReceived))
         
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
         if (r=="p"):
             numberOfPReceived+=1        
         print("Number of P: "+str(numberOfPReceived))
 
-	r=getMotorResponse()
-	print("Resp:"+r)
+        r=getMotorResponse()
+        print("Resp:"+r)
         if (r=="p"):
             numberOfPReceived+=1        
         print("Number of P: "+str(numberOfPReceived))
@@ -320,7 +320,6 @@ def commandMotor(x,y):
             ret = 0
         else:
             ret = -1
-        print("Number of P: "+str(numberOfPReceived))
 
     return ret,lsx_pos,lsy_pos,lscomp_pos
 
@@ -343,29 +342,29 @@ def stepDone():
     return ret
 
 def motorPositions():
-	# Obtain final positions
-	cmd_str = str(sweepconfig.cte_motor_x)+"POS"
-	sendMotorCommand(cmd_str)
-	print("PosCmd:"+cmd_str)
-	r=getMotorResponse()
-	print("PosResp:"+r)
-	mx_fdback=int(r)
+    # Obtain final positions
+    cmd_str = str(sweepconfig.cte_motor_x)+"POS"
+    sendMotorCommand(cmd_str)
+    print("PosCmd:"+cmd_str)
+    r=getMotorResponse()
+    print("PosResp:"+r)
+    mx_fdback=int(r)
 
-        cmd_str = str(sweepconfig.cte_motor_y)+"POS"
-	sendMotorCommand(cmd_str)
-	print("PosCmd:"+cmd_str)
-	r=getMotorResponse()
-	print("PosResp:"+r)
-	my_fdback=int(r)
+    cmd_str = str(sweepconfig.cte_motor_y)+"POS"
+    sendMotorCommand(cmd_str)
+    print("PosCmd:"+cmd_str)
+    r=getMotorResponse()
+    print("PosResp:"+r)
+    my_fdback=int(r)
 
-	cmd_str = str(sweepconfig.cte_motor_comp)+"POS"
-	sendMotorCommand(cmd_str)
-	print("PosCmd:"+cmd_str)
-	r=getMotorResponse()
-	print("PosResp:"+r)
-	mcomp_fdback=int(r)
+    cmd_str = str(sweepconfig.cte_motor_comp)+"POS"
+    sendMotorCommand(cmd_str)
+    print("PosCmd:"+cmd_str)
+    r=getMotorResponse()
+    print("PosResp:"+r)
+    mcomp_fdback=int(r)
 
-	return mx_fdback, my_fdback, mcomp_fdback
+    return mx_fdback, my_fdback, mcomp_fdback
 
 def motorClose():
     if not(sweepconfig.cte_use_socket):
