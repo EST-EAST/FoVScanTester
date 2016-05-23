@@ -10,7 +10,7 @@ import sys
 sys.path.insert(0, './fsm')
 
 import FoV
-
+from thread import *
 from datetime import datetime
 
 cte_stepTime=1000
@@ -52,11 +52,37 @@ def m3sim(conn):
     #print("Voy simulando el motor: "+str(FoV.dre.m2.setpoint)+" "+str(FoV.dre.m2.pos))
     FoV.M3Sim()
     print("Saliendo del simulador") 
-        
+
+def processCommand():
+    readCommand()
+    print "Arrived command: " + FoV.dre.command_rx_buf
+    FoV.dre.response = ""
+    FoV.CmdDispatcher()
+    print "Decoder executed"
+    if (FoV.dre.m1.req):
+        FoV.M1()
+        print "M1 simulator executed"
+        FoV.dre.response = FoV.dre.m1.resp
+        print "M1 Response to send " + FoV.dre.response
+        sendResponse()
+    if (FoV.dre.m2.req):
+        FoV.M2()
+        print "M2 simulator executed"
+        FoV.dre.response = FoV.dre.m2.resp
+        print "M2 Response to send " + FoV.dre.response
+        sendResponse()
+    if (FoV.dre.m3.req):
+        FoV.M3()
+        print "M3 simulator executed"
+        FoV.dre.response = FoV.dre.m3.resp
+        print "M3 Response to send2 " + FoV.dre.response
+        sendResponse()
+        print("Hecho!")
+
+
 #Function for handling connections. This will be used to create threads
 def clientthread(conn):
-    import FoV
-    
+
     #Sending message to connected client
     conn.send('Welcome to the server. Type something and hit enter\n') #send only takes string
     FoV.dre.ser = conn
@@ -87,39 +113,7 @@ def clientthread(conn):
             if (len(data)>=1):
                 FoV.dre.rx_buffer=FoV.dre.rx_buffer+str(data)
                 print("Buffer data"+FoV.dre.rx_buffer)
-                readCommand()
-                '''
-                try:
-                    print "hiola"
-                    print "Arrived command: "+FoV.dre.command_rx_buf
-                    print "adios"
-                except: # catch *all* exceptions
-                    e = sys.exc_info()[0]
-                    print e
-                ''' 
-                print "Arrived command: "+FoV.dre.command_rx_buf   
-                FoV.dre.response=""
-                FoV.CmdDispatcher()
-                print "Decoder executed"
-                if (FoV.dre.m1.req):
-                    FoV.M1()
-                    print "M1 simulator executed"
-                    FoV.dre.response = FoV.dre.m1.resp
-                    print "M1 Response to send "+FoV.dre.response
-                    sendResponse()            
-                if (FoV.dre.m2.req):
-                    FoV.M2()
-                    print "M2 simulator executed"
-                    FoV.dre.response = FoV.dre.m2.resp
-                    print "M2 Response to send "+FoV.dre.response
-                    sendResponse()
-                if (FoV.dre.m3.req):
-                    FoV.M3()
-                    print "M3 simulator executed"
-                    FoV.dre.response = FoV.dre.m3.resp
-                    print "M3 Response to send2 "+FoV.dre.response
-                    sendResponse()
-                    print("Hecho!")
+                processCommand()
     print("Cierro la conexion")
     FoV.dre.m1.simstop=True
     FoV.dre.m2.simstop=True
@@ -142,11 +136,25 @@ if not(sweepconfig.cte_use_socket):
         dsrdtr=False,
         xonxoff=True
     )
-    FoV.dre.ser = ser   
+    FoV.dre.ser = ser
+    FoV.dre.m1.simstop = False
+    idsim = start_new_thread(m1sim, (ser,))
+    FoV.dre.m2.simstop = False
+    idsim2 = start_new_thread(m2sim, (ser,))
+    FoV.dre.m3.simstop = False
+    idsim3 = start_new_thread(m3sim, (ser,))
+    endthread=False
+    while not(endthread):
+        processCommand()
+
+    print("Closing simulators and connection")
+    FoV.dre.m1.simstop=True
+    FoV.dre.m2.simstop=True
+    FoV.dre.m3.simstop=True
+    ser.close()
 else:
     import socket
     import sys
-    from thread import *
 
     sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print 'Socket created'
@@ -163,25 +171,17 @@ else:
 
     FoV.dre.cte_use_socket = sweepconfig.cte_use_socket
 
-    if not(sweepconfig.cte_use_socket):
-        while (True):
-            print ("Me pongo a leer el comando")
-            command=readCommand()
-            print("Comando: "+command)
-            sendResponse(len(command))
-        ser.close()
-    else:     
-        while (True):
-            #wait to accept a connection - blocking call
-            conn, addr = sckt.accept()
-            print 'Connected with ' + addr[0] + ':' + str(addr[1])
-            #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
-            conn.settimeout(10)
-            FoV.dre.m1.simstop=False
-            idsim=start_new_thread(m1sim,(conn,))
-            FoV.dre.m2.simstop=False
-            idsim2=start_new_thread(m2sim,(conn,))
-            FoV.dre.m3.simstop=False
-            idsim3=start_new_thread(m3sim,(conn,))
-            start_new_thread(clientthread ,(conn,))
-        sckt.close
+    while (True):
+        #wait to accept a connection - blocking call
+        conn, addr = sckt.accept()
+        print 'Connected with ' + addr[0] + ':' + str(addr[1])
+        #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
+        conn.settimeout(10)
+        FoV.dre.m1.simstop=False
+        idsim=start_new_thread(m1sim,(conn,))
+        FoV.dre.m2.simstop=False
+        idsim2=start_new_thread(m2sim,(conn,))
+        FoV.dre.m3.simstop=False
+        idsim3=start_new_thread(m3sim,(conn,))
+        start_new_thread(clientthread ,(conn,))
+    sckt.close

@@ -7,7 +7,7 @@ Created on Tue May 17 17:51:05 2016
 
 #### Connection configuration
 
-cte_use_socket = True
+cte_use_socket = False
 
 if not(cte_use_socket):
     # Serial connection configuration
@@ -37,12 +37,18 @@ cte_motor_x_xport = 22
 cte_motor_y_xport = 23
 cte_motor_comp_xport = 24
 
+# App configuration
+
+cte_verbose = True
+cte_fileprefix = "frame"
+
 #### Camera configuration
 
-cte_use_cvcam = False
+cte_use_cvcam = True
 
 if cte_use_cvcam:
     cte_camsource = 0
+    cte_framePath = "./00_acquired/"
 
 cte_use_photocam = True
 
