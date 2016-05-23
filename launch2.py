@@ -32,7 +32,7 @@ def import_URL(URL):
 
 ### Commands the motor to the position of that step
 def commandMotor(x,y):
-    if (sws.cte_verbose):
+    if (sweepconfig.cte_verbose):
       print ("Sweep step X: " + str(x) + " Y: " + str(y))
       return sws.commandMotor(x,y)
 
@@ -82,7 +82,7 @@ timestr=strftime("%Y%m%d%H%M%S", gmtime())
 if sweepconfig.cte_use_cvcam:
     # Cam has the video source
     cam = cv2.VideoCapture(sws.cte_camsource)
-    if (sws.cte_verbose):
+    if (sweepconfig.cte_verbose):
         print ("Camera resolution:")
         print ("* Horizontal: " + str(cam.get(cv2.CAP_PROP_FRAME_WIDTH)))
         print ("* Vertical: "+ str(cam.get(cv2.CAP_PROP_FRAME_HEIGHT)))
@@ -125,17 +125,17 @@ while (done!=-1 and curStep < endStep ):
         if sweepconfig.cte_use_cvcam:
             ret, frame = cam.read()
             #save to disk
-            strg=sws.cte_fileprefix+'%s_%03d_%03d.png' % (timestr, sweep_ex_id, curStep)
-            cv2.imwrite(sws.cte_framePath + strg, frame)
+            strg=sweepconfig.cte_fileprefix+'%s_%03d_%03d.png' % (timestr, sweep_ex_id, curStep)
+            cv2.imwrite(sweepconfig.cte_framePath + strg, frame)
             #show the image
             cv2.imshow('Current Frame', frame)
         if sweepconfig.cte_use_photocam:
             # We configure the image capture
-            strg=sws.cte_fileprefix+'%s_%03d_%03d.jpg' % (timestr, sweep_ex_id, curStep)
+            strg='D%s_%03d_%03d.jpg' % (timestr, sweep_ex_id, curStep)
             cmd=sweepconfig.cte_cameractrl_path+sweepconfig.cte_cameractrl_command
-            args=sweepconfig.cte_cameractrl_filenamecmd+" "+sws.cte_framePath+strg
+            args=sweepconfig.cte_cameractrl_filenamecmd+" "+strg
             print("Photo set filename: "+cmd+" "+args)
-            #subprocess.check_output([cmd,args])
+            subprocess.check_output([cmd,args])
             args=sweepconfig.cte_cameractrl_capturecmd
             print("Photo capture frame: "+cmd+" "+args)
             subprocess.check_output([cmd,args])

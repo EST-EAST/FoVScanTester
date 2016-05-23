@@ -33,9 +33,6 @@ FoV.dre.cte_use_socket = sweepconfig.cte_use_socket
 if sweepconfig.cte_use_cvcam:
     cte_camsource = sweepconfig.cte_camsource
 
-cte_verbose = True
-cte_fileprefix = "frame"
-cte_framePath = "./00_acquired/"
 
 cte_stepTime=1000
 
