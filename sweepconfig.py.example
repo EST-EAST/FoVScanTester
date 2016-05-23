@@ -5,17 +5,19 @@ Created on Tue May 17 17:51:05 2016
 @author: txinto
 """
 
+#### Connection configuration
+
 cte_use_socket = True
 
 if not(cte_use_socket):
     # Serial connection configuration
     import os
     if (os.name == 'nt'):
-        cte_serial_port = 'COM1:'
+        cte_serial_port = 'COM4:'
     else:
         cte_serial_port = '/dev/ttyUSB0'
     if (os.name == 'nt'):
-        cte_serial_port_loopback = 'COM2:'
+        cte_serial_port_loopback = 'COM5:'
     else:
         cte_serial_port_loopback = '/dev/ttyUSB1'
 
@@ -25,4 +27,20 @@ else:
     cte_socket_ip = socket.gethostname()
     cte_socket_port = 10001
 
-cte_camsource = 0
+#### Motor configuration
+
+cte_motor_x = 1
+cte_motor_y = 2
+cte_motor_comp = 3
+
+cte_motor_x_xport = 22
+cte_motor_y_xport = 23
+cte_motor_comp_xport = 24
+
+#### Camera configuration
+
+cte_use_cam = True
+
+if cte_use_cam:
+	cte_camsource = 0
+ 

@@ -56,8 +56,8 @@ def dbinsert(dbc, curStep, stepX, stepY,stepXcoord,stepYcoord,mx,my,mcomp,mx_fdb
     
 def dbprepare(dbc):
     dbc.execute(sqlprepare)
-    return True	
-	
+    return True
+    
 ###### END Functions ############
 
 ###### Automatically generated code ###########
@@ -82,8 +82,8 @@ if sweepconfig.cte_use_cam:
 
     if (sws.cte_verbose):
         print ("Camera resolution:")
-	print ("* Horizontal: " + str(cam.get(cv2.CAP_PROP_FRAME_WIDTH)))
-	print ("* Vertical: "+ str(cam.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+        print ("* Horizontal: " + str(cam.get(cv2.CAP_PROP_FRAME_WIDTH)))
+        print ("* Vertical: "+ str(cam.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 
 # Prepare the Database
 db = sqlite3.connect('./db/log.sqlite3')
@@ -114,34 +114,34 @@ while (done!=-1 and curStep < endStep ):
     done,mx,my,mcomp=commandMotor(stepXcoord,stepYcoord)
     # Wait command to end
     while (done==0):
-      done=stepDone();
+        done=stepDone();
     # END Command motor position for this step    
     if (done!=-1):
       # Acquire image
-      dtcam = datetime.now()
-      if sweepconfig.cte_use_cam:
-          ret, frame = cam.read()
-          #save to disk
-          strg=sws.cte_fileprefix+'%s_%03d_%03d.png' % (timestr, sweep_ex_id, curStep)
-          cv2.imwrite(sws.cte_framePath + strg, frame)
-          #show the image
-          cv2.imshow('Current Frame', frame)
-      # acquire the motor status
-      mx_fdback,my_fdback,mcomp_fdback = sws.motorPositions()
-      print ("Motor | mx: "+str(mx_fdback)+", my: "+str(my_fdback)+", mcomp: "+str(mcomp_fdback))
-      # Web information upload
-      #r = requests.post("http://localhost:3000/sweep_eng_runs/1/sweep_ex_logs/new", data={'sweep_ex_log': {"sweep_eng_run_id":"1", "a":"6", "b":"8", "c":"9"},"sweep_eng_run_id":"1" })
-      #print(r.status_code, r.reason)
-      # BD information store
-      done=dbinsert(dbc,curStep, stepX, stepY,stepXcoord, stepYcoord,mx,my,mcomp,mx_fdback,my_fdback,mcomp_fdback,timestr,dtinit,dtcam)
-      curStep += 1
+          dtcam = datetime.now()
+          if sweepconfig.cte_use_cam:
+              ret, frame = cam.read()
+              #save to disk
+              strg=sws.cte_fileprefix+'%s_%03d_%03d.png' % (timestr, sweep_ex_id, curStep)
+              cv2.imwrite(sws.cte_framePath + strg, frame)
+              #show the image
+              cv2.imshow('Current Frame', frame)
+          # acquire the motor status
+          mx_fdback,my_fdback,mcomp_fdback = sws.motorPositions()
+          print ("Motor | mx: "+str(mx_fdback)+", my: "+str(my_fdback)+", mcomp: "+str(mcomp_fdback))
+          # Web information upload
+          #r = requests.post("http://localhost:3000/sweep_eng_runs/1/sweep_ex_logs/new", data={'sweep_ex_log': {"sweep_eng_run_id":"1", "a":"6", "b":"8", "c":"9"},"sweep_eng_run_id":"1" })
+          #print(r.status_code, r.reason)
+          # BD information store
+          done=dbinsert(dbc,curStep, stepX, stepY,stepXcoord, stepYcoord,mx,my,mcomp,mx_fdback,my_fdback,mcomp_fdback,timestr,dtinit,dtcam)
+          curStep += 1
         
 # End of program, steps have finished or someone has cancelled the scan process
 if (curStep < len(steps)):
   # Scan process was cancelled
-  if (sws.cte_verbose):
-    print ("Scan process was cancelled")
-    dummy=0 # Dummy for avoiding indentation failures
+    if (sws.cte_verbose):
+        print ("Scan process was cancelled")
+        dummy=0 # Dummy for avoiding indentation failures
 
 db.commit()
 db.close()
