@@ -171,6 +171,7 @@ def goHome(idx):
         incrementPendingP()
         incrementPendingOk()
         consumePendingOks()
+        consumePendingPs()
 
         cmd_str = prefixX+"HOSP%3d" % (cte_vi[idx])
         sendMotorCommand(cmd_str)
@@ -358,6 +359,7 @@ cte_stepTime = cte_waitTime * 1000     # Time to wait between steps, apart from 
 
 # Waits for a defined time for user to press a key
 def waitKey(t):
+    '''
     import time, msvcrt
     startTime=time.time()
 
@@ -371,6 +373,9 @@ def waitKey(t):
         elif time.time() - startTime > t:
             done = True
     return ret
+    '''
+    return -1
+
 
 # Checks if the sweep step has been done.  It also returns if the sweep has to be cancelled
 def stepDone():
