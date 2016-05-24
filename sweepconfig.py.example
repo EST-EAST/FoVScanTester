@@ -44,13 +44,13 @@ cte_fileprefix = "frame"
 
 #### Camera configuration
 
-cte_use_cvcam = True
+cte_use_cvcam = False
 
 if cte_use_cvcam:
     cte_camsource = 0
     cte_framePath = "./00_acquired/"
 
-cte_use_photocam = True
+cte_use_photocam = False
 
 if cte_use_photocam:
     #cte_cameractrl_path = "C:\\Program Files (x86)\\digiCamControl\\"
@@ -59,3 +59,7 @@ if cte_use_photocam:
     cte_cameractrl_capturecmd = "/capture"
     cte_cameractrl_filenamecmd = "/filename"
     cte_cameractrl_filename_root = "FoV"
+
+cte_use_motor_x = True
+cte_use_motor_y = True
+cte_use_motor_comp = True

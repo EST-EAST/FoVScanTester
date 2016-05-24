@@ -8,6 +8,11 @@ if sweepconfig.cte_use_cvcam:
 
 if not(sweepconfig.cte_use_socket):
     import serial
+
+    FoV.dre.m1port = sweepconfig.cte_motor_x_xport
+    FoV.dre.m2port = sweepconfig.cte_motor_y_xport
+    FoV.dre.m3port = sweepconfig.cte_motor_comp_xport
+
     cte_serial_port = sweepconfig.cte_serial_port
     print "Chosen serial port: "+cte_serial_port
     ser = serial.Serial(
@@ -73,10 +78,18 @@ lsx_pos = 0.0
 lsy_pos = 0.0
 lscomp_pos = 0.0
 
+if (sweepconfig.cte_use_socket):
+    prefixX = ""
+    prefixY = ""
+    prefixComp = ""
+else:
+    prefixX = str(sweepconfig.cte_motor_x)
+    prefixY = str(sweepconfig.cte_motor_y)
+    prefixComp = str(sweepconfig.cte_motor_comp)
+
 def getMotorResponse():
     FoV.getCtrlResponse()
     return FoV.dre.command_rx_buf
-
 
 def sendMotorCommand(cmd_str):
     #ser.write(cmd_str+'\13')
@@ -84,124 +97,199 @@ def sendMotorCommand(cmd_str):
     FoV.dre.command_tx_buf = cmd_str
     FoV.sendCtrlCommand()
 
+def sendXportBegin(m):
+    if (sweepconfig.cte_use_socket):
+        cmdx_str = "#" + str(m)
+        sendMotorCommand(cmdx_str)
+        print(cmdx_str)
+
+def sendXportEnd():
+    if (sweepconfig.cte_use_socket):
+        cmdx_str = "@"
+        sendMotorCommand(cmdx_str)
+        print(cmdx_str)
+
 # Commands home and puts the window at the central position.
 def resetMotor():
-    # Programming the Home speeds
-    cmdx_str = str(sweepconfig.cte_motor_x)+"V%3d" % (cte_vhx)
-    sendMotorCommand(cmdx_str)
-    print(cmdx_str)
-    print(getMotorResponse())
 
-    cmdy_str = str(sweepconfig.cte_motor_y)+"V%3d" % (cte_vhy)
-    sendMotorCommand(cmdy_str)
-    print(cmdy_str)
-    print(getMotorResponse())
-    
-    cmdcomp_str = str(sweepconfig.cte_motor_comp)+"V%3d" % (cte_vhcomp)
-    sendMotorCommand(cmdcomp_str)
-    print(cmdcomp_str)
-    print(getMotorResponse())
-    
-    #Execute the home sequence:
-    cmdx_str = str(sweepconfig.cte_motor_x)+"GOHOSEQ"
-    sendMotorCommand(cmdx_str)
-    print(cmdx_str)
-    print(getMotorResponse())
+    if (sweepconfig.cte_use_motor_x):
+        # Programming the Home speeds
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        cmdx_str = prefixX+"V%3d" % (cte_vhx)
+        sendMotorCommand(cmdx_str)
+        print(cmdx_str)
+        print(getMotorResponse())
+        sendXportEnd()
 
-    cmdy_str = str(sweepconfig.cte_motor_y)+"GOHOSEQ"
-    sendMotorCommand(cmdy_str)
-    print(cmdy_str)
-    print(getMotorResponse())
-    
-    cmdcomp_str = str(sweepconfig.cte_motor_comp)+"GOHOSEQ"
-    sendMotorCommand(cmdcomp_str)
-    print(cmdcomp_str)
-    print(getMotorResponse())
-    
-    # Programming the Index speeds
-    cmdx_str = str(sweepconfig.cte_motor_x)+"V%03d" % (cte_vix)
-    sendMotorCommand(cmdx_str)
-    print(cmdx_str)
-    print(getMotorResponse())
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmdy_str = prefixY+"V%3d" % (cte_vhy)
+        sendMotorCommand(cmdy_str)
+        print(cmdy_str)
+        print(getMotorResponse())
+        sendXportEnd()
 
-    cmdy_str = str(sweepconfig.cte_motor_y)+"V%03d" % (cte_viy)
-    sendMotorCommand(cmdy_str)
-    print(cmdy_str)
-    print(getMotorResponse())
-    
-    cmdcomp_str = str(sweepconfig.cte_motor_comp)+"V%03d" % (cte_vicomp)
-    sendMotorCommand(cmdcomp_str)
-    print(cmdcomp_str)
-    print(getMotorResponse())
-    
-    # Find the indexes
-    cmdx_str = str(sweepconfig.cte_motor_x)+"GOIX"
-    sendMotorCommand(cmdx_str)
-    print(cmdx_str)
-    print(getMotorResponse())
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmdcomp_str = prefixComp+"V%3d" % (cte_vhcomp)
+        sendMotorCommand(cmdcomp_str)
+        print(cmdcomp_str)
+        print(getMotorResponse())
+        sendXportEnd()
 
-    cmdy_str = str(sweepconfig.cte_motor_y)+"GOIX"
-    sendMotorCommand(cmdy_str)
-    print(cmdy_str)
-    print(getMotorResponse())
-    
-    cmdcomp_str = str(sweepconfig.cte_motor_comp)+"GOIX"
-    sendMotorCommand(cmdcomp_str)
-    print(cmdcomp_str)
-    print(getMotorResponse())
-    
+    if (sweepconfig.cte_use_motor_x):
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        #Execute the home sequence:
+        cmdx_str = prefixX+"GOHOSEQ"
+        sendMotorCommand(cmdx_str)
+        print(cmdx_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmdy_str = prefixY+"GOHOSEQ"
+        sendMotorCommand(cmdy_str)
+        print(cmdy_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmdcomp_str = prefixComp+"GOHOSEQ"
+        sendMotorCommand(cmdcomp_str)
+        print(cmdcomp_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_x):
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        # Programming the Index speeds
+        cmdx_str = prefixX+"V%03d" % (cte_vix)
+        sendMotorCommand(cmdx_str)
+        print(cmdx_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmdy_str = prefixY+"V%03d" % (cte_viy)
+        sendMotorCommand(cmdy_str)
+        print(cmdy_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmdcomp_str = prefixComp+"V%03d" % (cte_vicomp)
+        sendMotorCommand(cmdcomp_str)
+        print(cmdcomp_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_x):
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        # Find the indexes
+        cmdx_str = prefixX+"GOIX"
+        sendMotorCommand(cmdx_str)
+        print(cmdx_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmdy_str = prefixY+"GOIX"
+        sendMotorCommand(cmdy_str)
+        print(cmdy_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmdcomp_str = prefixComp+"GOIX"
+        sendMotorCommand(cmdcomp_str)
+        print(cmdcomp_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
     # Calculate the center position of the window over the FoV
     lsx_pos = cte_lsx_zero
     lsy_pos = cte_lsy_zero
     lscomp_pos = cte_lscomp_zero
     
-    # Set center position as target for the movement
-    cmdx_str = str(sweepconfig.cte_motor_x)+"LA%05d" % (lsx_pos)
-    sendMotorCommand(cmdx_str)
-    print(cmdx_str)
-    print(getMotorResponse())
+    if (sweepconfig.cte_use_motor_x):
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        # Set center position as target for the movement
+        cmdx_str = prefixX+"LA%05d" % (lsx_pos)
+        sendMotorCommand(cmdx_str)
+        print(cmdx_str)
+        print(getMotorResponse())
+        sendXportEnd()
 
-    cmdy_str = str(sweepconfig.cte_motor_y)+"LA%05d" % (lsy_pos)
-    sendMotorCommand(cmdy_str)
-    print(cmdy_str)
-    print(getMotorResponse())
-    
-    cmdcomp_str = str(sweepconfig.cte_motor_comp)+"LA%05d" % (lscomp_pos)
-    sendMotorCommand(cmdcomp_str)
-    print(cmdcomp_str)
-    print(getMotorResponse())
-    
-    cmdx_str = str(sweepconfig.cte_motor_x)+"V%03d" % (cte_vx)
-    sendMotorCommand(cmdx_str)
-    print(cmdx_str)
-    print(getMotorResponse())
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmdy_str = prefixY+"LA%05d" % (lsy_pos)
+        sendMotorCommand(cmdy_str)
+        print(cmdy_str)
+        print(getMotorResponse())
+        sendXportEnd()
 
-    cmdy_str = str(sweepconfig.cte_motor_y)+"V%03d" % (cte_vy)
-    sendMotorCommand(cmdy_str)
-    print(cmdy_str)
-    print(getMotorResponse())    
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmdcomp_str = prefixComp+"LA%05d" % (lscomp_pos)
+        sendMotorCommand(cmdcomp_str)
+        print(cmdcomp_str)
+        print(getMotorResponse())
+        sendXportEnd()
 
-    cmdcomp_str = str(sweepconfig.cte_motor_comp)+"V%03d" % (cte_vcomp)
-    sendMotorCommand(cmdcomp_str)
-    print(cmdcomp_str)
-    print(getMotorResponse())
-    
-    # Move the motor
-    cmdx_str = str(sweepconfig.cte_motor_x)+"M"
-    sendMotorCommand(cmdx_str)
-    print(cmdx_str)
-    print(getMotorResponse())
+    if (sweepconfig.cte_use_motor_x):
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        cmdx_str = prefixX+"V%03d" % (cte_vx)
+        sendMotorCommand(cmdx_str)
+        print(cmdx_str)
+        print(getMotorResponse())
+        sendXportEnd()
 
-    cmdy_str = str(sweepconfig.cte_motor_y)+"M"
-    sendMotorCommand(cmdy_str)
-    print(cmdy_str)
-    print(getMotorResponse())
-    
-    cmdcomp_str = str(sweepconfig.cte_motor_comp)+"M"
-    sendMotorCommand(cmdcomp_str)
-    print(cmdcomp_str)
-    print(getMotorResponse())
-    
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmdy_str = prefixY+"V%03d" % (cte_vy)
+        sendMotorCommand(cmdy_str)
+        print(cmdy_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmdcomp_str = prefixComp+"V%03d" % (cte_vcomp)
+        sendMotorCommand(cmdcomp_str)
+        print(cmdcomp_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_x):
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        # Move the motor
+        cmdx_str = prefixX+"M"
+        sendMotorCommand(cmdx_str)
+        print(cmdx_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmdy_str = prefixY+"M"
+        sendMotorCommand(cmdy_str)
+        print(cmdy_str)
+        print(getMotorResponse())
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmdcomp_str = prefixComp+"M"
+        sendMotorCommand(cmdcomp_str)
+        print(cmdcomp_str)
+        print(getMotorResponse())
+        sendXportEnd()
 
 def commandMotor(x,y):
     ret = 0
@@ -227,96 +315,117 @@ def commandMotor(x,y):
         # send the commands
 
         # Program the motor to warn when the command is done
+        if (sweepconfig.cte_use_motor_x):
+            sendXportBegin(sweepconfig.cte_motor_x_xport)
+            cmd_str = prefixX+"NP"
+            sendMotorCommand(cmd_str)
+            print("Cmd: "+ cmd_str)
+            r=getMotorResponse()
+            print("Resp:"+r)
 
-        cmd_str = str(sweepconfig.cte_motor_x)+"NP"
-        sendMotorCommand(cmd_str)
-        print("Cmd: "+ cmd_str)
-        r=getMotorResponse()
-        print("Resp:"+r)
+            cmdx_str = prefixX+"LA%04d" % (lsx_pos)
+            sendMotorCommand(cmdx_str)
+            print(cmdx_str)
+            r=getMotorResponse()
+            print("Resp:"+r)
+            sendXportEnd()
 
-        cmdx_str = str(sweepconfig.cte_motor_x)+"LA%04d" % (lsx_pos)
-        sendMotorCommand(cmdx_str)
-        print(cmdx_str)
-        r=getMotorResponse()
-        print("Resp:"+r)
+        if (sweepconfig.cte_use_motor_y):
+            sendXportBegin(sweepconfig.cte_motor_y_xport)
+            # Program the motor to warn when the command is done
+            cmd_str = prefixY+"NP"
+            sendMotorCommand(cmd_str)
+            print(cmd_str)
+            r=getMotorResponse()
+            print("Resp:"+r)
 
-        # Program the motor to warn when the command is done
-        cmd_str = str(sweepconfig.cte_motor_y)+"NP"
-        sendMotorCommand(cmd_str)
-        print(cmd_str)
-        r=getMotorResponse()
-        print("Resp:"+r)
+            cmdy_str = prefixY+"LA%04d" % (lsy_pos)
+            sendMotorCommand(cmdy_str)
+            print(cmdy_str)
+            r=getMotorResponse()
+            print("Resp:"+r)
+            sendXportEnd()
 
-        cmdy_str = str(sweepconfig.cte_motor_y)+"LA%04d" % (lsy_pos)
-        sendMotorCommand(cmdy_str)
-        print(cmdy_str)
-        r=getMotorResponse()
-        print("Resp:"+r)
+        if (sweepconfig.cte_use_motor_comp):
+            sendXportBegin(sweepconfig.cte_motor_comp_xport)
+            # Program the motor to warn when the command is done
+            cmd_str = prefixComp+"NP"
+            sendMotorCommand(cmd_str)
+            print(cmd_str)
+            r=getMotorResponse()
+            print("Resp:"+r)
 
-        # Program the motor to warn when the command is done
-        cmd_str = str(sweepconfig.cte_motor_comp)+"NP"
-        sendMotorCommand(cmd_str)
-        print(cmd_str)
-        r=getMotorResponse()
-        print("Resp:"+r)
+            cmdcomp_str = prefixComp+"LA%04d" % (lscomp_pos)
+            sendMotorCommand(cmdcomp_str)
+            print(cmdcomp_str)
+            r=getMotorResponse()
+            print("Resp:"+r)
+            sendXportEnd()
 
-        cmdcomp_str = str(sweepconfig.cte_motor_comp)+"LA%04d" % (lscomp_pos)
-        sendMotorCommand(cmdcomp_str)
-        print(cmdcomp_str)        
-        r=getMotorResponse()
-        print("Resp:"+r)
+        numberOfPToRx = 0
+        numberOfOkToRx = 0
 
-        numberOfPReceived=0
-        # Move the motor
-        cmdx_str = str(sweepconfig.cte_motor_x)+"M"
-        sendMotorCommand(cmdx_str)
-        print(cmdx_str)
-        r=getMotorResponse()
-        print("Resp:"+r)
-        if (r=="p"):
-            numberOfPReceived+=1
-        print("Number of P: "+str(numberOfPReceived))
-        
-        cmdy_str = str(sweepconfig.cte_motor_y)+"M"
-        sendMotorCommand(cmdy_str)
-        print("Cmd:"+cmdy_str)
-        r=getMotorResponse()
-        print("Resp:"+r)
-        if (r=="p"):
-            numberOfPReceived+=1        
-        print("Number of P: "+str(numberOfPReceived))
- 
-        cmdcomp_str = str(sweepconfig.cte_motor_comp)+"M"
-        sendMotorCommand(cmdcomp_str)
-        print("Cmd:"+cmdcomp_str)
-        r=getMotorResponse()
-        print("Resp:"+r)
-        if (r=="p"):
-            numberOfPReceived+=1        
-        print("Number of P: "+str(numberOfPReceived))
+        if (sweepconfig.cte_use_motor_x):
+            sendXportBegin(sweepconfig.cte_motor_x_xport)
+            # Move the motor
+            cmdx_str = prefixX+"M"
+            sendMotorCommand(cmdx_str)
+            print(cmdx_str)
+            numberOfPToRx+=1
+            numberOfOkToRx+=1
+            r=getMotorResponse()
+            print("Resp:"+r)
+            if (r=="p"):
+                numberOfPToRx -= 1
+            if (r=="OK"):
+                numberOfOkToRx -= 1
+            print("Number of P to Rx: "+str(numberOfPToRx))
+            sendXportEnd()
+
+        if (sweepconfig.cte_use_motor_y):
+            sendXportBegin(sweepconfig.cte_motor_y_xport)
+            cmdy_str = prefixY+"M"
+            sendMotorCommand(cmdy_str)
+            print("Cmd:"+cmdy_str)
+            numberOfPToRx += 1
+            numberOfOkToRx += 1
+            r=getMotorResponse()
+            print("Resp:"+r)
+            if (r=="p"):
+                numberOfPToRx -= 1
+            if (r=="OK"):
+                numberOfOkToRx -= 1
+            print("Number of P to Rx: " + str(numberOfPToRx))
+            sendXportEnd()
+
+        if (sweepconfig.cte_use_motor_comp):
+            sendXportBegin(sweepconfig.cte_motor_comp_xport)
+            cmdcomp_str = prefixComp+"M"
+            sendMotorCommand(cmdcomp_str)
+            print("Cmd:"+cmdcomp_str)
+            numberOfPToRx += 1
+            numberOfOkToRx+=1
+            r=getMotorResponse()
+            print("Resp:"+r)
+            if (r=="p"):
+                numberOfPToRx-=1
+            if (r=="OK"):
+                numberOfOkToRx-=1
+            print("Number of P to Rx: " + str(numberOfPToRx))
+            sendXportEnd()
 
         # Wait for command responses
-        print("Waiting Motors to finish")
-        
-        r=getMotorResponse()
-        print("Resp:"+r)
-        if (r=="p"):
-            numberOfPReceived+=1        
-        print("Number of P: "+str(numberOfPReceived))
-        
-        r=getMotorResponse()
-        print("Resp:"+r)
-        if (r=="p"):
-            numberOfPReceived+=1        
-        print("Number of P: "+str(numberOfPReceived))
+        while  (numberOfPToRx>0 or numberOfOkToRx>0):
+            print("Waiting "+str(numberOfPToRx)+" Motors to finish")
+            r=getMotorResponse()
+            print("Resp:"+r)
+            if (r=="p"):
+                numberOfPToRx-=1
+            if (r=="OK"):
+                numberOfOkToRx-=1
+            print("Number of P to Rx: " + str(numberOfPToRx))
 
-        r=getMotorResponse()
-        print("Resp:"+r)
-        if (r=="p"):
-            numberOfPReceived+=1        
-        print("Number of P: "+str(numberOfPReceived))
-        
-        if (numberOfPReceived==3):
+        if (numberOfPToRx==0):
             ret = 0
         else:
             ret = -1
@@ -343,26 +452,41 @@ def stepDone():
 
 def motorPositions():
     # Obtain final positions
-    cmd_str = str(sweepconfig.cte_motor_x)+"POS"
-    sendMotorCommand(cmd_str)
-    print("PosCmd:"+cmd_str)
-    r=getMotorResponse()
-    print("PosResp:"+r)
-    mx_fdback=int(r)
+    if (sweepconfig.cte_use_motor_x):
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        cmd_str = prefixX+"POS"
+        sendMotorCommand(cmd_str)
+        print("PosCmd:"+cmd_str)
+        r=getMotorResponse()
+        print("PosResp:"+r)
+        mx_fdback=int(r)
+        sendXportEnd()
+    else:
+        mx_fdback = -1
 
-    cmd_str = str(sweepconfig.cte_motor_y)+"POS"
-    sendMotorCommand(cmd_str)
-    print("PosCmd:"+cmd_str)
-    r=getMotorResponse()
-    print("PosResp:"+r)
-    my_fdback=int(r)
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmd_str = prefixY+"POS"
+        sendMotorCommand(cmd_str)
+        print("PosCmd:"+cmd_str)
+        r=getMotorResponse()
+        print("PosResp:"+r)
+        my_fdback=int(r)
+        sendXportEnd()
+    else:
+        my_fdback = -1
 
-    cmd_str = str(sweepconfig.cte_motor_comp)+"POS"
-    sendMotorCommand(cmd_str)
-    print("PosCmd:"+cmd_str)
-    r=getMotorResponse()
-    print("PosResp:"+r)
-    mcomp_fdback=int(r)
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmd_str = prefixComp+"POS"
+        sendMotorCommand(cmd_str)
+        print("PosCmd:"+cmd_str)
+        r=getMotorResponse()
+        print("PosResp:"+r)
+        mcomp_fdback=int(r)
+        sendXportEnd()
+    else:
+        mcomp_fdback = -1
 
     return mx_fdback, my_fdback, mcomp_fdback
 
@@ -371,4 +495,3 @@ def motorClose():
         ser.close()             # close port
     else:    
         sckt.close              # Close the socket when done    
-

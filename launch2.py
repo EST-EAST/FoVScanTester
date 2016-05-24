@@ -152,7 +152,7 @@ while (done!=-1 and curStep < endStep ):
 # End of program, steps have finished or someone has cancelled the scan process
 if (curStep < len(steps)):
   # Scan process was cancelled
-    if (sws.cte_verbose):
+    if (sweepconfig.cte_verbose):
         print ("Scan process was cancelled")
         dummy=0 # Dummy for avoiding indentation failures
 
