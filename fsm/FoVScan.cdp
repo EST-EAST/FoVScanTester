@@ -1203,8 +1203,9 @@ dre.mX.posarg=int(dre.mX.cmd[2:])</property>
       <property name="id" type="long">129</property>
       <property name="name" type="string">programLR</property>
       <property name="description" type="string">Decode a LR command</property>
-      <property name="code" type="string">dre.mX.lr=True
-dre.mX.posarg=int(dre.mX.cmd[2:])</property>
+      <property name="code" type="string"># LR is similar to LA &#xD;
+dre.mX.la=True
+dre.mX.posarg=dre.mX.pos+int(dre.mX.cmd[2:])</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::programLR#129</property>
       <property name="inline" type="bool">1</property>
@@ -1575,6 +1576,40 @@ else:&#xD;
       <property name="user_retval_decl_place" type="int">0</property>
       <property name="function_modifier" type="int">0</property>
     </object>
+    <object type="udActionItem">
+      <property name="id" type="long">136</property>
+      <property name="name" type="string">programGoHoSeq</property>
+      <property name="description" type="string">GoHoSeq command</property>
+      <property name="code" type="string"># Program GoHoSeq similar to program LA with setpoint = 0&#xD;
+dre.mX.setpoint = 0&#xD;
+dre.mX.m = True&#xD;
+</property>
+      <property name="scope" type="string">&lt;global&gt;</property>
+      <property name="signature" type="string">&lt;global&gt;::programGoHoSeq#136</property>
+      <property name="inline" type="bool">0</property>
+      <property name="retval_data_type" type="int">10</property>
+      <property name="retval_value_type" type="int">0</property>
+      <property name="retval_data_modifier" type="int">0</property>
+      <property name="user_retval_decl_place" type="int">0</property>
+      <property name="function_modifier" type="int">0</property>
+    </object>
+    <object type="udActionItem">
+      <property name="id" type="long">137</property>
+      <property name="name" type="string">programGoIx</property>
+      <property name="description" type="string">Program the GoIndex action</property>
+      <property name="code" type="string"># Program GoIx similar to program LA with setpoint = 0&#xD;
+dre.mX.setpoint = 0&#xD;
+dre.mX.m = True&#xD;
+</property>
+      <property name="scope" type="string">&lt;global&gt;</property>
+      <property name="signature" type="string">&lt;global&gt;::programGoIx#137</property>
+      <property name="inline" type="bool">1</property>
+      <property name="retval_data_type" type="int">10</property>
+      <property name="retval_value_type" type="int">0</property>
+      <property name="retval_data_modifier" type="int">0</property>
+      <property name="user_retval_decl_place" type="int">0</property>
+      <property name="function_modifier" type="int">0</property>
+    </object>
   </object>
   <object type="udCodePackageItem">
     <property name="id" type="long">10</property>
@@ -1828,6 +1863,20 @@ False if the flag must be False to return True</property>
       <property name="user_retval_decl_place" type="int">0</property>
       <property name="function_modifier" type="int">0</property>
     </object>
+    <object type="udConditionItem">
+      <property name="id" type="long">135</property>
+      <property name="name" type="string">escReceived</property>
+      <property name="description" type="string">An Esc character is received to reset the XPort bus.  Simulator must ignore it.</property>
+      <property name="code" type="string">((""+'\27') in dre.command_rx_buf)</property>
+      <property name="scope" type="string">&lt;global&gt;</property>
+      <property name="signature" type="string">&lt;global&gt;::escReceived#135</property>
+      <property name="inline" type="bool">1</property>
+      <property name="retval_data_type" type="int">1</property>
+      <property name="retval_value_type" type="int">0</property>
+      <property name="retval_data_modifier" type="int">0</property>
+      <property name="user_retval_decl_place" type="int">0</property>
+      <property name="function_modifier" type="int">0</property>
+    </object>
   </object>
   <object type="udCodePackageItem">
     <property name="id" type="long">14</property>
@@ -1906,50 +1955,6 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="umlTransitionItem">
-          <property name="id" type="long">5</property>
-          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udTransElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Transition connection</property>
-              <property name="description" type="string">Transition's description...</property>
-              <property name="priority" type="long">2</property>
-              <object type="udConditionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">targetEngine</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::targetEngine#37&lt;motor:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="motor"></item>
-                </property>
-              </object>
-              <object type="udActionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">setM1Cmd</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::setM1Cmd#43</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-              </object>
-            </object>
-          </property>
-          <property name="source" type="long">11</property>
-          <property name="target" type="long">19</property>
-          <property name="target_offset" type="realpoint">0.258065,0.600000</property>
-          <property name="control_points" type="listrealpoint">
-            <item>420.000000,130.000000</item>
-          </property>
-          <property name="label" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">6</property>
-              <property name="relative_position" type="realpoint">-101.000000,-7.000000</property>
-              <property name="size" type="realpoint">218.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 2 : targetEngine(1) / [setM1Cmd()] &gt;&gt;</property>
-              <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlTransitionItem">
           <property name="id" type="long">7</property>
           <property name="relative_position" type="realpoint">510.000000,300.000000</property>
           <property name="user_data" type="serializabledynamic">
@@ -1989,50 +1994,6 @@ False if the flag must be False to return True</property>
               <property name="relative_position" type="realpoint">-101.000000,-7.000000</property>
               <property name="size" type="realpoint">218.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt; 3 : targetEngine(2) / [setM2Cmd()] &gt;&gt;</property>
-              <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlTransitionItem">
-          <property name="id" type="long">9</property>
-          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udTransElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Transition connection</property>
-              <property name="description" type="string">Transition's description...</property>
-              <property name="priority" type="long">4</property>
-              <object type="udConditionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">targetEngine</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::targetEngine#37&lt;motor:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="motor">3</item>
-                </property>
-              </object>
-              <object type="udActionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">setM3Cmd</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::setM3Cmd#45</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-              </object>
-            </object>
-          </property>
-          <property name="source" type="long">11</property>
-          <property name="target" type="long">19</property>
-          <property name="target_offset" type="realpoint">0.200000,0.600000</property>
-          <property name="control_points" type="listrealpoint">
-            <item>500.000000,270.000000</item>
-          </property>
-          <property name="label" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">10</property>
-              <property name="relative_position" type="realpoint">-101.000000,-7.000000</property>
-              <property name="size" type="realpoint">218.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 4 : targetEngine(3) / [setM3Cmd()] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -2139,6 +2100,83 @@ False if the flag must be False to return True</property>
               <property name="relative_position" type="realpoint">-102.000000,3.000000</property>
               <property name="size" type="realpoint">145.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt;  / [resetDispatcher()] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">24</property>
+          <property name="relative_position" type="realpoint">500.000000,260.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">5</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">escReceived</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::escReceived#135</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">11</property>
+          <property name="target" type="long">15</property>
+          <property name="control_points" type="listrealpoint">
+            <item>150.000000,390.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">25</property>
+              <property name="relative_position" type="realpoint">-84.000000,-27.000000</property>
+              <property name="size" type="realpoint">144.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 5 : escReceived() / [] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">5</property>
+          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">2</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">targetEngine</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::targetEngine#37&lt;motor:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="motor"></item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">setM1Cmd</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::setM1Cmd#43</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">11</property>
+          <property name="target" type="long">19</property>
+          <property name="target_offset" type="realpoint">0.258065,0.600000</property>
+          <property name="control_points" type="listrealpoint">
+            <item>420.000000,130.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">6</property>
+              <property name="relative_position" type="realpoint">-101.000000,-7.000000</property>
+              <property name="size" type="realpoint">218.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 2 : targetEngine(1) / [setM1Cmd()] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -2744,6 +2782,50 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="umlTransitionItem">
+          <property name="id" type="long">9</property>
+          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">4</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">targetEngine</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::targetEngine#37&lt;motor:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="motor">3</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">setM3Cmd</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::setM3Cmd#45</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">11</property>
+          <property name="target" type="long">19</property>
+          <property name="target_offset" type="realpoint">0.200000,0.600000</property>
+          <property name="control_points" type="listrealpoint">
+            <item>500.000000,270.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">10</property>
+              <property name="relative_position" type="realpoint">-101.000000,-7.000000</property>
+              <property name="size" type="realpoint">218.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 4 : targetEngine(3) / [setM3Cmd()] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
           <property name="id" type="long">22</property>
           <property name="relative_position" type="realpoint">510.000000,260.000000</property>
           <property name="user_data" type="serializabledynamic">
@@ -2766,19 +2848,30 @@ False if the flag must be False to return True</property>
                 <property name="original_code" type="string">&lt;global&gt;::setNewTarget#134</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
               </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">sendAnticipatedResponse</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::sendAnticipatedResponse#81&lt;resptosend:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="resptosend">""</item>
+                </property>
+              </object>
             </object>
           </property>
           <property name="source" type="long">11</property>
-          <property name="target" type="long">15</property>
+          <property name="target" type="long">19</property>
+          <property name="target_offset" type="realpoint">0.258065,0.600000</property>
           <property name="control_points" type="listrealpoint">
-            <item>360.000000,330.000000</item>
+            <item>400.000000,340.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
               <property name="id" type="long">23</property>
               <property name="relative_position" type="realpoint">-153.000000,-7.000000</property>
-              <property name="size" type="realpoint">233.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 1 : targetChange() / [setNewTarget()] &gt;&gt;</property>
+              <property name="size" type="realpoint">401.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 1 : targetChange() / [setNewTarget(), sendAnticipatedResponse("")] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -2831,7 +2924,7 @@ False if the flag must be False to return True</property>
           <property name="source" type="long">3</property>
           <property name="target" type="long">21</property>
           <property name="control_points" type="listrealpoint">
-            <item>340.000000,40.000000</item>
+            <item>540.000000,40.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -2845,7 +2938,7 @@ False if the flag must be False to return True</property>
         </object>
         <object type="umlInitialItem">
           <property name="id" type="long">3</property>
-          <property name="relative_position" type="realpoint">140.000000,50.000000</property>
+          <property name="relative_position" type="realpoint">340.000000,50.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udInitialElementItem">
               <property name="id" type="long">0</property>
@@ -2986,7 +3079,7 @@ False if the flag must be False to return True</property>
           <property name="source" type="long">21</property>
           <property name="target" type="long">13</property>
           <property name="control_points" type="listrealpoint">
-            <item>390.000000,280.000000</item>
+            <item>590.000000,280.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -3000,7 +3093,7 @@ False if the flag must be False to return True</property>
         </object>
         <object type="umlSimpleStateItem">
           <property name="id" type="long">13</property>
-          <property name="relative_position" type="realpoint">49.000000,380.000000</property>
+          <property name="relative_position" type="realpoint">249.000000,380.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udSimpleStateElementItem">
               <property name="id" type="long">0</property>
@@ -3033,7 +3126,7 @@ False if the flag must be False to return True</property>
           <property name="source" type="long">33</property>
           <property name="target" type="long">13</property>
           <property name="control_points" type="listrealpoint">
-            <item>327.000000,375.000000</item>
+            <item>527.000000,375.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -3069,7 +3162,7 @@ False if the flag must be False to return True</property>
         </object>
         <object type="umlFinalItem">
           <property name="id" type="long">19</property>
-          <property name="relative_position" type="realpoint">1110.000000,310.000000</property>
+          <property name="relative_position" type="realpoint">1310.000000,310.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udFinalElementItem">
               <property name="id" type="long">0</property>
@@ -3090,7 +3183,7 @@ False if the flag must be False to return True</property>
         </object>
         <object type="umlSimpleStateItem">
           <property name="id" type="long">21</property>
-          <property name="relative_position" type="realpoint">680.000000,0.000000</property>
+          <property name="relative_position" type="realpoint">880.000000,0.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udSimpleStateElementItem">
               <property name="id" type="long">0</property>
@@ -3142,7 +3235,7 @@ False if the flag must be False to return True</property>
           <property name="source" type="long">21</property>
           <property name="target" type="long">19</property>
           <property name="control_points" type="listrealpoint">
-            <item>970.000000,50.000000</item>
+            <item>1170.000000,50.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -3151,27 +3244,6 @@ False if the flag must be False to return True</property>
               <property name="size" type="realpoint">292.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt; 1 : checkCharAtPos(1, 'P', True) / [programNP()] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlSimpleStateItem">
-          <property name="id" type="long">25</property>
-          <property name="relative_position" type="realpoint">300.000000,180.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udSimpleStateElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">LReceived</property>
-              <property name="description" type="string">Diagram element's description...</property>
-            </object>
-          </property>
-          <property name="fill" type="brush">254,253,211,255 100</property>
-          <property name="title" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">26</property>
-              <property name="relative_position" type="realpoint">21.000000,5.000000</property>
-              <property name="size" type="realpoint">58.000000,15.000000</property>
-              <property name="text" type="string">LReceived</property>
-              <property name="label_type" type="int">1</property>
             </object>
           </property>
         </object>
@@ -3208,7 +3280,7 @@ False if the flag must be False to return True</property>
           <property name="source" type="long">25</property>
           <property name="target" type="long">19</property>
           <property name="control_points" type="listrealpoint">
-            <item>840.000000,180.000000</item>
+            <item>1040.000000,180.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -3222,7 +3294,7 @@ False if the flag must be False to return True</property>
         </object>
         <object type="umlSimpleStateItem">
           <property name="id" type="long">29</property>
-          <property name="relative_position" type="realpoint">249.000000,530.000000</property>
+          <property name="relative_position" type="realpoint">449.000000,530.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udSimpleStateElementItem">
               <property name="id" type="long">0</property>
@@ -3242,76 +3314,9 @@ False if the flag must be False to return True</property>
             </object>
           </property>
         </object>
-        <object type="umlTransitionItem">
-          <property name="id" type="long">31</property>
-          <property name="relative_position" type="realpoint">510.000000,250.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udTransElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Transition connection</property>
-              <property name="description" type="string">Transition's description...</property>
-              <property name="priority" type="long">3</property>
-              <object type="udConditionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">checkCharAtPos</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::checkCharAtPos#97&lt;idx:Integer&gt;&lt;cToCheck:Integer&gt;&lt;isEqual:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="cToCheck">'P'</item>
-                  <item key="idx">0</item>
-                  <item key="isEqual">True</item>
-                </property>
-              </object>
-              <object type="udActionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">resetDecoder</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::resetDecoder#101</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-              </object>
-            </object>
-          </property>
-          <property name="source" type="long">3</property>
-          <property name="target" type="long">33</property>
-          <property name="control_points" type="listrealpoint">
-            <item>290.000000,290.000000</item>
-          </property>
-          <property name="label" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">32</property>
-              <property name="relative_position" type="realpoint">50.000000,31.000000</property>
-              <property name="size" type="realpoint">303.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 3 : checkCharAtPos(0, 'P', True) / [resetDecoder()] &gt;&gt;</property>
-              <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlSimpleStateItem">
-          <property name="id" type="long">33</property>
-          <property name="relative_position" type="realpoint">779.000000,330.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udSimpleStateElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">PReceived</property>
-              <property name="description" type="string">Diagram element's description...</property>
-            </object>
-          </property>
-          <property name="size" type="realpoint">102.000000,50.000000</property>
-          <property name="fill" type="brush">254,253,211,255 100</property>
-          <property name="title" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">34</property>
-              <property name="relative_position" type="realpoint">22.000000,5.000000</property>
-              <property name="size" type="realpoint">59.000000,15.000000</property>
-              <property name="text" type="string">PReceived</property>
-              <property name="label_type" type="int">1</property>
-            </object>
-          </property>
-        </object>
         <object type="umlSimpleStateItem">
           <property name="id" type="long">35</property>
-          <property name="relative_position" type="realpoint">649.000000,520.000000</property>
+          <property name="relative_position" type="realpoint">849.000000,520.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udSimpleStateElementItem">
               <property name="id" type="long">0</property>
@@ -3357,7 +3362,7 @@ False if the flag must be False to return True</property>
           <property name="source" type="long">33</property>
           <property name="target" type="long">35</property>
           <property name="control_points" type="listrealpoint">
-            <item>610.000000,440.000000</item>
+            <item>810.000000,440.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -3424,7 +3429,7 @@ False if the flag must be False to return True</property>
           <property name="source" type="long">29</property>
           <property name="target" type="long">19</property>
           <property name="control_points" type="listrealpoint">
-            <item>710.000000,630.000000</item>
+            <item>910.000000,630.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -3469,7 +3474,7 @@ False if the flag must be False to return True</property>
           <property name="source" type="long">3</property>
           <property name="target" type="long">29</property>
           <property name="control_points" type="listrealpoint">
-            <item>240.000000,430.000000</item>
+            <item>440.000000,430.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -3477,58 +3482,6 @@ False if the flag must be False to return True</property>
               <property name="relative_position" type="realpoint">-52.000000,-29.000000</property>
               <property name="size" type="realpoint">303.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt; 5 : checkCharAtPos(0, 'S', True) / [resetDecoder()] &gt;&gt;</property>
-              <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlTransitionItem">
-          <property name="id" type="long">45</property>
-          <property name="relative_position" type="realpoint">500.000000,280.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udTransElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Transition connection</property>
-              <property name="description" type="string">Transition's description...</property>
-              <property name="priority" type="long">4</property>
-              <object type="udConditionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">checkCharAtPos</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::checkCharAtPos#97&lt;idx:Integer&gt;&lt;cToCheck:Integer&gt;&lt;isEqual:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="cToCheck">'M'</item>
-                  <item key="idx">0</item>
-                  <item key="isEqual">True</item>
-                </property>
-              </object>
-              <object type="udActionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">resetDecoder</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::resetDecoder#101</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-              </object>
-              <object type="udActionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">programM</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::programM#131</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-              </object>
-            </object>
-          </property>
-          <property name="source" type="long">3</property>
-          <property name="target" type="long">19</property>
-          <property name="control_points" type="listrealpoint">
-            <item>760.000000,100.000000</item>
-          </property>
-          <property name="label" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">46</property>
-              <property name="relative_position" type="realpoint">-121.000000,11.000000</property>
-              <property name="size" type="realpoint">374.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 4 : checkCharAtPos(0, 'M', True) / [resetDecoder(), programM()] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -3595,7 +3548,7 @@ False if the flag must be False to return True</property>
           <property name="source" type="long">13</property>
           <property name="target" type="long">19</property>
           <property name="control_points" type="listrealpoint">
-            <item>890.000000,640.000000</item>
+            <item>1090.000000,640.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -3603,6 +3556,327 @@ False if the flag must be False to return True</property>
               <property name="relative_position" type="realpoint">95.000000,-129.000000</property>
               <property name="size" type="realpoint">125.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt;  / [decodeError()] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlSimpleStateItem">
+          <property name="id" type="long">33</property>
+          <property name="relative_position" type="realpoint">969.000000,370.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udSimpleStateElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">PReceived</property>
+              <property name="description" type="string">Diagram element's description...</property>
+            </object>
+          </property>
+          <property name="size" type="realpoint">102.000000,50.000000</property>
+          <property name="fill" type="brush">254,253,211,255 100</property>
+          <property name="title" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">34</property>
+              <property name="relative_position" type="realpoint">22.000000,5.000000</property>
+              <property name="size" type="realpoint">59.000000,15.000000</property>
+              <property name="text" type="string">PReceived</property>
+              <property name="label_type" type="int">1</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">31</property>
+          <property name="relative_position" type="realpoint">510.000000,250.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">3</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">checkCharAtPos</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::checkCharAtPos#97&lt;idx:Integer&gt;&lt;cToCheck:Integer&gt;&lt;isEqual:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="cToCheck">'P'</item>
+                  <item key="idx">0</item>
+                  <item key="isEqual">True</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">resetDecoder</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::resetDecoder#101</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">3</property>
+          <property name="target" type="long">33</property>
+          <property name="control_points" type="listrealpoint">
+            <item>490.000000,290.000000</item>
+            <item>730.000000,350.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">32</property>
+              <property name="relative_position" type="realpoint">20.000000,51.000000</property>
+              <property name="size" type="realpoint">303.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 3 : checkCharAtPos(0, 'P', True) / [resetDecoder()] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">57</property>
+          <property name="relative_position" type="realpoint">560.000000,250.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">1</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">checkCharAtPos</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::checkCharAtPos#97&lt;idx:Integer&gt;&lt;cToCheck:Integer&gt;&lt;isEqual:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="cToCheck">'H'</item>
+                  <item key="idx">2</item>
+                  <item key="isEqual">True</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">programGoHoSeq</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::programGoHoSeq#136</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">53</property>
+          <property name="target" type="long">19</property>
+          <property name="control_points" type="listrealpoint">
+            <item>930.000000,300.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">58</property>
+              <property name="relative_position" type="realpoint">-162.000000,-7.000000</property>
+              <property name="size" type="realpoint">330.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 1 : checkCharAtPos(2, 'H', True) / [programGoHoSeq()] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">59</property>
+          <property name="relative_position" type="realpoint">500.000000,250.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">checkCharAtPos</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::checkCharAtPos#97&lt;idx:Integer&gt;&lt;cToCheck:Integer&gt;&lt;isEqual:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="cToCheck">'I'</item>
+                  <item key="idx">2</item>
+                  <item key="isEqual">True</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">programGoIx</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::programGoIx#137</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">53</property>
+          <property name="target" type="long">19</property>
+          <property name="control_points" type="listrealpoint">
+            <item>880.000000,330.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">60</property>
+              <property name="relative_position" type="realpoint">-139.000000,-7.000000</property>
+              <property name="size" type="realpoint">278.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; checkCharAtPos(2, 'I', True) / [programGoIx()] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlSimpleStateItem">
+          <property name="id" type="long">25</property>
+          <property name="relative_position" type="realpoint">500.000000,180.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udSimpleStateElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">LReceived</property>
+              <property name="description" type="string">Diagram element's description...</property>
+            </object>
+          </property>
+          <property name="fill" type="brush">254,253,211,255 100</property>
+          <property name="title" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">26</property>
+              <property name="relative_position" type="realpoint">21.000000,5.000000</property>
+              <property name="size" type="realpoint">58.000000,15.000000</property>
+              <property name="text" type="string">LReceived</property>
+              <property name="label_type" type="int">1</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">61</property>
+          <property name="relative_position" type="realpoint">500.000000,250.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+            </object>
+          </property>
+          <property name="source" type="long">53</property>
+          <property name="target" type="long">13</property>
+          <property name="control_points" type="listrealpoint">
+            <item>160.000000,320.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">62</property>
+              <property name="relative_position" type="realpoint">-23.000000,-7.000000</property>
+              <property name="size" type="realpoint">46.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; / [] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlSimpleStateItem">
+          <property name="id" type="long">53</property>
+          <property name="relative_position" type="realpoint">40.000000,190.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udSimpleStateElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">GReceived</property>
+              <property name="description" type="string">Diagram element's description...</property>
+            </object>
+          </property>
+          <property name="fill" type="brush">254,253,211,255 100</property>
+          <property name="title" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">54</property>
+              <property name="relative_position" type="realpoint">20.000000,5.000000</property>
+              <property name="size" type="realpoint">60.000000,15.000000</property>
+              <property name="text" type="string">GReceived</property>
+              <property name="label_type" type="int">1</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">45</property>
+          <property name="relative_position" type="realpoint">500.000000,280.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">4</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">checkCharAtPos</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::checkCharAtPos#97&lt;idx:Integer&gt;&lt;cToCheck:Integer&gt;&lt;isEqual:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="cToCheck">'M'</item>
+                  <item key="idx">0</item>
+                  <item key="isEqual">True</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">resetDecoder</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::resetDecoder#101</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">programM</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::programM#131</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">3</property>
+          <property name="target" type="long">19</property>
+          <property name="control_points" type="listrealpoint">
+            <item>950.000000,110.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">46</property>
+              <property name="relative_position" type="realpoint">-121.000000,11.000000</property>
+              <property name="size" type="realpoint">374.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 4 : checkCharAtPos(0, 'M', True) / [resetDecoder(), programM()] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">55</property>
+          <property name="relative_position" type="realpoint">500.000000,260.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">6</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">checkCharAtPos</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::checkCharAtPos#97&lt;idx:Integer&gt;&lt;cToCheck:Integer&gt;&lt;isEqual:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="cToCheck">'G'</item>
+                  <item key="idx">0</item>
+                  <item key="isEqual">True</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">resetDecoder</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::resetDecoder#101</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">3</property>
+          <property name="target" type="long">53</property>
+          <property name="control_points" type="listrealpoint">
+            <item>160.000000,110.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">56</property>
+              <property name="relative_position" type="realpoint">-132.000000,-7.000000</property>
+              <property name="size" type="realpoint">304.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 6 : checkCharAtPos(0, 'G', True) / [resetDecoder()] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -3629,7 +3903,7 @@ False if the flag must be False to return True</property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
               <property name="id" type="long">52</property>
-              <property name="relative_position" type="realpoint">-100.000000,-9.000000</property>
+              <property name="relative_position" type="realpoint">-100.000000,71.000000</property>
               <property name="size" type="realpoint">132.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt;  / [resetDecoder()] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
@@ -3746,6 +4020,104 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="umlTransitionItem">
+          <property name="id" type="long">11</property>
+          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">1</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">checkFlag</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::checkFlag#151&lt;flag:Integer&gt;&lt;SetOrUnset:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="SetOrUnset">True</item>
+                  <item key="flag">dre.m1.np</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">setFlag</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::setFlag#154&lt;flag:Integer&gt;&lt;value:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="value">True</item>
+                  <item key="flag">dre.m1.npflag</item>
+                </property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">3</property>
+          <property name="target" type="long">1</property>
+          <property name="target_offset" type="realpoint">0.500000,0.000000</property>
+          <property name="control_points" type="listrealpoint">
+            <item>860.000000,110.000000</item>
+            <item>940.000000,160.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">12</property>
+              <property name="relative_position" type="realpoint">-125.000000,23.000000</property>
+              <property name="size" type="realpoint">372.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m1.np, True) / [setFlag(dre.m1.npflag, True)] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlInitialItem">
+          <property name="id" type="long">13</property>
+          <property name="relative_position" type="realpoint">660.000000,10.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udInitialElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Initial</property>
+              <property name="description" type="string">Diagram element's description...</property>
+            </object>
+          </property>
+          <property name="size" type="realpoint">20.000000,20.000000</property>
+          <property name="fill" type="brush">0,0,0,255 100</property>
+          <property name="title" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">14</property>
+              <property name="relative_position" type="realpoint">0.000000,25.000000</property>
+              <property name="size" type="realpoint">29.000000,15.000000</property>
+              <property name="text" type="string">Initial</property>
+              <property name="label_type" type="int">1</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">17</property>
+          <property name="relative_position" type="realpoint">520.000000,240.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+            </object>
+          </property>
+          <property name="source" type="long">3</property>
+          <property name="target" type="long">1</property>
+          <property name="control_points" type="listrealpoint">
+            <item>690.000000,200.000000</item>
+            <item>703.000000,310.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">18</property>
+              <property name="relative_position" type="realpoint">-42.000000,-9.000000</property>
+              <property name="size" type="realpoint">49.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt;  / [] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
           <property name="id" type="long">7</property>
           <property name="relative_position" type="realpoint">510.000000,300.000000</property>
           <property name="user_data" type="serializabledynamic">
@@ -3844,78 +4216,6 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="umlTransitionItem">
-          <property name="id" type="long">11</property>
-          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udTransElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Transition connection</property>
-              <property name="description" type="string">Transition's description...</property>
-              <property name="priority" type="long">1</property>
-              <object type="udConditionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">checkFlag</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::checkFlag#151&lt;flag:Integer&gt;&lt;SetOrUnset:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="SetOrUnset">True</item>
-                  <item key="flag">dre.m1.np</item>
-                </property>
-              </object>
-              <object type="udActionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">setFlag</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::setFlag#154&lt;flag:Integer&gt;&lt;value:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="value">True</item>
-                  <item key="flag">dre.m1.npflag</item>
-                </property>
-              </object>
-            </object>
-          </property>
-          <property name="source" type="long">3</property>
-          <property name="target" type="long">1</property>
-          <property name="target_offset" type="realpoint">0.500000,0.000000</property>
-          <property name="control_points" type="listrealpoint">
-            <item>860.000000,110.000000</item>
-            <item>940.000000,160.000000</item>
-          </property>
-          <property name="label" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">12</property>
-              <property name="relative_position" type="realpoint">-125.000000,23.000000</property>
-              <property name="size" type="realpoint">372.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m1.np, True) / [setFlag(dre.m1.npflag, True)] &gt;&gt;</property>
-              <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlInitialItem">
-          <property name="id" type="long">13</property>
-          <property name="relative_position" type="realpoint">660.000000,10.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udInitialElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Initial</property>
-              <property name="description" type="string">Diagram element's description...</property>
-            </object>
-          </property>
-          <property name="size" type="realpoint">20.000000,20.000000</property>
-          <property name="fill" type="brush">0,0,0,255 100</property>
-          <property name="title" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">14</property>
-              <property name="relative_position" type="realpoint">0.000000,25.000000</property>
-              <property name="size" type="realpoint">29.000000,15.000000</property>
-              <property name="text" type="string">Initial</property>
-              <property name="label_type" type="int">1</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlTransitionItem">
           <property name="id" type="long">15</property>
           <property name="relative_position" type="realpoint">510.000000,300.000000</property>
           <property name="user_data" type="serializabledynamic">
@@ -3943,32 +4243,6 @@ False if the flag must be False to return True</property>
               <property name="relative_position" type="realpoint">-104.000000,3.000000</property>
               <property name="size" type="realpoint">173.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt;  / [setM1Response("OK")] &gt;&gt;</property>
-              <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlTransitionItem">
-          <property name="id" type="long">17</property>
-          <property name="relative_position" type="realpoint">520.000000,240.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udTransElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Transition connection</property>
-              <property name="description" type="string">Transition's description...</property>
-            </object>
-          </property>
-          <property name="source" type="long">3</property>
-          <property name="target" type="long">1</property>
-          <property name="control_points" type="listrealpoint">
-            <item>690.000000,200.000000</item>
-            <item>703.000000,310.000000</item>
-          </property>
-          <property name="label" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">18</property>
-              <property name="relative_position" type="realpoint">-42.000000,-9.000000</property>
-              <property name="size" type="realpoint">49.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt;  / [] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
