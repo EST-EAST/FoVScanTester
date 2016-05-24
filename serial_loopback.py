@@ -84,7 +84,6 @@ def processCommand():
 def clientthread(conn):
 
     #Sending message to connected client
-    conn.send('Welcome to the server. Type something and hit enter\n') #send only takes string
     FoV.dre.ser = conn
     #infinite loop so that function do not terminate and thread do not end.
     endthread=False

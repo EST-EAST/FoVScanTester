@@ -7,7 +7,8 @@ Created on Tue May 17 17:51:05 2016
 
 #### Connection configuration
 
-cte_use_socket = False
+cte_use_socket = True
+cte_debug = True
 
 if not(cte_use_socket):
     # Serial connection configuration
@@ -16,16 +17,20 @@ if not(cte_use_socket):
         cte_serial_port = 'COM4:'
     else:
         cte_serial_port = '/dev/ttyUSB0'
-    if (os.name == 'nt'):
-        cte_serial_port_loopback = 'COM5:'
-    else:
-        cte_serial_port_loopback = '/dev/ttyUSB1'
+    if (cte_debug):
+        if (os.name == 'nt'):
+            cte_serial_port_loopback = 'COM5:'
+        else:
+            cte_serial_port_loopback = '/dev/ttyUSB1'
 
 else:
     # TCP connection configuration
     import socket
-    cte_socket_ip = socket.gethostname()
     cte_socket_port = 10001
+    if not(cte_debug):
+        cte_socket_ip = 192.168.90.105
+    else:
+        cte_socket_ip = socket.gethostname()
 
 #### Motor configuration
 
