@@ -70,6 +70,16 @@ def resetDecoder(  ):
     dre.mX.error=False
     # ['<global>::resetDecoder' end]
 
+def programGoHoSeq(  ):
+    # ['<global>::programGoHoSeq' begin]
+    # Program GoHoSeq similar to program LA with setpoint = 0
+
+    dre.mX.setpoint = 0
+
+    dre.mX.m = True
+
+    # ['<global>::programGoHoSeq' end]
+
 def checkCharAtPos( idx, cToCheck, isEqual ):
     # ['<global>::checkCharAtPos' begin]
     if (isEqual):
@@ -198,10 +208,11 @@ ID_DECODEMOTORCMD_INITIAL = 21
 ID_DECODEMOTORCMD_FINAL = 22
 ID_DECODEMOTORCMD_ERROR = 23
 ID_DECODEMOTORCMD_NRECEIVED = 24
-ID_DECODEMOTORCMD_LRECEIVED = 25
-ID_DECODEMOTORCMD_SRECEIVED = 26
+ID_DECODEMOTORCMD_SRECEIVED = 25
+ID_DECODEMOTORCMD_PORECEIVED = 26
 ID_DECODEMOTORCMD_PRECEIVED = 27
-ID_DECODEMOTORCMD_PORECEIVED = 28
+ID_DECODEMOTORCMD_LRECEIVED = 28
+ID_DECODEMOTORCMD_GRECEIVED = 29
 
 def DecodeMotorCmd(  ):
     # set initial state
@@ -242,6 +253,12 @@ def DecodeMotorCmd(  ):
                 # Actions:
                 resetDecoder()
                 state = ID_DECODEMOTORCMD_SRECEIVED
+
+            elif( checkCharAtPos(0, 'G', True) ):
+                # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
+                # Actions:
+                resetDecoder()
+                state = ID_DECODEMOTORCMD_GRECEIVED
 
             else:
                 # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
@@ -291,9 +308,26 @@ def DecodeMotorCmd(  ):
                 # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::programLR' begin]
-                dre.mX.lr=True
-                dre.mX.posarg=int(dre.mX.cmd[2:])
+                # LR is similar to LA 
+
+                dre.mX.la=True
+                dre.mX.posarg=dre.mX.pos+int(dre.mX.cmd[2:])
                 # ['<global>::programLR' end]
+                state = ID_DECODEMOTORCMD_FINAL
+
+            else:
+                # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
+                state = ID_DECODEMOTORCMD_ERROR
+
+        # State ID: ID_DECODEMOTORCMD_SRECEIVED
+        elif( state==ID_DECODEMOTORCMD_SRECEIVED ):
+            if( checkCharAtPos(1, 'P', True) ):
+                # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::programSP' begin]
+                dre.mX.spd = True
+                dre.mX.spdarg = int(dre.mX.cmd[2:])
+                # ['<global>::programSP' end]
                 state = ID_DECODEMOTORCMD_FINAL
 
             else:
@@ -324,15 +358,25 @@ def DecodeMotorCmd(  ):
                 # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
                 state = ID_DECODEMOTORCMD_ERROR
 
-        # State ID: ID_DECODEMOTORCMD_SRECEIVED
-        elif( state==ID_DECODEMOTORCMD_SRECEIVED ):
-            if( checkCharAtPos(1, 'P', True) ):
+        # State ID: ID_DECODEMOTORCMD_GRECEIVED
+        elif( state==ID_DECODEMOTORCMD_GRECEIVED ):
+            if( checkCharAtPos(2, 'H', True) ):
                 # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
                 # Actions:
-                # ['<global>::programSP' begin]
-                dre.mX.spd = True
-                dre.mX.spdarg = int(dre.mX.cmd[2:])
-                # ['<global>::programSP' end]
+                programGoHoSeq()
+                state = ID_DECODEMOTORCMD_FINAL
+
+            elif( checkCharAtPos(2, 'I', True) ):
+                # Transition ID: ID_DECODEMOTORCMD_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::programGoIx' begin]
+                # Program GoIx similar to program LA with setpoint = 0
+
+                dre.mX.setpoint = 0
+
+                dre.mX.m = True
+
+                # ['<global>::programGoIx' end]
                 state = ID_DECODEMOTORCMD_FINAL
 
             else:
@@ -343,13 +387,13 @@ def DecodeMotorCmd(  ):
 
 # ['ProgramMotors' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_PROGRAMMOTORS_INITIAL = 29
-ID_PROGRAMMOTORS_FINAL = 30
-ID_PROGRAMMOTORS_M2BYPASS = 31
-ID_PROGRAMMOTORS_M1BYPASS = 32
-ID_PROGRAMMOTORS_M2DECODED = 33
-ID_PROGRAMMOTORS_M3DECODED = 34
-ID_PROGRAMMOTORS_M1DECODED = 35
+ID_PROGRAMMOTORS_INITIAL = 30
+ID_PROGRAMMOTORS_FINAL = 31
+ID_PROGRAMMOTORS_M2BYPASS = 32
+ID_PROGRAMMOTORS_M1BYPASS = 33
+ID_PROGRAMMOTORS_M2DECODED = 34
+ID_PROGRAMMOTORS_M3DECODED = 35
+ID_PROGRAMMOTORS_M1DECODED = 36
 
 def ProgramMotors(  ):
     # set initial state
@@ -429,10 +473,10 @@ def ProgramMotors(  ):
 
 # ['CmdDispatcher' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_CMDDISPATCHER_INITIAL = 36
-ID_CMDDISPATCHER_FINAL = 37
-ID_CMDDISPATCHER_DECODEENGINE = 38
-ID_CMDDISPATCHER_PROGRAMMOTORS = 39
+ID_CMDDISPATCHER_INITIAL = 37
+ID_CMDDISPATCHER_FINAL = 38
+ID_CMDDISPATCHER_DECODEENGINE = 39
+ID_CMDDISPATCHER_PROGRAMMOTORS = 40
 
 def CmdDispatcher(  ):
     # set initial state
@@ -483,7 +527,13 @@ def CmdDispatcher(  ):
                     dre.activeMotorPrefix=""
 
                 # ['<global>::setNewTarget' end]
-                state = ID_CMDDISPATCHER_FINAL
+                # ['<global>::sendAnticipatedResponse' begin]
+                if not(dre.cte_use_socket):
+                    dre.ser.write(""+'\13'+'\10')
+                else:
+                    dre.ser.sendall(""+'\13'+'\10')
+                # ['<global>::sendAnticipatedResponse' end]
+                state = ID_CMDDISPATCHER_PROGRAMMOTORS
 
             elif( str(1)[0]==dre.command_rx_buf[0] ):
                 # Transition ID: ID_CMDDISPATCHER_TRANSITION_CONNECTION
@@ -511,6 +561,10 @@ def CmdDispatcher(  ):
                 dre.m3.cmd=dre.command_rx_buf[1:]
                 # ['<global>::setM3Cmd' end]
                 state = ID_CMDDISPATCHER_PROGRAMMOTORS
+
+            elif( ((""+'\27') in dre.command_rx_buf) ):
+                # Transition ID: ID_CMDDISPATCHER_TRANSITION_CONNECTION
+                state = ID_CMDDISPATCHER_FINAL
 
             else:
                 # Transition ID: ID_CMDDISPATCHER_TRANSITION_CONNECTION
@@ -540,8 +594,8 @@ def CmdDispatcher(  ):
 
 # ['sendCtrlResponse' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_SENDCTRLRESPONSE_INITIAL = 40
-ID_SENDCTRLRESPONSE_FINAL = 41
+ID_SENDCTRLRESPONSE_INITIAL = 41
+ID_SENDCTRLRESPONSE_FINAL = 42
 
 def sendCtrlResponse(  ):
     # set initial state
@@ -571,10 +625,10 @@ def sendCtrlResponse(  ):
 
 # ['getCtrlCommand' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_GETCTRLCOMMAND_INITIAL = 42
-ID_GETCTRLCOMMAND_FINAL = 43
-ID_GETCTRLCOMMAND_READING = 44
-ID_GETCTRLCOMMAND_PREVBUF = 45
+ID_GETCTRLCOMMAND_INITIAL = 43
+ID_GETCTRLCOMMAND_FINAL = 44
+ID_GETCTRLCOMMAND_READING = 45
+ID_GETCTRLCOMMAND_PREVBUF = 46
 
 def getCtrlCommand(  ):
     # set initial state
@@ -660,8 +714,8 @@ def getCtrlCommand(  ):
 
 # ['sendCtrlCommand' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_SENDCTRLCOMMAND_INITIAL = 46
-ID_SENDCTRLCOMMAND_FINAL = 47
+ID_SENDCTRLCOMMAND_INITIAL = 47
+ID_SENDCTRLCOMMAND_FINAL = 48
 
 def sendCtrlCommand(  ):
     # set initial state
@@ -691,10 +745,10 @@ def sendCtrlCommand(  ):
 
 # ['getCtrlResponse' begin (DON'T REMOVE THIS LINE!)]
 # State IDs
-ID_GETCTRLRESPONSE_INITIAL = 48
-ID_GETCTRLRESPONSE_FINAL = 49
-ID_GETCTRLRESPONSE_READING = 50
-ID_GETCTRLRESPONSE_FINISHING = 51
+ID_GETCTRLRESPONSE_INITIAL = 49
+ID_GETCTRLRESPONSE_FINAL = 50
+ID_GETCTRLRESPONSE_READING = 51
+ID_GETCTRLRESPONSE_FINISHING = 52
 
 def getCtrlResponse(  ):
     # set initial state
