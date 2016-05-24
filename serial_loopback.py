@@ -90,7 +90,7 @@ def clientthread(conn):
     endthread=False
     FoV.dre.lastconnection = datetime.now()
     while not(endthread):
-        print "Waiting for command"
+        #print "Waiting for command"
         # Check if there is data
         data=""
         try:
@@ -104,12 +104,12 @@ def clientthread(conn):
             else:
                 # Other error, re-raise
                 print "Timeout ({0}): {1}".format(e.errno, e.strerror)
-        print(str((datetime.now()-FoV.dre.lastconnection).total_seconds()))
+        #print(str((datetime.now()-FoV.dre.lastconnection).total_seconds()))
         if ((datetime.now()-FoV.dre.lastconnection).total_seconds()>cte_timeout):
             print("Timeout manual")
             endthread=True
         if (not(endthread)):
-            print("Parece que no salgo")
+            #print("Parece que no salgo")
             if (len(data)>=1):
                 FoV.dre.rx_buffer=FoV.dre.rx_buffer+str(data)
                 print("Buffer data"+FoV.dre.rx_buffer)
@@ -124,6 +124,7 @@ def clientthread(conn):
 
 if not(sweepconfig.cte_use_socket):
     import serial
+
     cte_serial_port_loopback = sweepconfig.cte_serial_port_loopback
     print "Chosen serial port: "+cte_serial_port_loopback
     ser = serial.Serial(
@@ -155,6 +156,14 @@ if not(sweepconfig.cte_use_socket):
 else:
     import socket
     import sys
+
+    FoV.dre.m1port = sweepconfig.cte_motor_x_xport
+    FoV.dre.m2port = sweepconfig.cte_motor_y_xport
+    FoV.dre.m3port = sweepconfig.cte_motor_comp_xport
+
+    print("Arranco m1port=" + str(FoV.dre.m1port))
+    print("Arranco m2port=" + str(FoV.dre.m2port))
+    print("Arranco m3port=" + str(FoV.dre.m3port))
 
     sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print 'Socket created'

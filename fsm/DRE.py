@@ -40,3 +40,7 @@ class DRE:
     command_tx_buf = ""
     cte_use_socket = False
     response = "Wey"
+    activeMotorPrefix = ""
+    m1port=0
+    m2port=0
+    m3port=0
