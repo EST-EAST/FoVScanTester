@@ -101,6 +101,9 @@ if (ret==False):
     done = -1
     print "Database ERROR! Aborting"
 
+if (sweepconfig.cte_reset_motors_first):
+    sws.resetMotors()
+
 # Steps loop
 # until ESC key is pressed
 # or steps have finished
