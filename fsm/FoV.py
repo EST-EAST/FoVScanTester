@@ -925,9 +925,16 @@ def M1Sim(  ):
                 # ['<global>::notifyEndM1Mv' begin]
                 if (dre.m1.npflag):
 
+                    print("notify M1 #1")
+
                     dre.m1.npflag=False
 
+                    print("notify M1 #2")
+
                     sendUntimelyResponse("p")
+
+                    print("notify M1 #3")
+
                 # ['<global>::notifyEndM1Mv' end]
                 # ['<global>::setFlag' begin]
                 dre.m1.laflag=False
@@ -1002,8 +1009,15 @@ def M2Sim(  ):
                 # ['<global>::notifyEndM2Mv' begin]
                 if (dre.m2.npflag):
 
+                    print("notify M2 #1")
+
                     dre.m2.npflag=False
+                    print("notify M2 #2")
+
                     sendUntimelyResponse("p")
+
+                    print("notify M2 #3")
+
                 # ['<global>::notifyEndM2Mv' end]
                 # ['<global>::setFlag' begin]
                 dre.m2.laflag=False
@@ -1140,8 +1154,15 @@ def M3Sim(  ):
                 # ['<global>::NotifyEndM3Mv' begin]
                 if (dre.m3.npflag):
 
+                    print("notify M3 #1")
+
                     dre.m3.npflag=False
+                    print("notify M3 #2")
+
                     sendUntimelyResponse("p")
+
+                    print("notify M3 #3")
+
                 # ['<global>::NotifyEndM3Mv' end]
                 # ['<global>::setFlag' begin]
                 dre.m3.laflag=False
