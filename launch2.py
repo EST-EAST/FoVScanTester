@@ -21,6 +21,9 @@ if sweepconfig.cte_use_cvcam:
 if sweepconfig.cte_use_photocam:
     import subprocess
 
+if sweepconfig.cte_use_gphoto2:
+    import gphoto2capture
+
 import sqlite3
 import sweepsupport as sws
 import urllib
@@ -142,6 +145,9 @@ while (done!=-1 and curStep < endStep ):
             args=sweepconfig.cte_cameractrl_capturecmd
             print("Photo capture frame: "+cmd+" "+args)
             subprocess.check_output([cmd,args])
+        if sweepconfig.cte_use_gphoto2:
+            strg=sweepconfig.cte_gphoto2_filename_root+'%s_%03d_%03d.jpg' % (timestr, sweep_ex_id, curStep)
+            gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath+strg)
         # acquire the motor status
         mx_fdback,my_fdback,mcomp_fdback = sws.motorPositions()
         print ("Motor | mx: "+str(mx_fdback)+", my: "+str(my_fdback)+", mcomp: "+str(mcomp_fdback))

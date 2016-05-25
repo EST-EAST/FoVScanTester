@@ -79,3 +79,4 @@ target/
 /Interop.PortableDeviceTypesLib.dll
 /PortableDeviceLib.dll
 /log4net.dll
+/submodules

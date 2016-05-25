@@ -14,7 +14,7 @@ from thread import *
 from datetime import datetime
 
 cte_stepTime=1000
-cte_timeout = 10
+cte_timeout = 20
 
 ############ FUNCTIONS ##########################
 

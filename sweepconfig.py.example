@@ -65,6 +65,12 @@ if cte_use_photocam:
     cte_cameractrl_filenamecmd = "/filename"
     cte_cameractrl_filename_root = "FoV"
 
+cte_use_gphoto2 = True
+
+if cte_use_gphoto2:
+    cte_gphoto2_framePath = "./00_acquired/"
+    cte_gphoto2_filename_root = "FoV"
+
 cte_use_motor_x = True
 cte_use_motor_y = True
 cte_use_motor_comp = True
