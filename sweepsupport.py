@@ -109,7 +109,7 @@ def consumePendingOks():
     global numberOfPToRx
     while (numberOfOkToRx > 0):
         consumeResponse()
-    if (numberOfPToRx == 0):
+    if (numberOfOkToRx == 0):
         ret = 0
     else:
         ret = -1

@@ -925,12 +925,10 @@ def M1Sim(  ):
                 # ['<global>::notifyEndM1Mv' begin]
                 if (dre.m1.npflag):
 
+                    dre.m1.npflag=False
+
                     sendUntimelyResponse("p")
                 # ['<global>::notifyEndM1Mv' end]
-                # ['<global>::setFlag' begin]
-                dre.m1.npflag=False
-
-                # ['<global>::setFlag' end]
                 # ['<global>::setFlag' begin]
                 dre.m1.laflag=False
 
@@ -1003,12 +1001,10 @@ def M2Sim(  ):
                 # Actions:
                 # ['<global>::notifyEndM2Mv' begin]
                 if (dre.m2.npflag):
+
+                    dre.m2.npflag=False
                     sendUntimelyResponse("p")
                 # ['<global>::notifyEndM2Mv' end]
-                # ['<global>::setFlag' begin]
-                dre.m2.npflag=False
-
-                # ['<global>::setFlag' end]
                 # ['<global>::setFlag' begin]
                 dre.m2.laflag=False
 
@@ -1143,12 +1139,10 @@ def M3Sim(  ):
                 # Actions:
                 # ['<global>::NotifyEndM3Mv' begin]
                 if (dre.m3.npflag):
+
+                    dre.m3.npflag=False
                     sendUntimelyResponse("p")
                 # ['<global>::NotifyEndM3Mv' end]
-                # ['<global>::setFlag' begin]
-                dre.m3.npflag=False
-
-                # ['<global>::setFlag' end]
                 # ['<global>::setFlag' begin]
                 dre.m3.laflag=False
 
