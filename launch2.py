@@ -147,7 +147,7 @@ while (done!=-1 and curStep < endStep ):
             subprocess.check_output([cmd,args])
         if sweepconfig.cte_use_gphoto2:
             strg=sweepconfig.cte_gphoto2_filename_root+'%s_%03d_%03d.jpg' % (timestr, sweep_ex_id, curStep)
-            gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath+strg)
+            gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath,strg,False)
         # acquire the motor status
         mx_fdback,my_fdback,mcomp_fdback = sws.motorPositions()
         print ("Motor | mx: "+str(mx_fdback)+", my: "+str(my_fdback)+", mcomp: "+str(mcomp_fdback))

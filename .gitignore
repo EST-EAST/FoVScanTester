@@ -62,6 +62,7 @@ target/
 .ipynb_checkpoints
 
 /00_acquired/*.png
+/00_acquired/*.jpg
 /db/*.sqlite3*
 /sweepconfig.py
 
