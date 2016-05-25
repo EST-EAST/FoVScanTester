@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+from threading import Thread, Lock
 
 class Motor:
+
+    mutex = Lock()
+
     en = False
     cmd = ""
     req = False

@@ -161,19 +161,33 @@ def M1(  ):
             if( ((dre.m1.np)==(True)) ):
                 # Transition ID: ID_M1_TRANSITION_CONNECTION
                 # Actions:
-                # ['<global>::setFlag' begin]
-                dre.m1.npflag=True
+                # ['<global>::setMutexFlag' begin]
+                dre.m1.mutex.acquire()
 
-                # ['<global>::setFlag' end]
+                try:
+
+                    dre.m1.npflag=True
+
+                finally:
+
+                    dre.m1.mutex.release()
+                # ['<global>::setMutexFlag' end]
                 state = ID_M1_FINAL
 
             elif( ((dre.m1.m)==(True)) ):
                 # Transition ID: ID_M1_TRANSITION_CONNECTION
                 # Actions:
-                # ['<global>::setFlag' begin]
-                dre.m1.laflag=True
+                # ['<global>::setMutexFlag' begin]
+                dre.m1.mutex.acquire()
 
-                # ['<global>::setFlag' end]
+                try:
+
+                    dre.m1.laflag=True
+
+                finally:
+
+                    dre.m1.mutex.release()
+                # ['<global>::setMutexFlag' end]
                 state = ID_M1_FINAL
 
             elif( ((dre.m1.reqpos)==(True)) ):
@@ -923,17 +937,29 @@ def M1Sim(  ):
                 # Transition ID: ID_M1SIM_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::notifyEndM1Mv' begin]
-                if (dre.m1.npflag):
+                dre.m1.mutex.acquire()
 
-                    print("notify M1 #1")
+                try:
 
-                    dre.m1.npflag=False
+                    if (dre.m1.npflag):
 
-                    print("notify M1 #2")
+                        print("notify M1 #1")
 
-                    sendUntimelyResponse("p")
+                        dre.m1.npflag = False
 
-                    print("notify M1 #3")
+                        print("notify M1 #2")
+
+                        dre.m1.laflag = False
+
+                        print("notify M1 #3")
+
+                        sendUntimelyResponse("p")
+
+                        print("notify M1 #4")
+
+                finally:
+
+                    dre.m1.mutex.release()
 
                 # ['<global>::notifyEndM1Mv' end]
                 # ['<global>::setFlag' begin]
@@ -1007,16 +1033,29 @@ def M2Sim(  ):
                 # Transition ID: ID_M2SIM_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::notifyEndM2Mv' begin]
-                if (dre.m2.npflag):
+                dre.m2.mutex.acquire()
 
-                    print("notify M2 #1")
+                try:
 
-                    dre.m2.npflag=False
-                    print("notify M2 #2")
+                    if (dre.m2.npflag):
 
-                    sendUntimelyResponse("p")
+                        print("notify M2 #1")
 
-                    print("notify M2 #3")
+                        dre.m2.npflag = False
+
+                        print("notify M2 #2")
+
+                        dre.m2.laflag = False
+
+                        print("notify M2 #3")
+
+                        sendUntimelyResponse("p")
+
+                        print("notify M2 #4")
+
+                finally:
+
+                    dre.m2.mutex.release()
 
                 # ['<global>::notifyEndM2Mv' end]
                 # ['<global>::setFlag' begin]
@@ -1052,19 +1091,33 @@ def M2(  ):
             if( ((dre.m2.np)==(True)) ):
                 # Transition ID: ID_M2_TRANSITION_CONNECTION
                 # Actions:
-                # ['<global>::setFlag' begin]
-                dre.m2.npflag=True
+                # ['<global>::setMutexFlag' begin]
+                dre.m2.mutex.acquire()
 
-                # ['<global>::setFlag' end]
+                try:
+
+                    dre.m2.npflag=True
+
+                finally:
+
+                    dre.m2.mutex.release()
+                # ['<global>::setMutexFlag' end]
                 state = ID_M2_FINAL
 
             elif( ((dre.m2.m)==(True)) ):
                 # Transition ID: ID_M2_TRANSITION_CONNECTION
                 # Actions:
-                # ['<global>::setFlag' begin]
-                dre.m2.laflag=True
+                # ['<global>::setMutexFlag' begin]
+                dre.m2.mutex.acquire()
 
-                # ['<global>::setFlag' end]
+                try:
+
+                    dre.m2.laflag=True
+
+                finally:
+
+                    dre.m2.mutex.release()
+                # ['<global>::setMutexFlag' end]
                 state = ID_M2_FINAL
 
             elif( ((dre.m2.reqpos)==(True)) ):
@@ -1152,16 +1205,29 @@ def M3Sim(  ):
                 # Transition ID: ID_M3SIM_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::NotifyEndM3Mv' begin]
-                if (dre.m3.npflag):
+                dre.m3.mutex.acquire()
 
-                    print("notify M3 #1")
+                try:
 
-                    dre.m3.npflag=False
-                    print("notify M3 #2")
+                    if (dre.m3.npflag):
 
-                    sendUntimelyResponse("p")
+                        print("notify M3 #1")
 
-                    print("notify M3 #3")
+                        dre.m3.npflag = False
+
+                        print("notify M3 #2")
+
+                        dre.m3.laflag = False
+
+                        print("notify M3 #3")
+
+                        sendUntimelyResponse("p")
+
+                        print("notify M3 #4")
+
+                finally:
+
+                    dre.m3.mutex.release()
 
                 # ['<global>::NotifyEndM3Mv' end]
                 # ['<global>::setFlag' begin]
@@ -1197,19 +1263,33 @@ def M3(  ):
             if( ((dre.m3.np)==(True)) ):
                 # Transition ID: ID_M3_TRANSITION_CONNECTION
                 # Actions:
-                # ['<global>::setFlag' begin]
-                dre.m3.npflag=True
+                # ['<global>::setMutexFlag' begin]
+                dre.m3.mutex.acquire()
 
-                # ['<global>::setFlag' end]
+                try:
+
+                    dre.m3.npflag=True
+
+                finally:
+
+                    dre.m3.mutex.release()
+                # ['<global>::setMutexFlag' end]
                 state = ID_M3_FINAL
 
             elif( ((dre.m3.m)==(True)) ):
                 # Transition ID: ID_M3_TRANSITION_CONNECTION
                 # Actions:
-                # ['<global>::setFlag' begin]
-                dre.m3.laflag=True
+                # ['<global>::setMutexFlag' begin]
+                dre.m3.mutex.acquire()
 
-                # ['<global>::setFlag' end]
+                try:
+
+                    dre.m3.laflag=True
+
+                finally:
+
+                    dre.m3.mutex.release()
+                # ['<global>::setMutexFlag' end]
                 state = ID_M3_FINAL
 
             elif( ((dre.m3.reqpos)==(True)) ):
