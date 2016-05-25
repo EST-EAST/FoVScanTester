@@ -1339,9 +1339,19 @@ var+=delta&#xD;
       <property name="id" type="long">163</property>
       <property name="name" type="string">notifyEndM1Mv</property>
       <property name="description" type="string">Notifies (if needed) the end of the movement</property>
-      <property name="code" type="string">if (dre.m1.npflag):&#xD;
-    dre.m1.npflag=False&#xD;
-    sendUntimelyResponse("p")</property>
+      <property name="code" type="string">dre.m1.mutex.acquire()&#xD;
+try:&#xD;
+    if (dre.m1.npflag):&#xD;
+        print("notify M1 #1")&#xD;
+        dre.m1.npflag = False&#xD;
+        print("notify M1 #2")&#xD;
+        dre.m1.laflag = False&#xD;
+        print("notify M1 #3")&#xD;
+        sendUntimelyResponse("p")&#xD;
+        print("notify M1 #4")&#xD;
+finally:&#xD;
+    dre.m1.mutex.release()&#xD;
+</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::notifyEndM1Mv#163</property>
       <property name="inline" type="bool">1</property>
@@ -1487,9 +1497,19 @@ dre.rx_buffer=dre.rx_buffer[1:]</property>
       <property name="id" type="long">113</property>
       <property name="name" type="string">notifyEndM2Mv</property>
       <property name="description" type="string">Notifies the end of the movement if NP is activated</property>
-      <property name="code" type="string">if (dre.m2.npflag):&#xD;
-    dre.m2.npflag=False
-    sendUntimelyResponse("p")</property>
+      <property name="code" type="string">dre.m2.mutex.acquire()&#xD;
+try:&#xD;
+    if (dre.m2.npflag):&#xD;
+        print("notify M2 #1")&#xD;
+        dre.m2.npflag = False&#xD;
+        print("notify M2 #2")&#xD;
+        dre.m2.laflag = False&#xD;
+        print("notify M2 #3")&#xD;
+        sendUntimelyResponse("p")&#xD;
+        print("notify M2 #4")&#xD;
+finally:&#xD;
+    dre.m2.mutex.release()&#xD;
+</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::notifyEndM2Mv#113</property>
       <property name="inline" type="bool">1</property>
@@ -1528,9 +1548,19 @@ dre.rx_buffer=dre.rx_buffer[1:]</property>
       <property name="id" type="long">122</property>
       <property name="name" type="string">NotifyEndM3Mv</property>
       <property name="description" type="string">If NP enabled, notifies the end of the movement</property>
-      <property name="code" type="string">if (dre.m3.npflag):&#xD;
-    dre.m3.npflag=False
-    sendUntimelyResponse("p")</property>
+      <property name="code" type="string">dre.m3.mutex.acquire()&#xD;
+try:&#xD;
+    if (dre.m3.npflag):&#xD;
+        print("notify M3 #1")&#xD;
+        dre.m3.npflag = False&#xD;
+        print("notify M3 #2")&#xD;
+        dre.m3.laflag = False&#xD;
+        print("notify M3 #3")&#xD;
+        sendUntimelyResponse("p")&#xD;
+        print("notify M3 #4")&#xD;
+finally:&#xD;
+    dre.m3.mutex.release()&#xD;
+</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::NotifyEndM3Mv#122</property>
       <property name="inline" type="bool">1</property>
@@ -1612,6 +1642,58 @@ dre.mX.m = True&#xD;
       <property name="retval_data_modifier" type="int">0</property>
       <property name="user_retval_decl_place" type="int">0</property>
       <property name="function_modifier" type="int">0</property>
+    </object>
+    <object type="udActionItem">
+      <property name="id" type="long">140</property>
+      <property name="name" type="string">setMutexFlag</property>
+      <property name="description" type="string">Sets a flag using a mutex</property>
+      <property name="code" type="string">mutex.acquire()&#xD;
+try:&#xD;
+    flag=value&#xD;
+finally:&#xD;
+    mutex.release()</property>
+      <property name="scope" type="string">&lt;global&gt;</property>
+      <property name="signature" type="string">&lt;global&gt;::setMutexFlag#140&lt;flag:Integer&gt;&lt;value:Integer&gt;&lt;mutex:Integer&gt;</property>
+      <property name="inline" type="bool">1</property>
+      <property name="retval_data_type" type="int">10</property>
+      <property name="retval_value_type" type="int">0</property>
+      <property name="retval_data_modifier" type="int">0</property>
+      <property name="user_retval_decl_place" type="int">0</property>
+      <property name="function_modifier" type="int">0</property>
+      <object type="udParamItem">
+        <property name="id" type="long">141</property>
+        <property name="name" type="string">flag</property>
+        <property name="description" type="string">Flag to set</property>
+        <property name="scope" type="string">&lt;global&gt;::setMutexFlag</property>
+        <property name="signature" type="string">&lt;global&gt;::setMutexFlag::flag#141</property>
+        <property name="value_type" type="int">0</property>
+        <property name="data_type" type="int">5</property>
+        <property name="data_modifier" type="int">0</property>
+        <property name="user_decl_place" type="int">0</property>
+      </object>
+      <object type="udParamItem">
+        <property name="id" type="long">142</property>
+        <property name="name" type="string">value</property>
+        <property name="description" type="string">Value to set</property>
+        <property name="scope" type="string">&lt;global&gt;::setMutexFlag</property>
+        <property name="signature" type="string">&lt;global&gt;::setMutexFlag::value#142</property>
+        <property name="default_value" type="string">True</property>
+        <property name="value_type" type="int">0</property>
+        <property name="data_type" type="int">5</property>
+        <property name="data_modifier" type="int">0</property>
+        <property name="user_decl_place" type="int">0</property>
+      </object>
+      <object type="udParamItem">
+        <property name="id" type="long">143</property>
+        <property name="name" type="string">mutex</property>
+        <property name="description" type="string">Mutex variable to use</property>
+        <property name="scope" type="string">&lt;global&gt;::setMutexFlag</property>
+        <property name="signature" type="string">&lt;global&gt;::setMutexFlag::mutex#143</property>
+        <property name="value_type" type="int">0</property>
+        <property name="data_type" type="int">5</property>
+        <property name="data_modifier" type="int">0</property>
+        <property name="user_decl_place" type="int">0</property>
+      </object>
     </object>
   </object>
   <object type="udCodePackageItem">
@@ -4022,56 +4104,6 @@ False if the flag must be False to return True</property>
             </object>
           </property>
         </object>
-        <object type="umlTransitionItem">
-          <property name="id" type="long">7</property>
-          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udTransElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Transition connection</property>
-              <property name="description" type="string">Transition's description...</property>
-              <property name="priority" type="long">1</property>
-              <object type="udConditionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">checkFlag</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::checkFlag#151&lt;flag:Integer&gt;&lt;SetOrUnset:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="SetOrUnset">True</item>
-                  <item key="flag">dre.m1.np</item>
-                </property>
-              </object>
-              <object type="udActionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">setFlag</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::setFlag#154&lt;flag:Integer&gt;&lt;value:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="value">True</item>
-                  <item key="flag">dre.m1.npflag</item>
-                </property>
-              </object>
-            </object>
-          </property>
-          <property name="source" type="long">3</property>
-          <property name="target" type="long">1</property>
-          <property name="target_offset" type="realpoint">0.500000,0.000000</property>
-          <property name="control_points" type="listrealpoint">
-            <item>860.000000,110.000000</item>
-            <item>940.000000,160.000000</item>
-          </property>
-          <property name="label" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">8</property>
-              <property name="relative_position" type="realpoint">-125.000000,23.000000</property>
-              <property name="size" type="realpoint">372.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m1.np, True) / [setFlag(dre.m1.npflag, True)] &gt;&gt;</property>
-              <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
         <object type="umlInitialItem">
           <property name="id" type="long">9</property>
           <property name="relative_position" type="realpoint">660.000000,10.000000</property>
@@ -4116,55 +4148,6 @@ False if the flag must be False to return True</property>
               <property name="relative_position" type="realpoint">-42.000000,-9.000000</property>
               <property name="size" type="realpoint">49.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt;  / [] &gt;&gt;</property>
-              <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlTransitionItem">
-          <property name="id" type="long">13</property>
-          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udTransElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Transition connection</property>
-              <property name="description" type="string">Transition's description...</property>
-              <property name="priority" type="long">2</property>
-              <object type="udConditionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">checkFlag</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::checkFlag#151&lt;flag:Integer&gt;&lt;SetOrUnset:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="SetOrUnset">True</item>
-                  <item key="flag">dre.m1.m</item>
-                </property>
-              </object>
-              <object type="udActionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">setFlag</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::setFlag#154&lt;flag:Integer&gt;&lt;value:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="value">True</item>
-                  <item key="flag">dre.m1.laflag</item>
-                </property>
-              </object>
-            </object>
-          </property>
-          <property name="source" type="long">3</property>
-          <property name="target" type="long">1</property>
-          <property name="target_offset" type="realpoint">0.350000,0.500000</property>
-          <property name="control_points" type="listrealpoint">
-            <item>970.000000,320.000000</item>
-          </property>
-          <property name="label" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">14</property>
-              <property name="relative_position" type="realpoint">-232.000000,-17.000000</property>
-              <property name="size" type="realpoint">365.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 2 : checkFlag(dre.m1.m, True) / [setFlag(dre.m1.laflag, True)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -4250,6 +4233,107 @@ False if the flag must be False to return True</property>
             </object>
           </property>
         </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">7</property>
+          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">1</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">checkFlag</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::checkFlag#151&lt;flag:Integer&gt;&lt;SetOrUnset:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="SetOrUnset">True</item>
+                  <item key="flag">dre.m1.np</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">setMutexFlag</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::setMutexFlag#140&lt;flag:Integer&gt;&lt;value:Integer&gt;&lt;mutex:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="value">True</item>
+                  <item key="flag">dre.m1.npflag</item>
+                  <item key="mutex">dre.m1.mutex</item>
+                </property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">3</property>
+          <property name="target" type="long">1</property>
+          <property name="target_offset" type="realpoint">0.500000,0.000000</property>
+          <property name="control_points" type="listrealpoint">
+            <item>860.000000,110.000000</item>
+            <item>940.000000,160.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">8</property>
+              <property name="relative_position" type="realpoint">-125.000000,23.000000</property>
+              <property name="size" type="realpoint">484.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m1.np, True) / [setMutexFlag(dre.m1.npflag, True, dre.m1.mutex)] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">13</property>
+          <property name="relative_position" type="realpoint">510.000000,300.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">2</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">checkFlag</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::checkFlag#151&lt;flag:Integer&gt;&lt;SetOrUnset:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="SetOrUnset">True</item>
+                  <item key="flag">dre.m1.m</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">setMutexFlag</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::setMutexFlag#140&lt;flag:Integer&gt;&lt;value:Integer&gt;&lt;mutex:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="value">True</item>
+                  <item key="flag">dre.m1.laflag</item>
+                  <item key="mutex">dre.m1.mutex</item>
+                </property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">3</property>
+          <property name="target" type="long">1</property>
+          <property name="target_offset" type="realpoint">0.350000,0.500000</property>
+          <property name="control_points" type="listrealpoint">
+            <item>970.000000,320.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">14</property>
+              <property name="relative_position" type="realpoint">-222.000000,-7.000000</property>
+              <property name="size" type="realpoint">477.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 2 : checkFlag(dre.m1.m, True) / [setMutexFlag(dre.m1.laflag, True, dre.m1.mutex)] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
       </diagram>
     </object>
     <object type="udHStateChartDiagramItem">
@@ -4298,8 +4382,8 @@ False if the flag must be False to return True</property>
               </object>
             </object>
           </property>
-          <property name="source" type="long">15</property>
-          <property name="target" type="long">13</property>
+          <property name="source" type="long">13</property>
+          <property name="target" type="long">11</property>
           <property name="source_offset" type="realpoint">0.598039,0.400000</property>
           <property name="target_offset" type="realpoint">0.107843,0.800000</property>
           <property name="control_points" type="listrealpoint">
@@ -4325,7 +4409,7 @@ False if the flag must be False to return True</property>
               <property name="description" type="string">Transition's description...</property>
             </object>
           </property>
-          <property name="source" type="long">13</property>
+          <property name="source" type="long">11</property>
           <property name="target" type="long">7</property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
@@ -4381,7 +4465,7 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="umlTransitionItem">
-          <property name="id" type="long">11</property>
+          <property name="id" type="long">9</property>
           <property name="relative_position" type="realpoint">510.000000,190.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udTransElementItem">
@@ -4413,8 +4497,8 @@ False if the flag must be False to return True</property>
               </object>
             </object>
           </property>
-          <property name="source" type="long">15</property>
-          <property name="target" type="long">13</property>
+          <property name="source" type="long">13</property>
+          <property name="target" type="long">11</property>
           <property name="source_offset" type="realpoint">0.598039,0.400000</property>
           <property name="target_offset" type="realpoint">0.107843,0.600000</property>
           <property name="control_points" type="listrealpoint">
@@ -4422,7 +4506,7 @@ False if the flag must be False to return True</property>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
-              <property name="id" type="long">12</property>
+              <property name="id" type="long">10</property>
               <property name="relative_position" type="realpoint">-338.000000,11.000000</property>
               <property name="size" type="realpoint">435.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt; 1 : greaterThan(dre.m1.setpoint, dre.m1.pos) / [incrDelta(dre.m1.pos, +1)] &gt;&gt;</property>
@@ -4431,7 +4515,7 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="umlSimpleStateItem">
-          <property name="id" type="long">13</property>
+          <property name="id" type="long">11</property>
           <property name="relative_position" type="realpoint">819.000000,80.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udSimpleStateElementItem">
@@ -4444,7 +4528,7 @@ False if the flag must be False to return True</property>
           <property name="fill" type="brush">254,253,211,255 100</property>
           <property name="title" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
-              <property name="id" type="long">14</property>
+              <property name="id" type="long">12</property>
               <property name="relative_position" type="realpoint">24.000000,5.000000</property>
               <property name="size" type="realpoint">55.000000,15.000000</property>
               <property name="text" type="string">StepDone</property>
@@ -4453,7 +4537,7 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="umlSimpleStateItem">
-          <property name="id" type="long">15</property>
+          <property name="id" type="long">13</property>
           <property name="relative_position" type="realpoint">409.000000,110.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udSimpleStateElementItem">
@@ -4466,7 +4550,7 @@ False if the flag must be False to return True</property>
           <property name="fill" type="brush">254,253,211,255 100</property>
           <property name="title" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
-              <property name="id" type="long">16</property>
+              <property name="id" type="long">14</property>
               <property name="relative_position" type="realpoint">32.000000,5.000000</property>
               <property name="size" type="realpoint">39.000000,15.000000</property>
               <property name="text" type="string">Enable</property>
@@ -4475,7 +4559,7 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="umlTransitionItem">
-          <property name="id" type="long">17</property>
+          <property name="id" type="long">15</property>
           <property name="relative_position" type="realpoint">510.000000,190.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udTransElementItem">
@@ -4497,10 +4581,10 @@ False if the flag must be False to return True</property>
             </object>
           </property>
           <property name="source" type="long">5</property>
-          <property name="target" type="long">15</property>
+          <property name="target" type="long">13</property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
-              <property name="id" type="long">18</property>
+              <property name="id" type="long">16</property>
               <property name="relative_position" type="realpoint">-166.000000,-9.000000</property>
               <property name="size" type="realpoint">232.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m1.laflag, True) / [] &gt;&gt;</property>
@@ -4509,7 +4593,7 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="umlTransitionItem">
-          <property name="id" type="long">19</property>
+          <property name="id" type="long">17</property>
           <property name="relative_position" type="realpoint">510.000000,190.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udTransElementItem">
@@ -4525,7 +4609,7 @@ False if the flag must be False to return True</property>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
-              <property name="id" type="long">20</property>
+              <property name="id" type="long">18</property>
               <property name="relative_position" type="realpoint">-42.000000,-9.000000</property>
               <property name="size" type="realpoint">49.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt;  / [] &gt;&gt;</property>
@@ -4534,7 +4618,7 @@ False if the flag must be False to return True</property>
           </property>
         </object>
         <object type="uddNoteItem">
-          <property name="id" type="long">21</property>
+          <property name="id" type="long">19</property>
           <property name="relative_position" type="realpoint">20.000000,310.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udNoteElementItem">
@@ -4547,7 +4631,7 @@ False if the flag must be False to return True</property>
           <property name="connect_to_vertex" type="bool">0</property>
           <property name="title" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
-              <property name="id" type="long">22</property>
+              <property name="id" type="long">20</property>
               <property name="relative_position" type="realpoint">5.000000,5.000000</property>
               <property name="size" type="realpoint">26.000000,15.000000</property>
               <property name="text" type="string">Note</property>
@@ -4556,7 +4640,7 @@ False if the flag must be False to return True</property>
           </property>
           <property name="content" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
-              <property name="id" type="long">23</property>
+              <property name="id" type="long">21</property>
               <property name="relative_position" type="realpoint">5.000000,23.000000</property>
               <property name="size" type="realpoint">338.000000,30.000000</property>
               <property name="text" type="string">This FSM is prepared for a loop, it acts as non blocking.  
@@ -4566,7 +4650,7 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
           </property>
         </object>
         <object type="umlTransitionItem">
-          <property name="id" type="long">9</property>
+          <property name="id" type="long">22</property>
           <property name="relative_position" type="realpoint">510.000000,190.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udTransElementItem">
@@ -4593,7 +4677,7 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
               </object>
             </object>
           </property>
-          <property name="source" type="long">15</property>
+          <property name="source" type="long">13</property>
           <property name="target" type="long">7</property>
           <property name="target_offset" type="realpoint">0.200000,0.500000</property>
           <property name="control_points" type="listrealpoint">
@@ -4601,7 +4685,7 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
-              <property name="id" type="long">10</property>
+              <property name="id" type="long">23</property>
               <property name="relative_position" type="realpoint">-227.000000,-19.000000</property>
               <property name="size" type="realpoint">301.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt;  / [notifyEndM1Mv(), setFlag(dre.m1.laflag, False)] &gt;&gt;</property>
@@ -5153,6 +5237,28 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
             </object>
           </property>
         </object>
+        <object type="umlInitialItem">
+          <property name="id" type="long">15</property>
+          <property name="relative_position" type="realpoint">852.000000,20.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udInitialElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Initial</property>
+              <property name="description" type="string">Diagram element's description...</property>
+            </object>
+          </property>
+          <property name="size" type="realpoint">20.000000,20.000000</property>
+          <property name="fill" type="brush">0,0,0,255 100</property>
+          <property name="title" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">16</property>
+              <property name="relative_position" type="realpoint">0.000000,25.000000</property>
+              <property name="size" type="realpoint">29.000000,15.000000</property>
+              <property name="text" type="string">Initial</property>
+              <property name="label_type" type="int">1</property>
+            </object>
+          </property>
+        </object>
         <object type="umlTransitionItem">
           <property name="id" type="long">13</property>
           <property name="relative_position" type="realpoint">510.000000,190.000000</property>
@@ -5175,13 +5281,14 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
               </object>
               <object type="udActionLinkItem">
                 <property name="id" type="long">-1</property>
-                <property name="name" type="string">setFlag</property>
+                <property name="name" type="string">setMutexFlag</property>
                 <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::setFlag#154&lt;flag:Integer&gt;&lt;value:Integer&gt;</property>
+                <property name="original_code" type="string">&lt;global&gt;::setMutexFlag#140&lt;flag:Integer&gt;&lt;value:Integer&gt;&lt;mutex:Integer&gt;</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="value">True</item>
                   <item key="flag">dre.m2.npflag</item>
+                  <item key="mutex">dre.m2.mutex</item>
                 </property>
               </object>
             </object>
@@ -5189,38 +5296,16 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
           <property name="source" type="long">5</property>
           <property name="target" type="long">1</property>
           <property name="control_points" type="listrealpoint">
-            <item>1182.000000,100.000000</item>
-            <item>1172.000000,160.000000</item>
+            <item>1152.000000,100.000000</item>
+            <item>1142.000000,160.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
               <property name="id" type="long">14</property>
-              <property name="relative_position" type="realpoint">-272.000000,11.000000</property>
-              <property name="size" type="realpoint">372.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m2.np, True) / [setFlag(dre.m2.npflag, True)] &gt;&gt;</property>
+              <property name="relative_position" type="realpoint">-282.000000,11.000000</property>
+              <property name="size" type="realpoint">484.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m2.np, True) / [setMutexFlag(dre.m2.npflag, True, dre.m2.mutex)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlInitialItem">
-          <property name="id" type="long">15</property>
-          <property name="relative_position" type="realpoint">852.000000,20.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udInitialElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Initial</property>
-              <property name="description" type="string">Diagram element's description...</property>
-            </object>
-          </property>
-          <property name="size" type="realpoint">20.000000,20.000000</property>
-          <property name="fill" type="brush">0,0,0,255 100</property>
-          <property name="title" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">16</property>
-              <property name="relative_position" type="realpoint">0.000000,25.000000</property>
-              <property name="size" type="realpoint">29.000000,15.000000</property>
-              <property name="text" type="string">Initial</property>
-              <property name="label_type" type="int">1</property>
             </object>
           </property>
         </object>
@@ -5246,13 +5331,14 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
               </object>
               <object type="udActionLinkItem">
                 <property name="id" type="long">-1</property>
-                <property name="name" type="string">setFlag</property>
+                <property name="name" type="string">setMutexFlag</property>
                 <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::setFlag#154&lt;flag:Integer&gt;&lt;value:Integer&gt;</property>
+                <property name="original_code" type="string">&lt;global&gt;::setMutexFlag#140&lt;flag:Integer&gt;&lt;value:Integer&gt;&lt;mutex:Integer&gt;</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="value">True</item>
                   <item key="flag">dre.m2.laflag</item>
+                  <item key="mutex">dre.m2.mutex</item>
                 </property>
               </object>
             </object>
@@ -5265,9 +5351,9 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
               <property name="id" type="long">18</property>
-              <property name="relative_position" type="realpoint">-252.000000,-49.000000</property>
-              <property name="size" type="realpoint">365.000000,15.000000</property>
-              <property name="text" type="string">&lt;&lt; 2 : checkFlag(dre.m2.m, True) / [setFlag(dre.m2.laflag, True)] &gt;&gt;</property>
+              <property name="relative_position" type="realpoint">-302.000000,-19.000000</property>
+              <property name="size" type="realpoint">477.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 2 : checkFlag(dre.m2.m, True) / [setMutexFlag(dre.m2.laflag, True, dre.m2.mutex)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -5625,7 +5711,7 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
       <diagram>
         <object type="umlSimpleStateItem">
           <property name="id" type="long">1</property>
-          <property name="relative_position" type="realpoint">515.000000,120.000000</property>
+          <property name="relative_position" type="realpoint">567.000000,120.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udSimpleStateElementItem">
               <property name="id" type="long">0</property>
@@ -5638,8 +5724,8 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
           <property name="title" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
               <property name="id" type="long">2</property>
-              <property name="relative_position" type="realpoint">25.000000,5.000000</property>
-              <property name="size" type="realpoint">53.000000,18.000000</property>
+              <property name="relative_position" type="realpoint">31.000000,5.000000</property>
+              <property name="size" type="realpoint">41.000000,15.000000</property>
               <property name="text" type="string">Waiting</property>
               <property name="label_type" type="int">1</property>
             </object>
@@ -5647,7 +5733,7 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
         </object>
         <object type="umlFinalItem">
           <property name="id" type="long">3</property>
-          <property name="relative_position" type="realpoint">566.000000,330.000000</property>
+          <property name="relative_position" type="realpoint">618.000000,330.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udFinalElementItem">
               <property name="id" type="long">0</property>
@@ -5660,7 +5746,7 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
             <object type="uddLabelElement">
               <property name="id" type="long">4</property>
               <property name="relative_position" type="realpoint">0.000000,25.000000</property>
-              <property name="size" type="realpoint">32.000000,18.000000</property>
+              <property name="size" type="realpoint">27.000000,15.000000</property>
               <property name="text" type="string">Final</property>
               <property name="label_type" type="int">1</property>
             </object>
@@ -5682,15 +5768,15 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
             <object type="uddLabelElement">
               <property name="id" type="long">6</property>
               <property name="relative_position" type="realpoint">-42.000000,-9.000000</property>
-              <property name="size" type="realpoint">84.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; / [] &gt;&gt;</property>
+              <property name="size" type="realpoint">49.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt;  / [] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
         </object>
         <object type="umlInitialItem">
           <property name="id" type="long">7</property>
-          <property name="relative_position" type="realpoint">556.000000,30.000000</property>
+          <property name="relative_position" type="realpoint">608.000000,30.000000</property>
           <property name="user_data" type="serializabledynamic">
             <object type="udInitialElementItem">
               <property name="id" type="long">0</property>
@@ -5704,7 +5790,7 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
             <object type="uddLabelElement">
               <property name="id" type="long">8</property>
               <property name="relative_position" type="realpoint">-10.000000,-25.000000</property>
-              <property name="size" type="realpoint">36.000000,18.000000</property>
+              <property name="size" type="realpoint">29.000000,15.000000</property>
               <property name="text" type="string">Initial</property>
               <property name="label_type" type="int">1</property>
             </object>
@@ -5736,7 +5822,7 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
             <object type="uddLabelElement">
               <property name="id" type="long">10</property>
               <property name="relative_position" type="realpoint">-125.000000,-29.000000</property>
-              <property name="size" type="realpoint">251.000000,18.000000</property>
+              <property name="size" type="realpoint">173.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt;  / [setM3Response("OK")] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
@@ -5778,63 +5864,15 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
           <property name="source" type="long">1</property>
           <property name="target" type="long">3</property>
           <property name="control_points" type="listrealpoint">
-            <item>836.000000,260.000000</item>
-            <item>846.000000,330.000000</item>
+            <item>888.000000,260.000000</item>
+            <item>898.000000,330.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
               <property name="id" type="long">12</property>
               <property name="relative_position" type="realpoint">-188.000000,31.000000</property>
-              <property name="size" type="realpoint">606.000000,18.000000</property>
+              <property name="size" type="realpoint">428.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt; 4 : checkFlag(dre.m3.la, True) / [setVar(dre.m3.setpoint, dre.m3.posarg)] &gt;&gt;</property>
-              <property name="label_type" type="int">3</property>
-            </object>
-          </property>
-        </object>
-        <object type="umlTransitionItem">
-          <property name="id" type="long">13</property>
-          <property name="relative_position" type="realpoint">510.000000,190.000000</property>
-          <property name="user_data" type="serializabledynamic">
-            <object type="udTransElementItem">
-              <property name="id" type="long">0</property>
-              <property name="name" type="string">Transition connection</property>
-              <property name="description" type="string">Transition's description...</property>
-              <property name="priority" type="long">2</property>
-              <object type="udConditionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">checkFlag</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::checkFlag#151&lt;flag:Integer&gt;&lt;SetOrUnset:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="SetOrUnset">True</item>
-                  <item key="flag">dre.m3.m</item>
-                </property>
-              </object>
-              <object type="udActionLinkItem">
-                <property name="id" type="long">-1</property>
-                <property name="name" type="string">setFlag</property>
-                <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::setFlag#154&lt;flag:Integer&gt;&lt;value:Integer&gt;</property>
-                <property name="scope" type="string">&lt;global&gt;</property>
-                <property name="call_parameters" type="mapstring">
-                  <item key="value">True</item>
-                  <item key="flag">dre.m3.laflag</item>
-                </property>
-              </object>
-            </object>
-          </property>
-          <property name="source" type="long">1</property>
-          <property name="target" type="long">3</property>
-          <property name="control_points" type="listrealpoint">
-            <item>258.000000,320.000000</item>
-          </property>
-          <property name="label" type="serializabledynamicnocreate">
-            <object type="uddLabelElement">
-              <property name="id" type="long">14</property>
-              <property name="relative_position" type="realpoint">-258.000000,-9.000000</property>
-              <property name="size" type="realpoint">517.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; 2 : checkFlag(dre.m3.m, True) / [setFlag(dre.m3.laflag, True)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
@@ -5874,13 +5912,13 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
           <property name="source" type="long">1</property>
           <property name="target" type="long">3</property>
           <property name="control_points" type="listrealpoint">
-            <item>816.000000,100.000000</item>
+            <item>868.000000,100.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
               <property name="id" type="long">16</property>
               <property name="relative_position" type="realpoint">-208.000000,1.000000</property>
-              <property name="size" type="realpoint">593.000000,18.000000</property>
+              <property name="size" type="realpoint">425.000000,15.000000</property>
               <property name="text" type="string">&lt;&lt; 3 : checkFlag(dre.m3.reqpos, True) / [setM3Response(str(dre.m3.pos))] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
@@ -5908,13 +5946,14 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
               </object>
               <object type="udActionLinkItem">
                 <property name="id" type="long">-1</property>
-                <property name="name" type="string">setFlag</property>
+                <property name="name" type="string">setMutexFlag</property>
                 <property name="description" type="string">Link description...</property>
-                <property name="original_code" type="string">&lt;global&gt;::setFlag#154&lt;flag:Integer&gt;&lt;value:Integer&gt;</property>
+                <property name="original_code" type="string">&lt;global&gt;::setMutexFlag#140&lt;flag:Integer&gt;&lt;value:Integer&gt;&lt;mutex:Integer&gt;</property>
                 <property name="scope" type="string">&lt;global&gt;</property>
                 <property name="call_parameters" type="mapstring">
                   <item key="value">True</item>
                   <item key="flag">dre.m3.npflag</item>
+                  <item key="mutex">dre.m3.mutex</item>
                 </property>
               </object>
             </object>
@@ -5922,15 +5961,64 @@ M1Sim is a blocking one, suitable for thread implementations.</property>
           <property name="source" type="long">1</property>
           <property name="target" type="long">3</property>
           <property name="control_points" type="listrealpoint">
-            <item>356.000000,70.000000</item>
-            <item>316.000000,190.000000</item>
+            <item>408.000000,70.000000</item>
+            <item>368.000000,190.000000</item>
           </property>
           <property name="label" type="serializabledynamicnocreate">
             <object type="uddLabelElement">
               <property name="id" type="long">18</property>
-              <property name="relative_position" type="realpoint">-338.000000,31.000000</property>
-              <property name="size" type="realpoint">526.000000,18.000000</property>
-              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m3.np, True) / [setFlag(dre.m3.npflag, True)] &gt;&gt;</property>
+              <property name="relative_position" type="realpoint">-358.000000,41.000000</property>
+              <property name="size" type="realpoint">484.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 1 : checkFlag(dre.m3.np, True) / [setMutexFlag(dre.m3.npflag, True, dre.m3.mutex)] &gt;&gt;</property>
+              <property name="label_type" type="int">3</property>
+            </object>
+          </property>
+        </object>
+        <object type="umlTransitionItem">
+          <property name="id" type="long">13</property>
+          <property name="relative_position" type="realpoint">510.000000,190.000000</property>
+          <property name="user_data" type="serializabledynamic">
+            <object type="udTransElementItem">
+              <property name="id" type="long">0</property>
+              <property name="name" type="string">Transition connection</property>
+              <property name="description" type="string">Transition's description...</property>
+              <property name="priority" type="long">2</property>
+              <object type="udConditionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">checkFlag</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::checkFlag#151&lt;flag:Integer&gt;&lt;SetOrUnset:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="SetOrUnset">True</item>
+                  <item key="flag">dre.m3.m</item>
+                </property>
+              </object>
+              <object type="udActionLinkItem">
+                <property name="id" type="long">-1</property>
+                <property name="name" type="string">setMutexFlag</property>
+                <property name="description" type="string">Link description...</property>
+                <property name="original_code" type="string">&lt;global&gt;::setMutexFlag#140&lt;flag:Integer&gt;&lt;value:Integer&gt;&lt;mutex:Integer&gt;</property>
+                <property name="scope" type="string">&lt;global&gt;</property>
+                <property name="call_parameters" type="mapstring">
+                  <item key="value">True</item>
+                  <item key="flag">dre.m3.laflag</item>
+                  <item key="mutex">dre.m3.mutex</item>
+                </property>
+              </object>
+            </object>
+          </property>
+          <property name="source" type="long">1</property>
+          <property name="target" type="long">3</property>
+          <property name="control_points" type="listrealpoint">
+            <item>310.000000,320.000000</item>
+          </property>
+          <property name="label" type="serializabledynamicnocreate">
+            <object type="uddLabelElement">
+              <property name="id" type="long">14</property>
+              <property name="relative_position" type="realpoint">-258.000000,-9.000000</property>
+              <property name="size" type="realpoint">477.000000,15.000000</property>
+              <property name="text" type="string">&lt;&lt; 2 : checkFlag(dre.m3.m, True) / [setMutexFlag(dre.m3.laflag, True, dre.m3.mutex)] &gt;&gt;</property>
               <property name="label_type" type="int">3</property>
             </object>
           </property>
