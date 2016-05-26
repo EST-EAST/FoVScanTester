@@ -121,6 +121,8 @@ def clientthread(conn):
 
 ################ MAIN ####################
 
+FoV.dre.disable_untimely_resp = sweepconfig.cte_sim_disable_untimely_resp
+
 if not(sweepconfig.cte_use_socket):
     import serial
 

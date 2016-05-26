@@ -79,7 +79,8 @@ def processPendingResponse(r):
     global numberOfPToRx
     print("Resp2:" + r)
     if (r == "p"):
-        numberOfPToRx -= 1
+        if sweepconfig.cte_wait_for_p:
+            numberOfPToRx -= 1
     if (r == "OK"):
         numberOfOkToRx -= 1
     print("Number of pending P to Rx: " + str(numberOfPToRx))
@@ -121,19 +122,23 @@ def consumePendingOks():
 def consumePendingPs():
     global numberOfOkToRx
     global numberOfPToRx
-    while (numberOfPToRx > 0):
-        consumeResponse()
-    if (numberOfPToRx == 0):
-        ret = 0
+    if sweepconfig.cte_wait_for_p:
+        while (numberOfPToRx > 0):
+            consumeResponse()
+        if (numberOfPToRx == 0):
+            ret = 0
+        else:
+            ret = -1
     else:
-        ret = -1
+        ret = 0
     return ret
 
 
 # Increments the count of pending P responses
 def incrementPendingP():
     global numberOfPToRx
-    numberOfPToRx += 1
+    if sweepconfig.cte_wait_for_p:
+        numberOfPToRx += 1
 
 
 # Increments the count of pending Ok responses
@@ -159,16 +164,17 @@ def goHome(idx):
         incrementPendingOk()
         consumePendingOks()
 
-        cmd_str = prefixX + "NP"
-        sendMotorCommand(cmd_str)
-        print("Command:"+cmd_str)
-        incrementPendingOk()
-        consumePendingOks()
+        if (sweepconfig.cte_command_np_flags):
+            cmd_str = prefixX + "NP"
+            sendMotorCommand(cmd_str)
+            print("Command:"+cmd_str)
+            incrementPendingOk()
+            consumePendingOks()
+            incrementPendingP()
 
         cmd_str = prefixX + "GOHOSEQ"
         sendMotorCommand(cmd_str)
         print("Command:"+cmd_str)
-        incrementPendingP()
         incrementPendingOk()
         consumePendingOks()
         consumePendingPs()
@@ -179,16 +185,17 @@ def goHome(idx):
         incrementPendingOk()
         consumePendingOks()
 
-        cmd_str = prefixX + "NP"
-        sendMotorCommand(cmd_str)
-        print("Command:"+cmd_str)
-        incrementPendingOk()
-        consumePendingOks()
+        if (sweepconfig.cte_command_np_flags):
+            cmd_str = prefixX + "NP"
+            sendMotorCommand(cmd_str)
+            print("Command:"+cmd_str)
+            incrementPendingOk()
+            consumePendingOks()
+            incrementPendingP()
 
         cmd_str = prefixX + "GOIX"
         sendMotorCommand(cmd_str)
         print("Command:"+cmd_str)
-        incrementPendingP()
         incrementPendingOk()
         consumePendingOks()
         consumePendingPs()
@@ -258,11 +265,13 @@ def commandMotor(x, y):
         # Program the motor to warn when the command is done
         if (sweepconfig.cte_use_motor_x):
             sendXportBegin(sweepconfig.cte_motor_x_xport)
-            cmd_str = prefixX + "NP"
-            sendMotorCommand(cmd_str)
-            print("Command:" + cmd_str)
-            incrementPendingOk()
-            consumePendingOks()
+            if (sweepconfig.cte_command_np_flags):
+                cmd_str = prefixX + "NP"
+                sendMotorCommand(cmd_str)
+                print("Command:" + cmd_str)
+                incrementPendingOk()
+                consumePendingOks()
+                incrementPendingP()
 
             cmd_str = prefixX + "LA%04d" % (lsx_pos)
             sendMotorCommand(cmd_str)
@@ -274,11 +283,13 @@ def commandMotor(x, y):
         if (sweepconfig.cte_use_motor_y):
             sendXportBegin(sweepconfig.cte_motor_y_xport)
             # Program the motor to warn when the command is done
-            cmd_str = prefixY + "NP"
-            sendMotorCommand(cmd_str)
-            print("Command:" + cmd_str)
-            incrementPendingOk()
-            consumePendingOks()
+            if (sweepconfig.cte_command_np_flags):
+                cmd_str = prefixY + "NP"
+                sendMotorCommand(cmd_str)
+                print("Command:" + cmd_str)
+                incrementPendingOk()
+                consumePendingOks()
+                incrementPendingP()
 
             cmd_str = prefixY + "LA%04d" % (lsy_pos)
             sendMotorCommand(cmd_str)
@@ -290,11 +301,13 @@ def commandMotor(x, y):
         if (sweepconfig.cte_use_motor_comp):
             sendXportBegin(sweepconfig.cte_motor_comp_xport)
             # Program the motor to warn when the command is done
-            cmd_str = prefixComp + "NP"
-            sendMotorCommand(cmd_str)
-            print("Command:" + cmd_str)
-            incrementPendingOk()
-            consumePendingOks()
+            if (sweepconfig.cte_command_np_flags):
+                cmd_str = prefixComp + "NP"
+                sendMotorCommand(cmd_str)
+                print("Command:" + cmd_str)
+                incrementPendingOk()
+                consumePendingOks()
+                incrementPendingP()
 
             cmd_str = prefixComp + "LA%04d" % (lscomp_pos)
             sendMotorCommand(cmd_str)
@@ -309,7 +322,6 @@ def commandMotor(x, y):
             cmd_str = prefixX + "M"
             sendMotorCommand(cmd_str)
             print("Command:" + cmd_str)
-            incrementPendingP()
             incrementPendingOk()
             consumePendingOks()
             sendXportEnd()
@@ -319,7 +331,6 @@ def commandMotor(x, y):
             cmd_str = prefixY + "M"
             sendMotorCommand(cmd_str)
             print("Command:" + cmd_str)
-            incrementPendingP()
             incrementPendingOk()
             consumePendingOks()
             sendXportEnd()
@@ -329,7 +340,6 @@ def commandMotor(x, y):
             cmd_str = prefixComp + "M"
             sendMotorCommand(cmd_str)
             print("Command:" + cmd_str)
-            incrementPendingP()
             incrementPendingOk()
             consumePendingOks()
             sendXportEnd()
@@ -352,6 +362,35 @@ def resetMotors():
     lscomp_pos = cte_lscomp_zero
     
     commandMotor(0.0, 0.0)
+
+
+# Disables the motors
+def disableMotors():
+    if (sweepconfig.cte_use_motor_x):
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        cmd_str = prefixX + "DI"
+        sendMotorCommand(cmd_str)
+        print("Command:" + cmd_str)
+        incrementPendingOk()
+        consumePendingOks()
+
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmd_str = prefixY + "DI"
+        sendMotorCommand(cmd_str)
+        print("Command:" + cmd_str)
+        incrementPendingOk()
+        consumePendingOks()
+
+
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmd_str = prefixComp + "DI"
+        sendMotorCommand(cmd_str)
+        print("Command:" + cmd_str)
+        incrementPendingOk()
+        consumePendingOks()
+
 
 cte_waitTime = 1
 cte_stepTime = cte_waitTime * 1000     # Time to wait between steps, apart from motors and camera ones

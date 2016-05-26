@@ -65,7 +65,7 @@ if cte_use_photocam:
     cte_cameractrl_filenamecmd = "/filename"
     cte_cameractrl_filename_root = "FoV"
 
-cte_use_gphoto2 = True
+cte_use_gphoto2 = False
 
 if cte_use_gphoto2:
     cte_gphoto2_framePath = "./00_acquired/"
@@ -75,4 +75,17 @@ cte_use_motor_x = True
 cte_use_motor_y = True
 cte_use_motor_comp = True
 
-cte_reset_motors_first = True
+cte_test_protocol=True
+
+if (cte_test_protocol):
+    cte_disable_motors_first = True
+    cte_reset_motors_first = True
+    cte_command_np_flags = True
+    cte_wait_for_p = False
+    cte_sim_disable_untimely_resp = True
+else:
+    cte_disable_motors_first = False
+    cte_reset_motors_first = True
+    cte_command_np_flags = True
+    cte_wait_for_p = True
+    cte_sim_disable_untimely_resp = False
