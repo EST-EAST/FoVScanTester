@@ -8,7 +8,7 @@ Created on Tue May 17 17:51:05 2016
 #### Connection configuration
 
 cte_use_socket = True
-cte_debug = True
+cte_debug = False
 
 if not(cte_use_socket):
     # Serial connection configuration
@@ -75,17 +75,19 @@ cte_use_motor_x = True
 cte_use_motor_y = True
 cte_use_motor_comp = True
 
-cte_test_protocol=True
+cte_test_protocol=False
 
 if (cte_test_protocol):
+    cte_enable_motors_first = False
     cte_disable_motors_first = True
     cte_reset_motors_first = True
     cte_command_np_flags = True
     cte_wait_for_p = False
     cte_sim_disable_untimely_resp = True
 else:
+    cte_enable_motors_first = True
     cte_disable_motors_first = False
-    cte_reset_motors_first = True
+    cte_reset_motors_first = False
     cte_command_np_flags = True
     cte_wait_for_p = True
     cte_sim_disable_untimely_resp = False

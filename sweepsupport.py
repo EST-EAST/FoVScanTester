@@ -374,6 +374,7 @@ def disableMotors():
         print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
+        sendXportEnd()
 
     if (sweepconfig.cte_use_motor_y):
         sendXportBegin(sweepconfig.cte_motor_y_xport)
@@ -382,6 +383,7 @@ def disableMotors():
         print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
+        sendXportEnd()
 
 
     if (sweepconfig.cte_use_motor_comp):
@@ -391,6 +393,37 @@ def disableMotors():
         print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
+        sendXportEnd()
+
+# Disables the motors
+def enableMotors():
+    if (sweepconfig.cte_use_motor_x):
+        sendXportBegin(sweepconfig.cte_motor_x_xport)
+        cmd_str = prefixX + "EN"
+        sendMotorCommand(cmd_str)
+        print("Command:" + cmd_str)
+        incrementPendingOk()
+        consumePendingOks()
+        sendXportEnd()
+
+    if (sweepconfig.cte_use_motor_y):
+        sendXportBegin(sweepconfig.cte_motor_y_xport)
+        cmd_str = prefixY + "EN"
+        sendMotorCommand(cmd_str)
+        print("Command:" + cmd_str)
+        incrementPendingOk()
+        consumePendingOks()
+        sendXportEnd()
+
+
+    if (sweepconfig.cte_use_motor_comp):
+        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+        cmd_str = prefixComp + "EN"
+        sendMotorCommand(cmd_str)
+        print("Command:" + cmd_str)
+        incrementPendingOk()
+        consumePendingOks()
+        sendXportEnd()
 
 
 cte_waitTime = 1
