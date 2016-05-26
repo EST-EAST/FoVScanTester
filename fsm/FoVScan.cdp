@@ -6400,10 +6400,11 @@ return a_as_str</property>
       <property name="id" type="long">90</property>
       <property name="name" type="string">sendUntimelyResponse</property>
       <property name="description" type="string">Sends a response without a command.  Commonly used for sending the 'p' notification</property>
-      <property name="code" type="string">if not(dre.cte_use_socket):
-    dre.ser.write(resptosend+'\13'+'\10')
-else:
-    dre.ser.sendall(resptosend+'\13'+'\10')</property>
+      <property name="code" type="string">if not(dre.disable_untimely_resp):&#xD;
+    if not(dre.cte_use_socket):&#xD;
+        dre.ser.write(resptosend+'\13'+'\10')&#xD;
+    else:&#xD;
+        dre.ser.sendall(resptosend+'\13'+'\10')</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::sendUntimelyResponse#90&lt;resptosend:Integer&gt;</property>
       <property name="inline" type="bool">0</property>

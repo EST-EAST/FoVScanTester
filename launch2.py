@@ -104,6 +104,9 @@ if (ret==False):
     done = -1
     print "Database ERROR! Aborting"
 
+if (sweepconfig.cte_disable_motors_first):
+    sws.disableMotors()
+
 if (sweepconfig.cte_reset_motors_first):
     sws.resetMotors()
 

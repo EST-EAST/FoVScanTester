@@ -48,3 +48,4 @@ class DRE:
     m1port=0
     m2port=0
     m3port=0
+    disable_untimely_resp = False
