@@ -68,7 +68,9 @@ def dbprepare(dbc):
 
 ###### Automatically generated code ###########
 sweep_ex_id = 2
-steps = [ { 'c': (0),'x': (0),'y': (0),'x_coord': (0.0),'y_coord': (0.0) },{ 'c': (1),'x': (1),'y': (0),'x_coord': (0.0018),'y_coord': (0.0) },{ 'c': (2),'x': (1),'y': (1),'x_coord': (0.0018),'y_coord': (0.0008) },{ 'c': (3),'x': (0),'y': (1),'x_coord': (0.0),'y_coord': (0.0008) },{ 'c': (4),'x': (-1),'y': (1),'x_coord': (-0.0018),'y_coord': (0.0008) },{ 'c': (5),'x': (-1),'y': (0),'x_coord': (-0.0018),'y_coord': (0.0) },{ 'c': (6),'x': (-1),'y': (-1),'x_coord': (-0.0018),'y_coord': (-0.0008) },{ 'c': (7),'x': (0),'y': (-1),'x_coord': (0.0),'y_coord': (-0.0008) } ]
+#steps = [ { 'c': (0),'x': (0),'y': (0),'x_coord': (0.0),'y_coord': (0.0) }]
+steps = [ { 'c': (1),'x': (1),'y': (0),'x_coord': (0.0018),'y_coord': (0.0018) }]
+#,{ 'c': (1),'x': (1),'y': (0),'x_coord': (0.0018),'y_coord': (0.0) },{ 'c': (2),'x': (1),'y': (1),'x_coord': (0.0018),'y_coord': (0.0008) },{ 'c': (3),'x': (0),'y': (1),'x_coord': (0.0),'y_coord': (0.0008) },{ 'c': (4),'x': (-1),'y': (1),'x_coord': (-0.0018),'y_coord': (0.0008) },{ 'c': (5),'x': (-1),'y': (0),'x_coord': (-0.0018),'y_coord': (0.0) },{ 'c': (6),'x': (-1),'y': (-1),'x_coord': (-0.0018),'y_coord': (-0.0008) },{ 'c': (7),'x': (0),'y': (-1),'x_coord': (0.0),'y_coord': (-0.0008) } ]
 
 ###### Automatically generated steps table ###########
 ###### END Automatically generated code ###########
@@ -104,11 +106,14 @@ if (ret==False):
     done = -1
     print "Database ERROR! Aborting"
 
+if (sweepconfig.cte_enable_motors_first):
+    sws.enableMotors()
+    
 if (sweepconfig.cte_disable_motors_first):
     sws.disableMotors()
 
-if (sweepconfig.cte_reset_motors_first):
-    sws.resetMotors()
+#if (sweepconfig.cte_reset_motors_first):
+#    sws.resetMotors()
 
 # Steps loop
 # until ESC key is pressed
