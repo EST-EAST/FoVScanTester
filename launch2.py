@@ -84,7 +84,7 @@ timestr=strftime("%Y%m%d%H%M%S", gmtime())
 
 if sweepconfig.cte_use_cvcam:
     # Cam has the video source
-    cam = cv2.VideoCapture(sws.cte_camsource)
+    cam = cv2.VideoCapture(sweepconfig.cte_camsource)
     if (sweepconfig.cte_verbose):
         print ("Camera resolution:")
         print ("* Horizontal: " + str(cam.get(cv2.CAP_PROP_FRAME_WIDTH)))
