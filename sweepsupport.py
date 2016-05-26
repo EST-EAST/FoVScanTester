@@ -14,6 +14,7 @@ def resetXport():
     if sweepconfig.cte_use_socket:
         str = "" + chr(27)
         FoV.dre.ser.sendall(str)
+        sendMotorCommand("@")
 
 
 # Sends an XPort command, and process its response
