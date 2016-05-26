@@ -91,6 +91,18 @@ if sweepconfig.cte_use_cvcam:
         print ("* Vertical: "+ str(cam.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 
     #subprocess.check_call("exit 1", shell=True)
+
+if (sweepconfig.cte_disable_motors_first):
+    sws.disableMotors()
+
+print("Check initial motor positions")
+sws.motorPositions()
+
+if (sweepconfig.cte_reset_motors_first):
+    sws.resetMotors()
+    print("Check motor positions after resets")
+    sws.motorPositions()
+
 # Prepare the Database
 db = sqlite3.connect('./db/log.sqlite3')
 if not(db):
@@ -99,16 +111,11 @@ else:
     ret = True
     dbc = db.cursor()
     ret=dbprepare(dbc)
-    
+
 if (ret==False):
     done = -1
     print "Database ERROR! Aborting"
 
-if (sweepconfig.cte_disable_motors_first):
-    sws.disableMotors()
-
-if (sweepconfig.cte_reset_motors_first):
-    sws.resetMotors()
 
 # Steps loop
 # until ESC key is pressed
