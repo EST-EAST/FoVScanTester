@@ -958,9 +958,9 @@ else:&#xD;
       <property name="name" type="string">serialCommandWrite</property>
       <property name="description" type="string">Write a command through serial line, copying it from the tx_buffer</property>
       <property name="code" type="string">if not(dre.cte_use_socket):&#xD;
-    dre.ser.write(dre.command_tx_buf+'\13')&#xD;
+    dre.ser.write(dre.command_tx_buf+chr(13))&#xD;
 else:&#xD;
-    dre.ser.sendall(dre.command_tx_buf+'\13')</property>
+    dre.ser.sendall(dre.command_tx_buf+chr(13))</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::serialCommandWrite#19</property>
       <property name="inline" type="bool">1</property>
@@ -975,9 +975,9 @@ else:&#xD;
       <property name="name" type="string">serialResposeWrite</property>
       <property name="description" type="string">Writes the response over a serial bus</property>
       <property name="code" type="string">if not(dre.cte_use_socket):&#xD;
-    dre.ser.write(dre.command_tx_buf+'\13'+'\10')&#xD;
+    dre.ser.write(dre.command_tx_buf+chr(13)+chr(10))&#xD;
 else:&#xD;
-    dre.ser.sendall(dre.command_tx_buf+'\13'+'\10')</property>
+    dre.ser.sendall(dre.command_tx_buf+chr(13)+chr(10))</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::serialResposeWrite#24</property>
       <property name="inline" type="bool">1</property>
@@ -1392,9 +1392,9 @@ finally:&#xD;
       <property name="name" type="string">sendAnticipatedResponse</property>
       <property name="description" type="string">Sends an anticipated response "OK" for M command.</property>
       <property name="code" type="string">if not(dre.cte_use_socket):
-    dre.ser.write(resptosend+'\13'+'\10')
+    dre.ser.write(resptosend+chr(13)+chr(10))
 else:
-    dre.ser.sendall(resptosend+'\13'+'\10')</property>
+    dre.ser.sendall(resptosend+chr(13)+chr(10))</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::sendAnticipatedResponse#81&lt;resptosend:Integer&gt;</property>
       <property name="inline" type="bool">1</property>
@@ -1703,7 +1703,7 @@ finally:&#xD;
       <property name="id" type="long">9</property>
       <property name="name" type="string">validCharRead</property>
       <property name="description" type="string">A valid character (different from \13 of \10) is read.</property>
-      <property name="code" type="string">(dre.char_read != '\10') and (dre.char_read != '\13')</property>
+      <property name="code" type="string">(dre.char_read != chr(10)) and (dre.char_read != chr(13))</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::validCharRead#9</property>
       <property name="inline" type="bool">1</property>
@@ -1717,7 +1717,7 @@ finally:&#xD;
       <property name="id" type="long">12</property>
       <property name="name" type="string">endingCharRead</property>
       <property name="description" type="string">An ending character has been received (\10 or \13)</property>
-      <property name="code" type="string">dre.char_read=='\10' or dre.char_read=='\13'</property>
+      <property name="code" type="string">dre.char_read==chr(10) or dre.char_read==chr(13)</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::endingCharRead#12</property>
       <property name="inline" type="bool">1</property>
@@ -1952,7 +1952,7 @@ False if the flag must be False to return True</property>
       <property name="id" type="long">135</property>
       <property name="name" type="string">escReceived</property>
       <property name="description" type="string">An Esc character is received to reset the XPort bus.  Simulator must ignore it.</property>
-      <property name="code" type="string">((""+'\27') in dre.command_rx_buf)</property>
+      <property name="code" type="string">((""+chr(27)) in dre.command_rx_buf)</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::escReceived#135</property>
       <property name="inline" type="bool">1</property>
@@ -6402,9 +6402,9 @@ return a_as_str</property>
       <property name="description" type="string">Sends a response without a command.  Commonly used for sending the 'p' notification</property>
       <property name="code" type="string">if not(dre.disable_untimely_resp):&#xD;
     if not(dre.cte_use_socket):&#xD;
-        dre.ser.write(resptosend+'\13'+'\10')&#xD;
+        dre.ser.write(resptosend+chr(13)+chr(10))&#xD;
     else:&#xD;
-        dre.ser.sendall(resptosend+'\13'+'\10')</property>
+        dre.ser.sendall(resptosend+chr(13)+chr(10))</property>
       <property name="scope" type="string">&lt;global&gt;</property>
       <property name="signature" type="string">&lt;global&gt;::sendUntimelyResponse#90&lt;resptosend:Integer&gt;</property>
       <property name="inline" type="bool">0</property>

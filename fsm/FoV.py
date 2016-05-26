@@ -543,9 +543,9 @@ def CmdDispatcher(  ):
                 # ['<global>::setNewTarget' end]
                 # ['<global>::sendAnticipatedResponse' begin]
                 if not(dre.cte_use_socket):
-                    dre.ser.write(""+'\13'+'\10')
+                    dre.ser.write(""+chr(13)+chr(10))
                 else:
-                    dre.ser.sendall(""+'\13'+'\10')
+                    dre.ser.sendall(""+chr(13)+chr(10))
                 # ['<global>::sendAnticipatedResponse' end]
                 state = ID_CMDDISPATCHER_PROGRAMMOTORS
 
@@ -576,7 +576,7 @@ def CmdDispatcher(  ):
                 # ['<global>::setM3Cmd' end]
                 state = ID_CMDDISPATCHER_PROGRAMMOTORS
 
-            elif( ((""+'\27') in dre.command_rx_buf) ):
+            elif( ((""+chr(27)) in dre.command_rx_buf) ):
                 # Transition ID: ID_CMDDISPATCHER_TRANSITION_CONNECTION
                 state = ID_CMDDISPATCHER_FINAL
 
@@ -623,11 +623,11 @@ def sendCtrlResponse(  ):
             # ['<global>::serialResposeWrite' begin]
             if not(dre.cte_use_socket):
 
-                dre.ser.write(dre.command_tx_buf+'\13'+'\10')
+                dre.ser.write(dre.command_tx_buf+chr(13)+chr(10))
 
             else:
 
-                dre.ser.sendall(dre.command_tx_buf+'\13'+'\10')
+                dre.ser.sendall(dre.command_tx_buf+chr(13)+chr(10))
             # ['<global>::serialResposeWrite' end]
             state = ID_SENDCTRLRESPONSE_FINAL
 
@@ -674,7 +674,7 @@ def getCtrlCommand(  ):
 
         # State ID: ID_GETCTRLCOMMAND_READING
         elif( state==ID_GETCTRLCOMMAND_READING ):
-            if( (dre.char_read != '\10') and (dre.char_read != '\13') ):
+            if( (dre.char_read != chr(10)) and (dre.char_read != chr(13)) ):
                 # Transition ID: ID_GETCTRLCOMMAND_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::appendCharToRxBuf' begin]
@@ -682,7 +682,7 @@ def getCtrlCommand(  ):
                 # ['<global>::appendCharToRxBuf' end]
                 serialCharRead()
 
-            elif( dre.char_read=='\10' or dre.char_read=='\13' ):
+            elif( dre.char_read==chr(10) or dre.char_read==chr(13) ):
                 # Transition ID: ID_GETCTRLCOMMAND_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::prependActiveMotor' begin]
@@ -696,7 +696,7 @@ def getCtrlCommand(  ):
 
         # State ID: ID_GETCTRLCOMMAND_PREVBUF
         elif( state==ID_GETCTRLCOMMAND_PREVBUF ):
-            if( dre.char_read=='\10' or dre.char_read=='\13' ):
+            if( dre.char_read==chr(10) or dre.char_read==chr(13) ):
                 # Transition ID: ID_GETCTRLCOMMAND_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::prependActiveMotor' begin]
@@ -743,11 +743,11 @@ def sendCtrlCommand(  ):
             # ['<global>::serialCommandWrite' begin]
             if not(dre.cte_use_socket):
 
-                dre.ser.write(dre.command_tx_buf+'\13')
+                dre.ser.write(dre.command_tx_buf+chr(13))
 
             else:
 
-                dre.ser.sendall(dre.command_tx_buf+'\13')
+                dre.ser.sendall(dre.command_tx_buf+chr(13))
             # ['<global>::serialCommandWrite' end]
             state = ID_SENDCTRLCOMMAND_FINAL
 
@@ -781,13 +781,13 @@ def getCtrlResponse(  ):
 
         # State ID: ID_GETCTRLRESPONSE_READING
         elif( state==ID_GETCTRLRESPONSE_READING ):
-            if( dre.char_read=='\10' or dre.char_read=='\13' ):
+            if( dre.char_read==chr(10) or dre.char_read==chr(13) ):
                 # Transition ID: ID_GETCTRLRESPONSE_TRANSITION_CONNECTION
                 # Actions:
                 serialCharRead()
                 state = ID_GETCTRLRESPONSE_FINISHING
 
-            elif( (dre.char_read != '\10') and (dre.char_read != '\13') ):
+            elif( (dre.char_read != chr(10)) and (dre.char_read != chr(13)) ):
                 # Transition ID: ID_GETCTRLRESPONSE_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::appendCharToRxBuf' begin]
@@ -797,11 +797,11 @@ def getCtrlResponse(  ):
 
         # State ID: ID_GETCTRLRESPONSE_FINISHING
         elif( state==ID_GETCTRLRESPONSE_FINISHING ):
-            if( dre.char_read=='\10' or dre.char_read=='\13' ):
+            if( dre.char_read==chr(10) or dre.char_read==chr(13) ):
                 # Transition ID: ID_GETCTRLRESPONSE_TRANSITION_CONNECTION
                 state = ID_GETCTRLRESPONSE_FINAL
 
-            elif( (dre.char_read != '\10') and (dre.char_read != '\13') ):
+            elif( (dre.char_read != chr(10)) and (dre.char_read != chr(13)) ):
                 # Transition ID: ID_GETCTRLRESPONSE_TRANSITION_CONNECTION
                 # Actions:
                 serialCharRead()

@@ -39,7 +39,7 @@ class DRE:
     mX = m1
     rx_buffer=""
     command_rx_buf = ""
-    char_read = '\0'
+    char_read = chr(0)
     ser = None
     command_tx_buf = ""
     cte_use_socket = False
