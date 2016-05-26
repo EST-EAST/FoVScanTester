@@ -12,7 +12,7 @@ if sweepconfig.cte_use_cvcam:
 # Sends an escape char to clear the Xport channel
 def resetXport():
     if sweepconfig.cte_use_socket:
-        str = "" + '\27'
+        str = "" + chr(27)
         FoV.dre.ser.sendall(str)
 
 
@@ -62,7 +62,7 @@ def getMotorResponse():
 
 # Sends a command to the Motors
 def sendMotorCommand(cmd_str):
-    #ser.write(cmd_str+'\13')
+    #ser.write(cmd_str+chr(13))
     print "Command sent: "+cmd_str
     FoV.dre.command_tx_buf = cmd_str
     FoV.sendCtrlCommand()

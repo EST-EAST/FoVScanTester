@@ -16,9 +16,9 @@ def sendUntimelyResponse( resptosend ):
     # ['<global>::sendUntimelyResponse' begin]
     if not(dre.disable_untimely_resp):
         if not(dre.cte_use_socket):
-            dre.ser.write(resptosend+'\13'+'\10')
+            dre.ser.write(resptosend+chr(13)+chr(10))
         else:
-            dre.ser.sendall(resptosend+'\13'+'\10')
+            dre.ser.sendall(resptosend+chr(13)+chr(10))
     # ['<global>::sendUntimelyResponse' end]
 
 # ['Common definitions for 'Code items generator'' end (DON'T REMOVE THIS LINE!)]
