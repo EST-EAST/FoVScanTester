@@ -64,6 +64,7 @@ target/
 /00_acquired/*.png
 /00_acquired/*.jpg
 /db/*.sqlite3*
+/db/2*.ods
 /sweepconfig.py
 
 /doc/commands.txt

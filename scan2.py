@@ -1,4 +1,4 @@
-from time import gmtime, strftime
+from time import gmtime, strftime, sleep
 from datetime import datetime
 
 import sweepconfig
@@ -129,7 +129,7 @@ def dbprepare(dbc):
 ###### Automatically generated code ###########
 
 sweep_ex_id = 2
-steps = [ { 'c': (0),'x': (0),'y': (0),'x_coord': (0.0),'y_coord': (0.0) }]#,{ 'c': (1),'x': (1),'y': (0),'x_coord': (0.0018),'y_coord': (0.0) },{ 'c': (2),'x': (1),'y': (1),'x_coord': (0.0018),'y_coord': (0.0008) },{ 'c': (3),'x': (0),'y': (1),'x_coord': (0.0),'y_coord': (0.0008) },{ 'c': (4),'x': (-1),'y': (1),'x_coord': (-0.0018),'y_coord': (0.0008) },{ 'c': (5),'x': (-1),'y': (0),'x_coord': (-0.0018),'y_coord': (0.0) },{ 'c': (6),'x': (-1),'y': (-1),'x_coord': (-0.0018),'y_coord': (-0.0008) },{ 'c': (7),'x': (0),'y': (-1),'x_coord': (0.0),'y_coord': (-0.0008) },{ 'c': (8),'x': (1),'y': (-1),'x_coord': (0.0018),'y_coord': (-0.0008) },{ 'c': (9),'x': (2),'y': (-1),'x_coord': (0.0036),'y_coord': (-0.0008) },{ 'c': (10),'x': (2),'y': (0),'x_coord': (0.0036),'y_coord': (0.0) },{ 'c': (11),'x': (2),'y': (1),'x_coord': (0.0036),'y_coord': (0.0008) },{ 'c': (12),'x': (2),'y': (2),'x_coord': (0.0036),'y_coord': (0.0016) },{ 'c': (13),'x': (1),'y': (2),'x_coord': (0.0018),'y_coord': (0.0016) },{ 'c': (14),'x': (0),'y': (2),'x_coord': (0.0),'y_coord': (0.0016) },{ 'c': (15),'x': (-1),'y': (2),'x_coord': (-0.0018),'y_coord': (0.0016) },{ 'c': (16),'x': (-2),'y': (2),'x_coord': (-0.0036),'y_coord': (0.0016) },{ 'c': (17),'x': (-2),'y': (1),'x_coord': (-0.0036),'y_coord': (0.0008) },{ 'c': (18),'x': (-2),'y': (0),'x_coord': (-0.0036),'y_coord': (0.0) },{ 'c': (19),'x': (-2),'y': (-1),'x_coord': (-0.0036),'y_coord': (-0.0008) },{ 'c': (20),'x': (-2),'y': (-2),'x_coord': (-0.0036),'y_coord': (-0.0016) },{ 'c': (21),'x': (-1),'y': (-2),'x_coord': (-0.0018),'y_coord': (-0.0016) },{ 'c': (22),'x': (0),'y': (-2),'x_coord': (0.0),'y_coord': (-0.0016) },{ 'c': (23),'x': (1),'y': (-2),'x_coord': (0.0018),'y_coord': (-0.0016) },{ 'c': (24),'x': (2),'y': (-2),'x_coord': (0.0036),'y_coord': (-0.0016) }, ]
+steps = [ { 'c': (0),'x': (0),'y': (0),'x_coord': (0.0),'y_coord': (0.0) },{ 'c': (1),'x': (1),'y': (0),'x_coord': (0.0018),'y_coord': (0.0) },{ 'c': (2),'x': (1),'y': (1),'x_coord': (0.0018),'y_coord': (0.0008) },{ 'c': (3),'x': (0),'y': (1),'x_coord': (0.0),'y_coord': (0.0008) },{ 'c': (4),'x': (-1),'y': (1),'x_coord': (-0.0018),'y_coord': (0.0008) },{ 'c': (5),'x': (-1),'y': (0),'x_coord': (-0.0018),'y_coord': (0.0) },{ 'c': (6),'x': (-1),'y': (-1),'x_coord': (-0.0018),'y_coord': (-0.0008) },{ 'c': (7),'x': (0),'y': (-1),'x_coord': (0.0),'y_coord': (-0.0008) },{ 'c': (8),'x': (1),'y': (-1),'x_coord': (0.0018),'y_coord': (-0.0008) },{ 'c': (9),'x': (2),'y': (-1),'x_coord': (0.0036),'y_coord': (-0.0008) },{ 'c': (10),'x': (2),'y': (0),'x_coord': (0.0036),'y_coord': (0.0) },{ 'c': (11),'x': (2),'y': (1),'x_coord': (0.0036),'y_coord': (0.0008) },{ 'c': (12),'x': (2),'y': (2),'x_coord': (0.0036),'y_coord': (0.0016) },{ 'c': (13),'x': (1),'y': (2),'x_coord': (0.0018),'y_coord': (0.0016) },{ 'c': (14),'x': (0),'y': (2),'x_coord': (0.0),'y_coord': (0.0016) },{ 'c': (15),'x': (-1),'y': (2),'x_coord': (-0.0018),'y_coord': (0.0016) },{ 'c': (16),'x': (-2),'y': (2),'x_coord': (-0.0036),'y_coord': (0.0016) },{ 'c': (17),'x': (-2),'y': (1),'x_coord': (-0.0036),'y_coord': (0.0008) },{ 'c': (18),'x': (-2),'y': (0),'x_coord': (-0.0036),'y_coord': (0.0) },{ 'c': (19),'x': (-2),'y': (-1),'x_coord': (-0.0036),'y_coord': (-0.0008) },{ 'c': (20),'x': (-2),'y': (-2),'x_coord': (-0.0036),'y_coord': (-0.0016) },{ 'c': (21),'x': (-1),'y': (-2),'x_coord': (-0.0018),'y_coord': (-0.0016) },{ 'c': (22),'x': (0),'y': (-2),'x_coord': (0.0),'y_coord': (-0.0016) },{ 'c': (23),'x': (1),'y': (-2),'x_coord': (0.0018),'y_coord': (-0.0016) },{ 'c': (24),'x': (2),'y': (-2),'x_coord': (0.0036),'y_coord': (-0.0016) }, ]
 
 ###### Automatically generated steps table ###########
 ###### END Automatically generated code ###########
@@ -161,10 +161,11 @@ if (sweepconfig.cte_enable_motors_first):
 if (sweepconfig.cte_reset_motors_first):
     sws.resetMotors()
     print("Check motor positions after resets")
+    sleep(sweepconfig.cte_stabilization_time)
     sws.motorPositions()
 else:
     print("Check initial motor positions")
-    #sws.getMotorResponse()
+    sleep(sweepconfig.cte_stabilization_time)
     sws.motorPositions()
 
 
@@ -205,6 +206,7 @@ while (done!=-1 and curStep < endStep ):
     if (done!=-1):
         # Acquire image
         dtcam = datetime.now()
+	capture_done=False
         if sweepconfig.cte_use_cvcam:
             ret, frame = cam.read()
             #save to disk
@@ -212,6 +214,7 @@ while (done!=-1 and curStep < endStep ):
             cv2.imwrite(sweepconfig.cte_framePath + strg, frame)
             #show the image
             cv2.imshow('Current Frame', frame)
+            capture_done=True
         if sweepconfig.cte_use_photocam:
             # We configure the image capture
             strg='D%s_%03d_%03d.jpg' % (timestr, sweep_ex_id, curStep)
@@ -222,9 +225,16 @@ while (done!=-1 and curStep < endStep ):
             args=sweepconfig.cte_cameractrl_capturecmd
             print("Photo capture frame: "+cmd+" "+args)
             subprocess.check_output([cmd,args])
+            capture_done=True
         if sweepconfig.cte_use_gphoto2:
             strg=sweepconfig.cte_gphoto2_filename_root+'%s_%03d_%03d.jpg' % (timestr, sweep_ex_id, curStep)
             gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath,strg,False)
+            capture_done=True
+	if (not(capture_done)):
+            # Wait some ms to stabilyze before reading position
+            # not necessary if capture has been taken
+            sleep(sweepconfig.cte_stabilization_time)
+		
         # acquire the motor status
         mx_fdback,my_fdback,mcomp_fdback = sws.motorPositions()
         print ("Motor | mx: "+str(mx_fdback)+", my: "+str(my_fdback)+", mcomp: "+str(mcomp_fdback))
