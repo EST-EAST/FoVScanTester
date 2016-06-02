@@ -25,11 +25,13 @@ def sendXportCmd(str):
     global numberOfOkToRx
     global numberOfPToRx
     sendMotorCommand(str)
-    print("XportCmd>" + str)
+    if sweepconfig.cte_verbose:
+        print("XportCmd>" + str)
     done = False
     while not (done):
         r = getMotorResponse()
-        print("XPortResponse>" + r + "< nothing?")
+        if sweepconfig.cte_verbose:
+            print("XPortResponse>" + r + "< nothing?")
         done = (len(r) == 0)
         if not (done):
             processPendingResponse(r)
@@ -65,7 +67,8 @@ def getMotorResponse():
 # Sends a command to the Motors
 def sendMotorCommand(cmd_str):
     #ser.write(cmd_str+chr(13))
-    print "Command sent: "+cmd_str
+    if sweepconfig.cte_verbose:
+        print "Command sent: "+cmd_str
     FoV.dre.command_tx_buf = cmd_str
     FoV.sendCtrlCommand()
 
@@ -79,14 +82,16 @@ numberOfOkToRx = 0      # Number of pending Ok responses
 def processPendingResponse(r):
     global numberOfOkToRx
     global numberOfPToRx
-    print("Resp2:" + r)
+    if sweepconfig.cte_verbose:
+        print("Resp2:" + r)
     if (r == "p"):
         if sweepconfig.cte_wait_for_p:
             numberOfPToRx -= 1
     if (r == "OK"):
         numberOfOkToRx -= 1
-    print("Number of pending P to Rx: " + str(numberOfPToRx))
-    print("Number of pending Ok to Rx: " + str(numberOfOkToRx))
+    if sweepconfig.cte_verbose:
+        print("Number of pending P to Rx: " + str(numberOfPToRx))
+        print("Number of pending Ok to Rx: " + str(numberOfOkToRx))
 
 
 # Sets the number of pending responses to zero Ok's and zero P's
@@ -156,61 +161,70 @@ def goHome(idx):
         # Programming the Home speeds
         cmd_str = prefixX+"HOSP-%3d" % (cte_vh[idx])
         sendMotorCommand(cmd_str)
-        print("Command:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
 
         cmd_str = prefixX+"APL0"
         sendMotorCommand(cmd_str)
-        print("Command:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
 
         if (sweepconfig.cte_command_np_flags):
             cmd_str = prefixX + "NP"
             sendMotorCommand(cmd_str)
-            print("Command:"+cmd_str)
+            if sweepconfig.cte_verbose:
+                print("Command:"+cmd_str)
             incrementPendingOk()
             consumePendingOks()
             incrementPendingP()
 
         cmd_str = prefixX + "GOHOSEQ"
         sendMotorCommand(cmd_str)
-        print("Command:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
         consumePendingPs()
 
         cmd_str = prefixX+"HOSP%3d" % (cte_vi[idx])
         sendMotorCommand(cmd_str)
-        print("Command:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
 
         if (sweepconfig.cte_command_np_flags):
             cmd_str = prefixX + "NP"
             sendMotorCommand(cmd_str)
-            print("Command:"+cmd_str)
+            if sweepconfig.cte_verbose:
+                print("Command:"+cmd_str)
             incrementPendingOk()
             consumePendingOks()
             incrementPendingP()
 
         cmd_str = prefixX + "GOIX"
         sendMotorCommand(cmd_str)
-        print("Command:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
         consumePendingPs()
 
         cmd_str = prefixX+"APL1"
         sendMotorCommand(cmd_str)
-        print("Command:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
 
         cmd_str = prefixX+"HOSP-%3d" % (cte_vh[idx])
         sendMotorCommand(cmd_str)
-        print("Command:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
 
@@ -242,105 +256,121 @@ cte_tol_x = 10
 cte_tol_y = 10
 cte_tol_comp = 10
 
-def commandLSx(setpoint):
+
+def commandLSx(setpoint, blocking = True):
     # Program the motor to warn when the command is done
     if (sweepconfig.cte_use_motor_x):
         if (abs(setpoint - current_pos_x) > cte_tol_x):
             sendXportBegin(sweepconfig.cte_motor_x_xport)
 
-            if (sweepconfig.cte_command_np_flags):
+            if (sweepconfig.cte_command_np_flags and blocking):
                 cmd_str = prefixX + "NP"
                 sendMotorCommand(cmd_str)
-                print("Command:" + cmd_str)
+                if sweepconfig.cte_verbose:
+                    print("Command:" + cmd_str)
                 incrementPendingOk()
                 consumePendingOks()
                 incrementPendingP()
 
             cmd_str = prefixX + "LA%04d" % (setpoint)
             sendMotorCommand(cmd_str)
-            print("Command:" + cmd_str)
+            if sweepconfig.cte_verbose:
+                print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
 
             # Move the motor
             cmd_str = prefixX + "M"
             sendMotorCommand(cmd_str)
-            print("Command:" + cmd_str)
+            if sweepconfig.cte_verbose:
+                print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
 
             # Wait for command responses
-            ret = consumePendingPs()
+            if (blocking):
+                ret = consumePendingPs()
             sendXportEnd()
         else:
-            print("Cancelo pues Pos actual: " + str(current_pos_x) + " parecida a orden: " + str(setpoint))
+            if sweepconfig.cte_verbose:
+                print("Cancelo pues Pos actual: " + str(current_pos_x) + " parecida a orden: " + str(setpoint))
 
 
-def commandLSy(setpoint):
+def commandLSy(setpoint, blocking = True):
     if (sweepconfig.cte_use_motor_y):
         if (abs(setpoint - current_pos_y) > cte_tol_y):
             sendXportBegin(sweepconfig.cte_motor_y_xport)
 
             # Program the motor to warn when the command is done
-            if (sweepconfig.cte_command_np_flags):
+            if (sweepconfig.cte_command_np_flags and blocking):
                 cmd_str = prefixY + "NP"
                 sendMotorCommand(cmd_str)
-                print("Command:" + cmd_str)
+                if sweepconfig.cte_verbose:
+                    print("Command:" + cmd_str)
                 incrementPendingOk()
                 consumePendingOks()
                 incrementPendingP()
 
             cmd_str = prefixY + "LA%04d" % (setpoint)
             sendMotorCommand(cmd_str)
-            print("Command:" + cmd_str)
+            if sweepconfig.cte_verbose:
+                print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
 
             cmd_str = prefixY + "M"
             sendMotorCommand(cmd_str)
-            print("Command:" + cmd_str)
+            if sweepconfig.cte_verbose:
+                print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
 
             # Wait for command responses
-            ret = consumePendingPs()
+            if (blocking):
+                ret = consumePendingPs()
 
             sendXportEnd()
         else:
-            print("Cancelo pues Pos actual: " + str(current_pos_y) + " parecida a orden: " + str(setpoint))
+            if sweepconfig.cte_verbose:
+                print("Cancelo pues Pos actual: " + str(current_pos_y) + " parecida a orden: " + str(setpoint))
 
 
-def commandLScomp(setpoint):
+def commandLScomp(setpoint, blocking = True):
     if (sweepconfig.cte_use_motor_comp):
         if (abs(setpoint - current_pos_comp) > cte_tol_comp):
             sendXportBegin(sweepconfig.cte_motor_comp_xport)
             # Program the motor to warn when the command is done
-            if (sweepconfig.cte_command_np_flags):
+            if (sweepconfig.cte_command_np_flags and blocking):
                 cmd_str = prefixComp + "NP"
                 sendMotorCommand(cmd_str)
-                print("Command:" + cmd_str)
+                if sweepconfig.cte_verbose:
+                    print("Command:" + cmd_str)
                 incrementPendingOk()
                 consumePendingOks()
                 incrementPendingP()
 
             cmd_str = prefixComp + "LA%04d" % (setpoint)
             sendMotorCommand(cmd_str)
-            print("Command:" + cmd_str)
+            if sweepconfig.cte_verbose:
+                print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
 
             cmd_str = prefixComp + "M"
             sendMotorCommand(cmd_str)
-            print("Command:" + cmd_str)
+            if sweepconfig.cte_verbose:
+                print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
 
             # Wait for command responses
-            ret = consumePendingPs()
+            if (blocking):
+                ret = consumePendingPs()
 
             sendXportEnd()
         else:
-            print("Cancelo pues Pos actual: " + str(current_pos_comp) + " parecida a orden: " + str(setpoint))
+            if sweepconfig.cte_verbose:
+                print("Cancelo pues Pos actual: " + str(current_pos_comp) + " parecida a orden: " + str(setpoint))
 
 
 # Commands the window to x and y position (in mm from centered position)
@@ -360,16 +390,26 @@ def commandMotor(x, y):
     if (lsx_temp != lsx_pos or
                 lsy_temp != lsy_pos or
                 lscomp_temp != lscomp_pos):
-        print "Error on calculating position: out of range of LS motors"
-        print "X: %f Y: %f" % (x, y)
-        print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
-        print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
+        if sweepconfig.cte_verbose:
+            print "Error on calculating position: out of range of LS motors"
+            print "X: %f Y: %f" % (x, y)
+            print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
+            print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
         ret = -1
     else:
+        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x),
+                 'Blocking': False}
+        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y),
+                 'Blocking': False}
+        compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
+                    'Delta': abs(lscomp_pos-current_pos_comp), 'Blocking': False}
+        reordDict=[xDict, yDict, compDict]
         # send the commands
-        commandLSx(lsx_pos)
-        commandLSy(lsy_pos)
-        commandLScomp(lscomp_pos)
+        newlist = sorted(reordDict, key=lambda k: k['Delta'])
+        newlist[len(newlist)-1]['Blocking'] = True
+    for func in newlist:
+        print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
+        (func['Function'])(func['Argument'], func['Blocking'])
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
@@ -381,11 +421,10 @@ def resetMotors():
     goHomeMcomp()
 
     # Calculate the center position of the window over the FoV
-    lsx_pos = cte_lsx_zero
-    lsy_pos = cte_lsy_zero
-    lscomp_pos = cte_lscomp_zero
+    lsx = cte_lsx_zero
+    lsy = cte_lsy_zero
     
-    commandMotor(0.0, 0.0)
+    commandMotor(lsx, lsy)
 
 
 # Disables the motors
@@ -394,7 +433,8 @@ def disableMotors():
         sendXportBegin(sweepconfig.cte_motor_x_xport)
         cmd_str = prefixX + "DI"
         sendMotorCommand(cmd_str)
-        print("Command:" + cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
@@ -403,7 +443,8 @@ def disableMotors():
         sendXportBegin(sweepconfig.cte_motor_y_xport)
         cmd_str = prefixY + "DI"
         sendMotorCommand(cmd_str)
-        print("Command:" + cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
@@ -413,7 +454,8 @@ def disableMotors():
         sendXportBegin(sweepconfig.cte_motor_comp_xport)
         cmd_str = prefixComp + "DI"
         sendMotorCommand(cmd_str)
-        print("Command:" + cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
@@ -424,7 +466,8 @@ def enableMotors():
         sendXportBegin(sweepconfig.cte_motor_x_xport)
         cmd_str = prefixX + "EN"
         sendMotorCommand(cmd_str)
-        print("Command:" + cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
@@ -433,7 +476,8 @@ def enableMotors():
         sendXportBegin(sweepconfig.cte_motor_y_xport)
         cmd_str = prefixY + "EN"
         sendMotorCommand(cmd_str)
-        print("Command:" + cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
@@ -443,7 +487,8 @@ def enableMotors():
         sendXportBegin(sweepconfig.cte_motor_comp_xport)
         cmd_str = prefixComp + "EN"
         sendMotorCommand(cmd_str)
-        print("Command:" + cmd_str)
+        if sweepconfig.cte_verbose:
+            print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
@@ -511,9 +556,11 @@ def motorPositions():
         sendXportBegin(sweepconfig.cte_motor_x_xport)
         cmd_str = prefixX+"POS"
         sendMotorCommand(cmd_str)
-        print("PosCmd:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("PosCmd:"+cmd_str)
         r=getMotorResponse()
-        print("PosResp:"+r)
+        if sweepconfig.cte_verbose:
+            print("PosResp:"+r)
         mx_fdback=int(r)
         current_pos_x = mx_fdback
         sendXportEnd()
@@ -524,9 +571,11 @@ def motorPositions():
         sendXportBegin(sweepconfig.cte_motor_y_xport)
         cmd_str = prefixY+"POS"
         sendMotorCommand(cmd_str)
-        print("PosCmd:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("PosCmd:"+cmd_str)
         r=getMotorResponse()
-        print("PosResp:"+r)
+        if sweepconfig.cte_verbose:
+            print("PosResp:"+r)
         my_fdback=int(r)
         current_pos_y = my_fdback
         sendXportEnd()
@@ -537,9 +586,11 @@ def motorPositions():
         sendXportBegin(sweepconfig.cte_motor_comp_xport)
         cmd_str = prefixComp+"POS"
         sendMotorCommand(cmd_str)
-        print("PosCmd:"+cmd_str)
+        if sweepconfig.cte_verbose:
+            print("PosCmd:"+cmd_str)
         r=getMotorResponse()
-        print("PosResp:"+r)
+        if sweepconfig.cte_verbose:
+            print("PosResp:"+r)
         mcomp_fdback=int(r)
         current_pos_comp = mcomp_fdback
         sendXportEnd()
@@ -598,11 +649,6 @@ cte_vcomp = 100
 
 cte_v = [cte_vh, cte_vh, cte_vcomp]
 
-# Calculated positions for each linear stage
-lsx_pos = 0.0
-lsy_pos = 0.0
-lscomp_pos = 0.0
-
 ########### MAIN INITIALIZATIONS ###############
 
 # Indicates to the DRE (fsm data base) which kind of connection must be used
@@ -613,7 +659,8 @@ if not (sweepconfig.cte_use_socket):
     import serial
 
     cte_serial_port = sweepconfig.cte_serial_port
-    print "Chosen serial port: " + cte_serial_port
+    if sweepconfig.cte_verbose:
+        print "Chosen serial port: " + cte_serial_port
     ser = serial.Serial(
         port=cte_serial_port,
         baudrate=9600,

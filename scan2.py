@@ -45,8 +45,8 @@ def import_URL(URL):
 # ## Commands the motor to the position of that step
 def commandMotor(x, y):
     if sweepconfig.cte_verbose:
-        print ("Sweep step X: " + str(x) + " Y: " + str(y))
-        return sws.commandMotor(x, y)
+       print ("Sweep step X: " + str(x) + " Y: " + str(y))
+    return sws.commandMotor(x, y)
 
 
 # ## Investigate if the current step has been executed
@@ -98,7 +98,8 @@ def dbinsert(dbcon, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_set
 
     if firstDbSentence:
         item = [timestamp, 100, 100, 100, dt_end, dt_end, ex_id]
-        print(sqlsentence2)
+        if sweepconfig.cte_verbose:
+            print(sqlsentence2)
         dbcon.execute(sqlsentence2, item)
         run_id = dbcon.lastrowid
         firstDbSentence = False
@@ -124,7 +125,8 @@ def dbinsert(dbcon, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_set
             item = [timestamp, 100, 100, 100, sdtcam, sdtcam, ex_id]
             for row in engrunsheet.iter_rows('B2:H2'):
                 for cell in row:
-                    print("idx: " + str(idx))
+                    if sweepconfig.cte_verbose:
+                        print("idx: " + str(idx))
                     cell.value = item[idx]
                     idx += 1
 
@@ -254,11 +256,13 @@ if sweepconfig.cte_enable_motors_first:
 
 if sweepconfig.cte_reset_motors_first:
     sws.resetMotors()
-    print("Check motor positions after resets")
+    if sweepconfig.cte_verbose:
+        print("Check motor positions after resets")
     sleep(sweepconfig.cte_stabilization_time)
     sws.motorPositions()
 else:
-    print("Check initial motor positions")
+    if sweepconfig.cte_verbose:
+        print("Check initial motor positions")
     sleep(sweepconfig.cte_stabilization_time)
     sws.motorPositions()
 
@@ -310,10 +314,12 @@ while (done != -1) and (curStep < endStep):
             strg = 'D%s_%03d_%03d.jpg' % (timestr, sweep_ex_id, curStep)
             cmd = sweepconfig.cte_cameractrl_path + sweepconfig.cte_cameractrl_command
             args = sweepconfig.cte_cameractrl_filenamecmd + " " + strg
-            print("Photo set filename: " + cmd + " " + args)
+            if sweepconfig.cte_verbose:
+                print("Photo set filename: " + cmd + " " + args)
             subprocess.check_output([cmd, args])
             args = sweepconfig.cte_cameractrl_capturecmd
-            print("Photo capture frame: " + cmd + " " + args)
+            if sweepconfig.cte_verbose:
+                print("Photo capture frame: " + cmd + " " + args)
             subprocess.check_output([cmd, args])
             capture_done = True
         if sweepconfig.cte_use_gphoto2:
@@ -327,7 +333,7 @@ while (done != -1) and (curStep < endStep):
 
         # acquire the motor status
         mx_fdback, my_fdback, mcomp_fdback = sws.motorPositions()
-        print ("Motor | mx: " + str(mx_fdback) + ", my: " + str(my_fdback) + ", mcomp: " + str(mcomp_fdback))
+        print ("Step: "+str(curStep)+" Motor | mx: " + str(mx_fdback) + ", my: " + str(my_fdback) + ", mcomp: " + str(mcomp_fdback))
         # BD information store
         sweep_eng_run_id = dbinsert(dbc, curStep, stepX, stepY, stepXcoord, stepYcoord, mx, my, mcomp, mx_fdback,
                                     my_fdback, mcomp_fdback, timestr, dtinit, dtcam, sweep_ex_id, sweep_eng_run_id)
