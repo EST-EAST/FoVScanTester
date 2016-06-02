@@ -558,19 +558,19 @@ def motorClose():
 cte_lsx_min = 0  # End of LS travel in lower units
 cte_lsx_scale = -(1000 * 1000)  # LS units / mm * 1000 mm / 1 m
 cte_lsx_max = 0.030 * (-cte_lsx_scale)  # End of LS travel in upper units
-cte_lsx_zero = (cte_lsx_max / 2)  # LS units coincidence with 0 mm (center)
+cte_lsx_zero = 13100  # LS units coincidence with 0 mm (center)
 
 # My = y
 cte_lsy_min = 0  # End of LS travel in lower units
 cte_lsy_scale = (2000 * 1000)  # LS units / mm * 1000 mm / 1 m
 cte_lsy_max = 0.020 * (cte_lsy_scale)  # End of LS travel in upper units
-cte_lsy_zero = (cte_lsy_max / 2)  # LS units coincidence with 0 mm (center)
+cte_lsy_zero = 18400  # LS units coincidence with 0 mm (center)
 
 # Mcomp = compensaTion
 cte_lscomp_min = 0  # End of LS travel in lower units
 cte_lscomp_scale = -(2000 * 1000)  # LS units / mm * 1000 mm / 1 m
 cte_lscomp_max = 0.020 * (-cte_lscomp_scale)  # End of LS travel in upper units
-cte_lscomp_zero = (cte_lscomp_max / 2)  # LS units coincidence with 0 mm (center)
+cte_lscomp_zero = 18800  # LS units coincidence with 0 mm (center)
 
 # Home speeds
 cte_vhx = 100
