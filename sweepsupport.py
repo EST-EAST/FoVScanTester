@@ -407,9 +407,9 @@ def commandMotor(x, y):
         # send the commands
         newlist = sorted(reordDict, key=lambda k: k['Delta'])
         newlist[len(newlist)-1]['Blocking'] = True
-    for func in newlist:
-        print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
-        (func['Function'])(func['Argument'], func['Blocking'])
+    	for func in newlist:
+        	print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
+        	(func['Function'])(func['Argument'], func['Blocking'])
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
@@ -421,8 +421,11 @@ def resetMotors():
     goHomeMcomp()
 
     # Calculate the center position of the window over the FoV
-    lsx = cte_lsx_zero
-    lsy = cte_lsy_zero
+    lsx = 0.0
+    lsy = 0.0
+
+    print("lsx: "+str(lsx))
+    print("lsy: "+str(lsy))
     
     commandMotor(lsx, lsy)
 
@@ -559,8 +562,8 @@ def motorPositions():
         if sweepconfig.cte_verbose:
             print("PosCmd:"+cmd_str)
         r=getMotorResponse()
-        if sweepconfig.cte_verbose:
-            print("PosResp:"+r)
+        #if sweepconfig.cte_verbose:
+        print("PosResp x:"+r)
         mx_fdback=int(r)
         current_pos_x = mx_fdback
         sendXportEnd()
@@ -574,8 +577,8 @@ def motorPositions():
         if sweepconfig.cte_verbose:
             print("PosCmd:"+cmd_str)
         r=getMotorResponse()
-        if sweepconfig.cte_verbose:
-            print("PosResp:"+r)
+        #if sweepconfig.cte_verbose:
+        print("PosResp y:"+r)
         my_fdback=int(r)
         current_pos_y = my_fdback
         sendXportEnd()
@@ -589,8 +592,8 @@ def motorPositions():
         if sweepconfig.cte_verbose:
             print("PosCmd:"+cmd_str)
         r=getMotorResponse()
-        if sweepconfig.cte_verbose:
-            print("PosResp:"+r)
+        #if sweepconfig.cte_verbose:
+        print("PosResp comp:"+r)
         mcomp_fdback=int(r)
         current_pos_comp = mcomp_fdback
         sendXportEnd()
