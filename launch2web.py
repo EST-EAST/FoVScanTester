@@ -121,8 +121,6 @@ if (ret==False):
     print "Database ERROR! Aborting"
 
 
-
-
 # Steps loop
 # until ESC key is pressed
 # or steps have finished
