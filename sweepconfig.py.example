@@ -4,11 +4,14 @@ Created on Tue May 17 17:51:05 2016
 
 @author: txinto
 """
+cte_export_ods= False
+cte_upload_web= False
+cte_web_root="http://gatatac.org:5555"
 
 #### Connection configuration
 
 cte_use_socket = True
-cte_debug = False
+cte_debug = True
 
 if not(cte_use_socket):
     # Serial connection configuration
@@ -85,7 +88,7 @@ if (cte_test_protocol):
     cte_wait_for_p = False
     cte_sim_disable_untimely_resp = True
 else:
-    cte_enable_motors_first = True
+    cte_enable_motors_first = False
     cte_disable_motors_first = False
     cte_reset_motors_first = False
     cte_command_np_flags = True
