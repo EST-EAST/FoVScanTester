@@ -347,7 +347,7 @@ if sweepconfig.cte_export_ods:
     doc.close()
 
 if sweepconfig.cte_export_openpyxl:
-    doc.save("./db/" + timestr + ".ods")
+    doc.save("./db/" + timestr + ".xlsx")
 
 if sweepconfig.cte_use_cvcam:
     cam.release()
