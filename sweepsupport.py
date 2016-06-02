@@ -15,6 +15,7 @@ def resetXport():
         str = "" + chr(27)
         FoV.dre.ser.sendall(str)
         sendMotorCommand("@")
+	r=getMotorResponse()
 
 
 # Sends an XPort command, and process its response
