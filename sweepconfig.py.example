@@ -7,6 +7,7 @@ Created on Tue May 17 17:51:05 2016
 cte_stabilization_time = 1.000
 
 cte_export_ods= True
+cte_export_openpyxl = False
 cte_upload_web= False
 cte_web_root="http://gatatac.org:5555"
 
