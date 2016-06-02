@@ -242,14 +242,110 @@ cte_tol_x = 10
 cte_tol_y = 10
 cte_tol_comp = 10
 
+def commandLSx(setpoint):
+    # Program the motor to warn when the command is done
+    if (sweepconfig.cte_use_motor_x):
+        if (abs(setpoint - current_pos_x) > cte_tol_x):
+            sendXportBegin(sweepconfig.cte_motor_x_xport)
+
+            if (sweepconfig.cte_command_np_flags):
+                cmd_str = prefixX + "NP"
+                sendMotorCommand(cmd_str)
+                print("Command:" + cmd_str)
+                incrementPendingOk()
+                consumePendingOks()
+                incrementPendingP()
+
+            cmd_str = prefixX + "LA%04d" % (setpoint)
+            sendMotorCommand(cmd_str)
+            print("Command:" + cmd_str)
+            incrementPendingOk()
+            consumePendingOks()
+
+            # Move the motor
+            cmd_str = prefixX + "M"
+            sendMotorCommand(cmd_str)
+            print("Command:" + cmd_str)
+            incrementPendingOk()
+            consumePendingOks()
+
+            # Wait for command responses
+            ret = consumePendingPs()
+            sendXportEnd()
+        else:
+            print("Cancelo pues Pos actual: " + str(current_pos_x) + " parecida a orden: " + str(setpoint))
+
+
+def commandLSy(setpoint):
+    if (sweepconfig.cte_use_motor_y):
+        if (abs(setpoint - current_pos_y) > cte_tol_y):
+            sendXportBegin(sweepconfig.cte_motor_y_xport)
+
+            # Program the motor to warn when the command is done
+            if (sweepconfig.cte_command_np_flags):
+                cmd_str = prefixY + "NP"
+                sendMotorCommand(cmd_str)
+                print("Command:" + cmd_str)
+                incrementPendingOk()
+                consumePendingOks()
+                incrementPendingP()
+
+            cmd_str = prefixY + "LA%04d" % (setpoint)
+            sendMotorCommand(cmd_str)
+            print("Command:" + cmd_str)
+            incrementPendingOk()
+            consumePendingOks()
+
+            cmd_str = prefixY + "M"
+            sendMotorCommand(cmd_str)
+            print("Command:" + cmd_str)
+            incrementPendingOk()
+            consumePendingOks()
+
+            # Wait for command responses
+            ret = consumePendingPs()
+
+            sendXportEnd()
+        else:
+            print("Cancelo pues Pos actual: " + str(current_pos_y) + " parecida a orden: " + str(setpoint))
+
+
+def commandLScomp(setpoint):
+    if (sweepconfig.cte_use_motor_comp):
+        if (abs(setpoint - current_pos_comp) > cte_tol_comp):
+            sendXportBegin(sweepconfig.cte_motor_comp_xport)
+            # Program the motor to warn when the command is done
+            if (sweepconfig.cte_command_np_flags):
+                cmd_str = prefixComp + "NP"
+                sendMotorCommand(cmd_str)
+                print("Command:" + cmd_str)
+                incrementPendingOk()
+                consumePendingOks()
+                incrementPendingP()
+
+            cmd_str = prefixComp + "LA%04d" % (setpoint)
+            sendMotorCommand(cmd_str)
+            print("Command:" + cmd_str)
+            incrementPendingOk()
+            consumePendingOks()
+
+            cmd_str = prefixComp + "M"
+            sendMotorCommand(cmd_str)
+            print("Command:" + cmd_str)
+            incrementPendingOk()
+            consumePendingOks()
+
+            # Wait for command responses
+            ret = consumePendingPs()
+
+            sendXportEnd()
+        else:
+            print("Cancelo pues Pos actual: " + str(current_pos_comp) + " parecida a orden: " + str(setpoint))
+
+
 # Commands the window to x and y position (in mm from centered position)
 # It calculates the needed commands for Mx, My and Mcomp motors and sends them.
 def commandMotor(x, y):
-
-    global current_pos_x
-    global current_pos_y
-    global current_pos_comp
-
     ret = 0
     # Compute compensation
     lscomp = (x + y) / 2
@@ -271,102 +367,9 @@ def commandMotor(x, y):
         ret = -1
     else:
         # send the commands
-
-        # Program the motor to warn when the command is done
-        if (sweepconfig.cte_use_motor_x):
-            if (abs(lsx_pos-current_pos_x)>cte_tol_x):
-                sendXportBegin(sweepconfig.cte_motor_x_xport)
-    
-                if (sweepconfig.cte_command_np_flags):
-                    cmd_str = prefixX + "NP"
-                    sendMotorCommand(cmd_str)
-                    print("Command:" + cmd_str)
-                    incrementPendingOk()
-                    consumePendingOks()
-                    incrementPendingP()
-    
-                cmd_str = prefixX + "LA%04d" % (lsx_pos)
-                sendMotorCommand(cmd_str)
-                print("Command:" + cmd_str)
-                incrementPendingOk()
-                consumePendingOks()
-    
-                # Move the motor
-                cmd_str = prefixX + "M"
-                sendMotorCommand(cmd_str)
-                print("Command:" + cmd_str)
-                incrementPendingOk()
-                consumePendingOks()
-    
-                # Wait for command responses
-                ret = consumePendingPs()
-                sendXportEnd()
-            else:
-                print("Cancelo pues Pos actual: "+str(current_pos_x)+" parecida a orden: "+str(lsx_pos))
-
-        if (sweepconfig.cte_use_motor_y):
-            if (abs(lsy_pos-current_pos_y)>cte_tol_y):
-                sendXportBegin(sweepconfig.cte_motor_y_xport)
-    
-                # Program the motor to warn when the command is done
-                if (sweepconfig.cte_command_np_flags):
-                    cmd_str = prefixY + "NP"
-                    sendMotorCommand(cmd_str)
-                    print("Command:" + cmd_str)
-                    incrementPendingOk()
-                    consumePendingOks()
-                    incrementPendingP()
-    
-                cmd_str = prefixY + "LA%04d" % (lsy_pos)
-                sendMotorCommand(cmd_str)
-                print("Command:" + cmd_str)
-                incrementPendingOk()
-                consumePendingOks()
-    
-                cmd_str = prefixY + "M"
-                sendMotorCommand(cmd_str)
-                print("Command:" + cmd_str)
-                incrementPendingOk()
-                consumePendingOks()
-    
-                # Wait for command responses
-                ret = consumePendingPs()
-    
-                sendXportEnd()
-            else:
-                print("Cancelo pues Pos actual: "+str(current_pos_y)+" parecida a orden: "+str(lsy_pos))
-
-        if (sweepconfig.cte_use_motor_comp):
-            if (abs(lscomp_pos-current_pos_comp)>cte_tol_comp):
-                sendXportBegin(sweepconfig.cte_motor_comp_xport)
-                # Program the motor to warn when the command is done
-                if (sweepconfig.cte_command_np_flags):
-                    cmd_str = prefixComp + "NP"
-                    sendMotorCommand(cmd_str)
-                    print("Command:" + cmd_str)
-                    incrementPendingOk()
-                    consumePendingOks()
-                    incrementPendingP()
-    
-                cmd_str = prefixComp + "LA%04d" % (lscomp_pos)
-                sendMotorCommand(cmd_str)
-                print("Command:" + cmd_str)
-                incrementPendingOk()
-                consumePendingOks()
-    
-                cmd_str = prefixComp + "M"
-                sendMotorCommand(cmd_str)
-                print("Command:" + cmd_str)
-                incrementPendingOk()
-                consumePendingOks()
-    
-                # Wait for command responses
-                ret = consumePendingPs()
-    
-                sendXportEnd()
-            else:
-                print("Cancelo pues Pos actual: "+str(current_pos_comp)+" parecida a orden: "+str(lscomp_pos))
-
+        commandLSx(lsx_pos)
+        commandLSy(lsy_pos)
+        commandLScomp(lscomp_pos)
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
@@ -491,9 +494,11 @@ def stepDone():
 
     return ret
 
+
 current_pos_x = 0
 current_pos_y = 0
 current_pos_comp = 0
+
 
 # Retrieves the position for each motor
 def motorPositions():
