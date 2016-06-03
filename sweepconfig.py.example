@@ -15,7 +15,7 @@ cte_web_root="http://gatatac.org:5555"
 #### Connection configuration
 
 cte_use_socket = True
-cte_debug = True
+cte_debug = False
 
 if not(cte_use_socket):
     # Serial connection configuration
@@ -51,7 +51,7 @@ cte_motor_comp_xport = 24
 
 # App configuration
 
-cte_verbose = True
+cte_verbose = False
 cte_fileprefix = "frame"
 
 #### Camera configuration
