@@ -3,6 +3,8 @@ import sys
 sys.path.insert(0, './fsm')
 import FoV
 
+from sweepconfig import *
+
 if sweepconfig.cte_use_cvcam:
     import cv2
 
@@ -252,10 +254,6 @@ def goHomeMcomp():
         goHome(sweepconfig.cte_motor_comp - 1)
         sendXportEnd()
 
-cte_tol_x = 10
-cte_tol_y = 10
-cte_tol_comp = 10
-
 
 def commandLSx(setpoint, blocking = True):
     # Program the motor to warn when the command is done
@@ -378,7 +376,7 @@ def commandLScomp(setpoint, blocking = True):
 def commandMotor(x, y):
     ret = 0
     # Compute compensation
-    lscomp = (x + y) / 2
+    lscomp = ((cte_comp_factor_x * x) + (cte_comp_factor_x * y)) / cte_comp_divisor
     # Compute LSX and LSY
     lsx_temp = cte_lsx_zero + (x * cte_lsx_scale)
     lsx_pos = max(min(lsx_temp, cte_lsx_max), cte_lsx_min)
@@ -463,6 +461,7 @@ def disableMotors():
         consumePendingOks()
         sendXportEnd()
 
+
 # Disables the motors
 def enableMotors():
     if (sweepconfig.cte_use_motor_x):
@@ -495,10 +494,6 @@ def enableMotors():
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
-
-
-cte_waitTime = 1
-cte_stepTime = cte_waitTime * 1000     # Time to wait between steps, apart from motors and camera ones
 
 
 # Waits for a defined time for user to press a key
@@ -610,47 +605,9 @@ def motorClose():
     else:    
         sckt.close              # Close the socket when done    
 
-
-########### WINDOW TO MOTORS DEFINITIONS ################
-
-# Mx = x
-cte_lsx_min = 0  # End of LS travel in lower units
-cte_lsx_scale = -(1000 * 1000)  # LS units / mm * 1000 mm / 1 m
-cte_lsx_max = 26900  # End of LS travel in upper units
-cte_lsx_zero = 13100  # LS units coincidence with 0 mm (center)
-
-# My = y
-cte_lsy_min = 0  # End of LS travel in lower units
-cte_lsy_scale = (2000 * 1000)  # LS units / mm * 1000 mm / 1 m
-cte_lsy_max = 39401  # End of LS travel in upper units
-cte_lsy_zero = 18400  # LS units coincidence with 0 mm (center)
-
-# Mcomp = compensaTion
-cte_lscomp_min = 0  # End of LS travel in lower units
-cte_lscomp_scale = -(2000 * 1000)  # LS units / mm * 1000 mm / 1 m
-cte_lscomp_max = 39800  # End of LS travel in upper units
-cte_lscomp_zero = 18800  # LS units coincidence with 0 mm (center)
-
-# Home speeds
-cte_vhx = 100
-cte_vhy = 100
-cte_vhcomp = 100
-
-cte_vh = [cte_vhx, cte_vhy, cte_vhcomp]
-
-# Index speeds
-cte_vix = 30
-cte_viy = 30
-cte_vicomp = 30
-
-cte_vi = [cte_vix, cte_viy, cte_vicomp]
-
-# Movement speeds
-cte_vx = 100
-cte_vy = 100
-cte_vcomp = 100
-
-cte_v = [cte_vh, cte_vh, cte_vcomp]
+    cte_vh = [cte_vhx, cte_vhy, cte_vhcomp]
+    cte_vi = [cte_vix, cte_viy, cte_vicomp]
+    cte_v = [cte_vh, cte_vh, cte_vcomp]
 
 ########### MAIN INITIALIZATIONS ###############
 
