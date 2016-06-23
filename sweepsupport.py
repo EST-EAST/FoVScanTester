@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, './fsm')
 import FoV
 
-from sweepconfig import *
+from sweepcalib import *
 
 if sweepconfig.cte_use_cvcam:
     import cv2
