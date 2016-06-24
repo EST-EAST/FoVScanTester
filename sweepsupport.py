@@ -605,9 +605,9 @@ def motorClose():
     else:    
         sckt.close              # Close the socket when done    
 
-    cte_vh = [cte_vhx, cte_vhy, cte_vhcomp]
-    cte_vi = [cte_vix, cte_viy, cte_vicomp]
-    cte_v = [cte_vh, cte_vh, cte_vcomp]
+cte_vh = [cte_vhx, cte_vhy, cte_vhcomp]
+cte_vi = [cte_vix, cte_viy, cte_vicomp]
+cte_v = [cte_vh, cte_vh, cte_vcomp]
 
 ########### MAIN INITIALIZATIONS ###############
 
