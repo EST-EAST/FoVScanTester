@@ -4,16 +4,22 @@ Created on Tue May 17 17:51:05 2016
 
 @author: txinto
 """
+# Tiempo de estabilización que entra en juego si no hay adquisición de imagen
 cte_stabilization_time = 1.000
-cte_proto_rev = 1
+cte_proto_rev = 2
 
+# Activa segunda fotografía
+cte_second_picture = True
+cte_stabilization_time_pic2 = 4.000
+
+# No cambiar
 cte_export_ods= True
 cte_export_openpyxl = False
 cte_upload_web= False
 cte_web_root="http://gatatac.org:5555"
 
 #### Connection configuration
-
+# No cambiar
 cte_use_socket = True
 cte_debug = False
 
@@ -40,7 +46,7 @@ else:
         cte_socket_ip = socket.gethostname()
 
 #### Motor configuration
-
+# No cambiar
 cte_motor_x = 1
 cte_motor_y = 2
 cte_motor_comp = 3
@@ -50,18 +56,20 @@ cte_motor_y_xport = 23
 cte_motor_comp_xport = 24
 
 # App configuration
-
+# No cambiar
 cte_verbose = False
 cte_fileprefix = "frame"
 
 #### Camera configuration
 
+# True si queremos Webcam
 cte_use_cvcam = False
 
 if cte_use_cvcam:
     cte_camsource = 0
     cte_framePath = "./00_acquired/"
 
+# Siempre False
 cte_use_photocam = False
 
 if cte_use_photocam:
@@ -72,17 +80,20 @@ if cte_use_photocam:
     cte_cameractrl_filenamecmd = "/filename"
     cte_cameractrl_filename_root = "FoV"
 
-cte_use_gphoto2 = False
+
+# True si quiero Reflex
+cte_use_gphoto2 = True
 
 if cte_use_gphoto2:
     cte_gphoto2_framePath = "./00_acquired/"
     cte_gphoto2_filename_root = "FoV"
 
+# Dejarlo como está
 cte_use_motor_x = True
 cte_use_motor_y = True
 cte_use_motor_comp = True
 
-cte_test_protocol=False
+cte_test_protocol=False   # Siempre False
 
 if (cte_test_protocol):
     cte_enable_motors_first = False
@@ -92,9 +103,9 @@ if (cte_test_protocol):
     cte_wait_for_p = False
     cte_sim_disable_untimely_resp = True
 else:
-    cte_enable_motors_first = False
-    cte_disable_motors_first = False
-    cte_reset_motors_first = False
-    cte_command_np_flags = True
-    cte_wait_for_p = True
-    cte_sim_disable_untimely_resp = False
+    cte_enable_motors_first = False	# Siempre faslse
+    cte_disable_motors_first = False	# Siempre False
+    cte_reset_motors_first = False	# Siempre False 
+    cte_command_np_flags = True		# Siempre True
+    cte_wait_for_p = True		# Siempre True
+    cte_sim_disable_untimely_resp = False	# Siempre False
