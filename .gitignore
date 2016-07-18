@@ -84,3 +84,8 @@ target/
 /log4net.dll
 /submodules
 /sweepconfig - copia.py
+
+/01_metrology
+/db.*
+/capt*.jpg
+
