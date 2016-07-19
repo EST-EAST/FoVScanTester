@@ -14,7 +14,14 @@ sws.motorPositions()
 if (sweepconfig.cte_enable_motors_first):
     sws.enableMotors()
 
-sws.resetMotorsWindow()
+# Calculate the center position of the window over the FoV
+lsx = 0.0
+lsy = 0.0
+
+print("lsx: "+str(lsx))
+print("lsy: "+str(lsy))
+
+sws.commandMotorWindow(lsx, lsy)
 
 print("Check motor positions after resets")
 sws.motorPositions()
