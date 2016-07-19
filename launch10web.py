@@ -342,6 +342,9 @@ while (done != -1) and (curStep < endStep):
     if done != -1:
         # Acquire image
         dtcam = datetime.now()
+        # Wait some ms to stabilyze before reading position
+        # not necessary if capture has been taken
+        sleep(sweepconfig.cte_stabilization_time)
         capture_done = False
         if sweepconfig.cte_use_cvcam:
             ret, frame = cam.read()
@@ -368,10 +371,6 @@ while (done != -1) and (curStep < endStep):
             strg = sweepconfig.cte_gphoto2_filename_root + '%s_%03d_%03d_%03d.jpg' % (timestr, sweep_ex_id, iteration, step)
             gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath, strg, False)
             capture_done = True
-        if not capture_done:
-            # Wait some ms to stabilyze before reading position
-            # not necessary if capture has been taken
-            sleep(sweepconfig.cte_stabilization_time)
 
 	# Shots a second picture after second stabilization time
 	if sweepconfig.cte_second_picture:
