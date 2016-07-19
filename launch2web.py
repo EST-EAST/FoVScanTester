@@ -42,33 +42,33 @@ def import_URL(URL):
 # ###### Functions API ################
 
 
-# ## Commands the motor to the position of that step
+# ## Commands the motor to a given position
 def commandMotor(x, y):
     if sweepconfig.cte_verbose:
-       print ("Sweep step X: " + str(x) + " Y: " + str(y))
+       print ("Command Motor X: " + str(x) + " Y: " + str(y))
     return sws.commandMotor(x, y)
 
 
-# ## Investigate if the current step has been executed
+# ## Investigate if the current movement has been executed
 # ## you can also include here the user interaction, allowing
 # ## him/her to quit the scanning operation
 def stepDone():
-    # Wait for command or step time
+    # Wait for command or movement time
     # returns are:
     #   -1 if the sweep operation must be cancelled
-    #   1 if the step has been done and the frame must be acquired
+    #   1 if the movement has been done and the frame must be acquired
     #   0 does nothing, non blocking implementation is welcome
     return sws.stepDone()
 
 
-sqlsentence = "INSERT INTO \"scan_ex_logs\" (\"step\", \"x\", \"y\", " + \
+sqlsentence = "INSERT INTO \"scan_ex_logs\" (\"step_order\", \"iteration\", \"step\", \"x\", \"y\", " + \
               "\"x_coord\", \"y_coord\", \"mx\", \"my\", \"mcomp\", \"mx_fdback\", \"my_fdback\", \"mcomp_fdback\", " + \
               "\"timestr\", \"scan_eng_run_id\", \"dtinit\", \"dtend\", \"created_at\", \"updated_at\") VALUES " + \
-              "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+              "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 
 sqlprepare = "CREATE TABLE IF NOT EXISTS \"scan_ex_logs\" (\"id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + \
              "\"mx\" float, \"my\" float, \"mcomp\" float, \"created_at\" datetime, \"updated_at\" datetime, " + \
-             "\"scan_eng_run_id\" integer, \"step\" integer, \"x\" integer, \"y\" integer, " + \
+             "\"scan_eng_run_id\" integer, \"step_order\" integer, \"iteration\" integer, \"step\" integer, \"x\" integer, \"y\" integer, " + \
              "\"x_coord\" float, \"y_coord\" float, \"timestr\" varchar, \"dtinit\" datetime, \"dtend\" datetime, " + \
              "\"mx_fdback\" float, \"my_fdback\" float, \"mcomp_fdback\" float);"
 
@@ -102,7 +102,7 @@ doc = None
 docrow = 0
 
 
-def dbinsert(dbcon, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_setpoint, my_setpoint, mcomp_setpoint,
+def dbinsert(dbcon, cur_step_order, cur_iter, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_setpoint, my_setpoint, mcomp_setpoint,
              mx_pos, my_pos, mcomp_pos, timestamp, dt_init, dt_end, ex_id, run_id):
     global firstDbSentence
     global docrow
@@ -153,7 +153,7 @@ def dbinsert(dbcon, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_set
                     sdtcam, sdtcam]
 
             engrunsheet[1, 1:33].values = item
-            exlogsheet[0, 0:18].values = ["id", "step", "x", "y", "x_coord", "y_coord", "mx", "my", "mcomp",
+            exlogsheet[0, 0:20].values = ["id", "step_order", "iteration", "step", "x", "y", "x_coord", "y_coord", "mx", "my", "mcomp",
                                           "mx_fdback", "my_fdback", "mcomp_fdback", "timestr", "scan_eng_run_id",
                                           "dtinit", "dtend", "created_at", "updated_at"]
         if sweepconfig.cte_export_openpyxl:
@@ -193,12 +193,12 @@ def dbinsert(dbcon, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_set
                     cell.value = item[idx]
                     idx += 1
 
-            item = ["id", "step", "x", "y", "x_coord", "y_coord", "mx", "my", "mcomp",
+            item = ["id", "step_order", "iteration", "step", "x", "y", "x_coord", "y_coord", "mx", "my", "mcomp",
                     "mx_fdback", "my_fdback", "mcomp_fdback", "timestr", "scan_eng_run_id",
                     "dtinit", "dtend", "created_at", "updated_at"]
             idx = 0
             print "**************************************"
-            for row in exlogsheet.iter_rows('A1:R1'):
+            for row in exlogsheet.iter_rows('A1:T1'):
                 for cell in row:
                     cell.value = item[idx]
                     idx += 1
@@ -211,22 +211,22 @@ def dbinsert(dbcon, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_set
 
         docrow += 1
 
-    item = [cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_setpoint, my_setpoint, mcomp_setpoint, mx_pos,
+    item = [cur_step_order, cur_iter, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_setpoint, my_setpoint, mcomp_setpoint, mx_pos,
             my_pos, mcomp_pos, timestamp, run_id, dt_init, dt_end, dt_end, dt_end]
     dbcon.execute(sqlsentence, item)
 
     if sweepconfig.cte_export_ods:
-        item = [cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_setpoint, my_setpoint, mcomp_setpoint, mx_pos,
+        item = [cur_step_order, cur_iter, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_setpoint, my_setpoint, mcomp_setpoint, mx_pos,
                 my_pos, mcomp_pos, timestamp, run_id, sdtinit, sdtcam, sdtcam, sdtcam]
         exlogsheet[docrow, 0].value = dbcon.lastrowid
-        exlogsheet[docrow, 1:18].values = item
+        exlogsheet[docrow, 1:20].values = item
 
     if sweepconfig.cte_export_openpyxl:
-        item = [cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_setpoint, my_setpoint, mcomp_setpoint, mx_pos,
+        item = [cur_step_order, cur_iter, cur_step, step_x, step_y, step_x_coord, step_y_coord, mx_setpoint, my_setpoint, mcomp_setpoint, mx_pos,
                 my_pos, mcomp_pos, timestamp, run_id, sdtinit, sdtcam, sdtcam, sdtcam]
         exlogsheet['A' + str(docrow + 1)] = dbcon.lastrowid
         idx = 0
-        for row in exlogsheet.iter_rows('B' + str(docrow + 1) + ':R' + str(docrow + 1)):
+        for row in exlogsheet.iter_rows('B' + str(docrow + 1) + ':T' + str(docrow + 1)):
             for cell in row:
                 cell.value = item[idx]
                 idx += 1
@@ -265,7 +265,7 @@ def dbprepare(dbcon):
 # ##### Automatically generated code ###########
 
 sweep_ex_id = 2
-steps = [ { 'c': (0),'x': (0),'y': (0),'x_coord': (0.0),'y_coord': (0.0) },{ 'c': (1),'x': (1),'y': (0),'x_coord': (0.0018),'y_coord': (0.0) },{ 'c': (2),'x': (1),'y': (1),'x_coord': (0.0018),'y_coord': (0.0008) },{ 'c': (3),'x': (0),'y': (1),'x_coord': (0.0),'y_coord': (0.0008) },{ 'c': (4),'x': (-1),'y': (1),'x_coord': (-0.0018),'y_coord': (0.0008) },{ 'c': (5),'x': (-1),'y': (0),'x_coord': (-0.0018),'y_coord': (0.0) },{ 'c': (6),'x': (-1),'y': (-1),'x_coord': (-0.0018),'y_coord': (-0.0008) },{ 'c': (7),'x': (0),'y': (-1),'x_coord': (0.0),'y_coord': (-0.0008) },{ 'c': (8),'x': (1),'y': (-1),'x_coord': (0.0018),'y_coord': (-0.0008) },{ 'c': (9),'x': (2),'y': (-1),'x_coord': (0.0036),'y_coord': (-0.0008) },{ 'c': (10),'x': (2),'y': (0),'x_coord': (0.0036),'y_coord': (0.0) },{ 'c': (11),'x': (2),'y': (1),'x_coord': (0.0036),'y_coord': (0.0008) },{ 'c': (12),'x': (2),'y': (2),'x_coord': (0.0036),'y_coord': (0.0016) },{ 'c': (13),'x': (1),'y': (2),'x_coord': (0.0018),'y_coord': (0.0016) },{ 'c': (14),'x': (0),'y': (2),'x_coord': (0.0),'y_coord': (0.0016) },{ 'c': (15),'x': (-1),'y': (2),'x_coord': (-0.0018),'y_coord': (0.0016) },{ 'c': (16),'x': (-2),'y': (2),'x_coord': (-0.0036),'y_coord': (0.0016) },{ 'c': (17),'x': (-2),'y': (1),'x_coord': (-0.0036),'y_coord': (0.0008) },{ 'c': (18),'x': (-2),'y': (0),'x_coord': (-0.0036),'y_coord': (0.0) },{ 'c': (19),'x': (-2),'y': (-1),'x_coord': (-0.0036),'y_coord': (-0.0008) },{ 'c': (20),'x': (-2),'y': (-2),'x_coord': (-0.0036),'y_coord': (-0.0016) },{ 'c': (21),'x': (-1),'y': (-2),'x_coord': (-0.0018),'y_coord': (-0.0016) },{ 'c': (22),'x': (0),'y': (-2),'x_coord': (0.0),'y_coord': (-0.0016) },{ 'c': (23),'x': (1),'y': (-2),'x_coord': (0.0018),'y_coord': (-0.0016) },{ 'c': (24),'x': (2),'y': (-2),'x_coord': (0.0036),'y_coord': (-0.0016) }, ]
+steps = [ { 'i': (0),'c': (0),'x': (0),'y': (0),'x_coord': (0.0),'y_coord': (0.0) },{ 'i': (0),'c': (1),'x': (1),'y': (0),'x_coord': (0.0018),'y_coord': (0.0) },{ 'i': (0),'c': (2),'x': (1),'y': (1),'x_coord': (0.0018),'y_coord': (0.0008) },{ 'i': (0),'c': (3),'x': (0),'y': (1),'x_coord': (0.0),'y_coord': (0.0008) },{ 'i': (0),'c': (4),'x': (-1),'y': (1),'x_coord': (-0.0018),'y_coord': (0.0008) },{ 'i': (0),'c': (5),'x': (-1),'y': (0),'x_coord': (-0.0018),'y_coord': (0.0) },{ 'i': (0),'c': (6),'x': (-1),'y': (-1),'x_coord': (-0.0018),'y_coord': (-0.0008) },{ 'i': (0),'c': (7),'x': (0),'y': (-1),'x_coord': (0.0),'y_coord': (-0.0008) },{ 'i': (0),'c': (8),'x': (1),'y': (-1),'x_coord': (0.0018),'y_coord': (-0.0008) },{ 'i': (0),'c': (9),'x': (2),'y': (-1),'x_coord': (0.0036),'y_coord': (-0.0008) },{ 'i': (0),'c': (10),'x': (2),'y': (0),'x_coord': (0.0036),'y_coord': (0.0) },{ 'i': (0),'c': (11),'x': (2),'y': (1),'x_coord': (0.0036),'y_coord': (0.0008) },{ 'i': (0),'c': (12),'x': (2),'y': (2),'x_coord': (0.0036),'y_coord': (0.0016) },{ 'i': (0),'c': (13),'x': (1),'y': (2),'x_coord': (0.0018),'y_coord': (0.0016) },{ 'i': (0),'c': (14),'x': (0),'y': (2),'x_coord': (0.0),'y_coord': (0.0016) },{ 'i': (0),'c': (15),'x': (-1),'y': (2),'x_coord': (-0.0018),'y_coord': (0.0016) },{ 'i': (0),'c': (16),'x': (-2),'y': (2),'x_coord': (-0.0036),'y_coord': (0.0016) },{ 'i': (0),'c': (17),'x': (-2),'y': (1),'x_coord': (-0.0036),'y_coord': (0.0008) },{ 'i': (0),'c': (18),'x': (-2),'y': (0),'x_coord': (-0.0036),'y_coord': (0.0) },{ 'i': (0),'c': (19),'x': (-2),'y': (-1),'x_coord': (-0.0036),'y_coord': (-0.0008) },{ 'i': (0),'c': (20),'x': (-2),'y': (-2),'x_coord': (-0.0036),'y_coord': (-0.0016) },{ 'i': (0),'c': (21),'x': (-1),'y': (-2),'x_coord': (-0.0018),'y_coord': (-0.0016) },{ 'i': (0),'c': (22),'x': (0),'y': (-2),'x_coord': (0.0),'y_coord': (-0.0016) },{ 'i': (0),'c': (23),'x': (1),'y': (-2),'x_coord': (0.0018),'y_coord': (-0.0016) },{ 'i': (0),'c': (24),'x': (2),'y': (-2),'x_coord': (0.0036),'y_coord': (-0.0016) }, ]
 
 # ##### Automatically generated steps table ###########
 # ##### END Automatically generated code ###########
@@ -326,6 +326,8 @@ endStep = len(steps)
 # endStep = 4
 while (done != -1) and (curStep < endStep):
     # In stepX and stepY we have the step positions to be done
+    iteration = steps[curStep]['i']
+    step = steps[curStep]['c']
     stepX = steps[curStep]['x']
     stepY = steps[curStep]['y']
     stepXcoord = steps[curStep]['x_coord']
@@ -340,18 +342,21 @@ while (done != -1) and (curStep < endStep):
     if done != -1:
         # Acquire image
         dtcam = datetime.now()
+        # Wait some ms to stabilyze before reading position
+        # not necessary if capture has been taken
+        sleep(sweepconfig.cte_stabilization_time)
         capture_done = False
         if sweepconfig.cte_use_cvcam:
             ret, frame = cam.read()
             # save to disk
-            strg = sweepconfig.cte_fileprefix + '%s_%03d_%03d.png' % (timestr, sweep_ex_id, curStep)
+            strg = sweepconfig.cte_fileprefix + '%s_%03d_%03d_%03d.png' % (timestr, sweep_ex_id, iteration, step)
             cv2.imwrite(sweepconfig.cte_framePath + strg, frame)
             # show the image
             cv2.imshow('Current Frame', frame)
             capture_done = True
         if sweepconfig.cte_use_photocam:
             # We configure the image capture
-            strg = 'D%s_%03d_%03d.jpg' % (timestr, sweep_ex_id, curStep)
+            strg = 'D%s_%03d_%03d_%03d.jpg' % (timestr, sweep_ex_id, iteration, step)
             cmd = sweepconfig.cte_cameractrl_path + sweepconfig.cte_cameractrl_command
             args = sweepconfig.cte_cameractrl_filenamecmd + " " + strg
             if sweepconfig.cte_verbose:
@@ -363,19 +368,44 @@ while (done != -1) and (curStep < endStep):
             subprocess.check_output([cmd, args])
             capture_done = True
         if sweepconfig.cte_use_gphoto2:
-            strg = sweepconfig.cte_gphoto2_filename_root + '%s_%03d_%03d.jpg' % (timestr, sweep_ex_id, curStep)
+            strg = sweepconfig.cte_gphoto2_filename_root + '%s_%03d_%03d_%03d.jpg' % (timestr, sweep_ex_id, iteration, step)
             gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath, strg, False)
             capture_done = True
-        if not capture_done:
-            # Wait some ms to stabilyze before reading position
-            # not necessary if capture has been taken
-            sleep(sweepconfig.cte_stabilization_time)
+
+        # Shots a second picture after second stabilization time
+        if sweepconfig.cte_second_picture:
+            sleep(sweepconfig.cte_stabilization_time_pic2)
+            if sweepconfig.cte_use_cvcam:
+                ret, frame = cam.read()
+                # save to disk
+                strg = sweepconfig.cte_fileprefix + '%s_%03d_%03d_%03d_2.png' % (timestr, sweep_ex_id, iteration, step)
+                cv2.imwrite(sweepconfig.cte_framePath + strg, frame)
+                # show the image
+                cv2.imshow('Current Frame', frame)
+                capture_done = True
+            if sweepconfig.cte_use_photocam:
+                # We configure the image capture
+                strg = 'D%s_%03d_%03d_%03d_2.jpg' % (timestr, sweep_ex_id, iteration, step)
+                cmd = sweepconfig.cte_cameractrl_path + sweepconfig.cte_cameractrl_command
+                args = sweepconfig.cte_cameractrl_filenamecmd + " " + strg
+                if sweepconfig.cte_verbose:
+                    print("Photo set filename: " + cmd + " " + args)
+                subprocess.check_output([cmd, args])
+                args = sweepconfig.cte_cameractrl_capturecmd
+                if sweepconfig.cte_verbose:
+                    print("Photo capture frame: " + cmd + " " + args)
+                subprocess.check_output([cmd, args])
+                capture_done = True
+            if sweepconfig.cte_use_gphoto2:
+                strg = sweepconfig.cte_gphoto2_filename_root + '%s_%03d_%03d_%03d_2.jpg' % (timestr, sweep_ex_id, iteration, step)
+                gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath, strg, False)
+                capture_done = True
 
         # acquire the motor status
         mx_fdback, my_fdback, mcomp_fdback = sws.motorPositions()
-        print ("Step: "+str(curStep)+" Motor | mx: " + str(mx_fdback) + ", my: " + str(my_fdback) + ", mcomp: " + str(mcomp_fdback))
+        print ("Iteration: "+str(iteration)+"Step: "+str(step)+" Motor | mx: " + str(mx_fdback) + ", my: " + str(my_fdback) + ", mcomp: " + str(mcomp_fdback))
         # BD information store
-        sweep_eng_run_id = dbinsert(dbc, curStep, stepX, stepY, stepXcoord, stepYcoord, mx, my, mcomp, mx_fdback,
+        sweep_eng_run_id = dbinsert(dbc, curStep, iteration, step, stepX, stepY, stepXcoord, stepYcoord, mx, my, mcomp, mx_fdback,
                                     my_fdback, mcomp_fdback, timestr, dtinit, dtcam, sweep_ex_id, sweep_eng_run_id)
         curStep += 1
 
@@ -400,3 +430,4 @@ if sweepconfig.cte_use_cvcam:
     cv2.destroyAllWindows()
 
 sws.motorClose()
+

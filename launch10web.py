@@ -372,39 +372,34 @@ while (done != -1) and (curStep < endStep):
             gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath, strg, False)
             capture_done = True
 
-	# Shots a second picture after second stabilization time
-	if sweepconfig.cte_second_picture:
-	        sleep(sweepconfig.cte_stabilization_time_pic2)
-		if sweepconfig.cte_use_cvcam:
-		    ret, frame = cam.read()
-		    # save to disk
-		    strg = sweepconfig.cte_fileprefix + '%s_%03d_%03d_%03d_2.png' % (timestr, sweep_ex_id, iteration, step)
-		    cv2.imwrite(sweepconfig.cte_framePath + strg, frame)
-		    # show the image
-		    cv2.imshow('Current Frame', frame)
-		    capture_done = True
-		if sweepconfig.cte_use_photocam:
-		    # We configure the image capture
-		    strg = 'D%s_%03d_%03d_%03d_2.jpg' % (timestr, sweep_ex_id, iteration, step)
-		    cmd = sweepconfig.cte_cameractrl_path + sweepconfig.cte_cameractrl_command
-		    args = sweepconfig.cte_cameractrl_filenamecmd + " " + strg
-		    if sweepconfig.cte_verbose:
-		        print("Photo set filename: " + cmd + " " + args)
-		    subprocess.check_output([cmd, args])
-		    args = sweepconfig.cte_cameractrl_capturecmd
-		    if sweepconfig.cte_verbose:
-		        print("Photo capture frame: " + cmd + " " + args)
-		    subprocess.check_output([cmd, args])
-		    capture_done = True
-		if sweepconfig.cte_use_gphoto2:
-		    strg = sweepconfig.cte_gphoto2_filename_root + '%s_%03d_%03d_%03d_2.jpg' % (timestr, sweep_ex_id, iteration, step)
-		    gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath, strg, False)
-		    capture_done = True
-		if not capture_done:
-		    # Wait some ms to stabilyze before reading position
-		    # not necessary if capture has been taken
-		    sleep(sweepconfig.cte_stabilization_time)
-
+        # Shots a second picture after second stabilization time
+        if sweepconfig.cte_second_picture:
+            sleep(sweepconfig.cte_stabilization_time_pic2)
+            if sweepconfig.cte_use_cvcam:
+                ret, frame = cam.read()
+                # save to disk
+                strg = sweepconfig.cte_fileprefix + '%s_%03d_%03d_%03d_2.png' % (timestr, sweep_ex_id, iteration, step)
+                cv2.imwrite(sweepconfig.cte_framePath + strg, frame)
+                # show the image
+                cv2.imshow('Current Frame', frame)
+                capture_done = True
+            if sweepconfig.cte_use_photocam:
+                # We configure the image capture
+                strg = 'D%s_%03d_%03d_%03d_2.jpg' % (timestr, sweep_ex_id, iteration, step)
+                cmd = sweepconfig.cte_cameractrl_path + sweepconfig.cte_cameractrl_command
+                args = sweepconfig.cte_cameractrl_filenamecmd + " " + strg
+                if sweepconfig.cte_verbose:
+                    print("Photo set filename: " + cmd + " " + args)
+                subprocess.check_output([cmd, args])
+                args = sweepconfig.cte_cameractrl_capturecmd
+                if sweepconfig.cte_verbose:
+                    print("Photo capture frame: " + cmd + " " + args)
+                subprocess.check_output([cmd, args])
+                capture_done = True
+            if sweepconfig.cte_use_gphoto2:
+                strg = sweepconfig.cte_gphoto2_filename_root + '%s_%03d_%03d_%03d_2.jpg' % (timestr, sweep_ex_id, iteration, step)
+                gphoto2capture.capture(sweepconfig.cte_gphoto2_framePath, strg, False)
+                capture_done = True
 
         # acquire the motor status
         mx_fdback, my_fdback, mcomp_fdback = sws.motorPositions()
@@ -435,3 +430,4 @@ if sweepconfig.cte_use_cvcam:
     cv2.destroyAllWindows()
 
 sws.motorClose()
+
