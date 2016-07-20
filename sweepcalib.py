@@ -30,8 +30,8 @@ cte_lscomp_zero = 18800  # LS units coincidence with 0 mm (center)
 
 # Home speeds
 cte_vhx = 100
-cte_vhy = 100
-cte_vhcomp = 100
+cte_vhy = 50
+cte_vhcomp = 50
 
 # Index speeds
 cte_vix = 30
