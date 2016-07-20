@@ -395,12 +395,12 @@ def commandMotor(x, y):
             print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
         ret = -1
     else:
-        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x)/(cte_vhx/100),
+        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x)/(cte_vx/100.0),
                  'Blocking': False}
-        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y)/(cte_vhx/100),
+        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y)/(cte_vy/100.0),
                  'Blocking': False}
         compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
-                    'Delta': abs(lscomp_pos-current_pos_comp)/(cte_vhcomp/100), 'Blocking': False}
+                    'Delta': abs(lscomp_pos-current_pos_comp)/(cte_vcomp/100.0), 'Blocking': False}
         reordDict=[xDict, yDict, compDict]
         # send the commands
         newlist = sorted(reordDict, key=lambda k: k['Delta'])
