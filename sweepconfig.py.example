@@ -4,12 +4,19 @@ Created on Tue May 17 17:51:05 2016
 
 @author: txinto
 """
+
+# Revision history:
+#cte_proto_rev = 1 # First mechanical version without horizontal bars support
+#cte_proto_rev = 2 # Second mechanical version with horizontal bars support attached to the mass
+#cte_proto_rev = 3 # First mechanical version without horizontal bars support (again)
+#cte_proto_rev = 4 # Third mechanical version with horizontal bars support attached to the SM1 support
+cte_proto_rev = 5 # Same as 4, but with reduced speeds for vertical and compensation
+
 # Tiempo de estabilización que entra en juego si no hay adquisición de imagen
-cte_stabilization_time = 1.000
-cte_proto_rev = 2
+cte_stabilization_time = 5.000
 
 # Activa segunda fotografía
-cte_second_picture = True
+cte_second_picture = False
 cte_stabilization_time_pic2 = 4.000
 
 # No cambiar
