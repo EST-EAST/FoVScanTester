@@ -29,19 +29,19 @@ cte_lscomp_max = 39800  # End of LS travel in upper units
 cte_lscomp_zero = 18800  # LS units coincidence with 0 mm (center)
 
 # Home speeds
-cte_vhx = 100
-cte_vhy = 50
-cte_vhcomp = 50
+cte_vhx = 100.0
+cte_vhy = 100.0
+cte_vhcomp = 100.0
 
 # Index speeds
-cte_vix = 30
-cte_viy = 30
-cte_vicomp = 30
+cte_vix = 30.0
+cte_viy = 30.0
+cte_vicomp = 30.0
 
 # Movement speeds
-cte_vx = 100
-cte_vy = 100
-cte_vcomp = 100
+cte_vx = 100.0
+cte_vy = 50.0
+cte_vcomp = 30.0
 
 ###################### COMPENSATION ALGORITHM PARAMETERS ######################
 # Original function ---> lscomp = (x + y) / 2
