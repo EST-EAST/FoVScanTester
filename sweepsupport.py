@@ -395,12 +395,12 @@ def commandMotor(x, y):
             print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
         ret = -1
     else:
-        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x)/(cte_vx/100.0),
+        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x)/(float(cte_vx)/100.0),
                  'Blocking': False}
-        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y)/(cte_vy/100.0),
+        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y)/(float(cte_vy)/100.0),
                  'Blocking': False}
         compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
-                    'Delta': abs(lscomp_pos-current_pos_comp)/(cte_vcomp/100.0), 'Blocking': False}
+                    'Delta': abs(lscomp_pos-current_pos_comp)/(float(cte_vcomp)/100.0), 'Blocking': False}
         reordDict=[xDict, yDict, compDict]
         # send the commands
         newlist = sorted(reordDict, key=lambda k: k['Delta'])
@@ -722,7 +722,7 @@ def motorClose():
 
 cte_vh = [cte_vhx, cte_vhy, cte_vhcomp]
 cte_vi = [cte_vix, cte_viy, cte_vicomp]
-cte_v = [cte_vh, cte_vh, cte_vcomp]
+cte_v = [cte_vx, cte_vy, cte_vcomp]
 
 ########### MAIN INITIALIZATIONS ###############
 
