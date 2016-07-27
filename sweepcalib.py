@@ -26,7 +26,7 @@ cte_lsy_zero = 18400  # LS units coincidence with 0 mm (center)
 cte_lscomp_min = 0  # End of LS travel in lower units
 cte_lscomp_scale = -(2000 * 1000)  # LS units / mm * 1000 mm / 1 m
 cte_lscomp_max = 39800  # End of LS travel in upper units
-cte_lscomp_zero = 18800  # LS units coincidence with 0 mm (center)
+cte_lscomp_zero = 25800  # LS units coincidence with 0 mm (center)
 
 # Home speeds
 cte_vhx = 100
