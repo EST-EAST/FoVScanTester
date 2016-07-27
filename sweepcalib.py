@@ -1,8 +1,8 @@
 # Tolerances for deciding if the movement has to be commanded or not.
 # If the distance to be covered is less than this ones, the movement will be skipped
-cte_tol_x = 10      # minimum distance in motor encoder to command a movement in X direction
-cte_tol_y = 10      # minimum distance in motor encoder to command a movement in Y direction
-cte_tol_comp = 10   # minimum distance in motor encoder to command a movement in compensation direction
+cte_tol_x = 5      # minimum distance in motor encoder to command a movement in X direction
+cte_tol_y = 5      # minimum distance in motor encoder to command a movement in Y direction
+cte_tol_comp = 5   # minimum distance in motor encoder to command a movement in compensation direction
 
 # Time to wait between steps, apart from motors and camera ones
 cte_waitTime = 1
@@ -30,8 +30,8 @@ cte_lscomp_zero = 18800  # LS units coincidence with 0 mm (center)
 
 # Home speeds
 cte_vhx = 100
-cte_vhy = 50
-cte_vhcomp = 30
+cte_vhy = 100
+cte_vhcomp = 100
 
 # Index speeds
 cte_vix = 30
@@ -40,8 +40,8 @@ cte_vicomp = 30
 
 # Movement speeds
 cte_vx = 100
-cte_vy = 50
-cte_vcomp = 30
+cte_vy = 100
+cte_vcomp = 100
 
 ###################### COMPENSATION ALGORITHM PARAMETERS ######################
 # Original function ---> lscomp = (x + y) / 2
