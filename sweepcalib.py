@@ -12,19 +12,19 @@ cte_stepTime = cte_waitTime * 1000
 
 # Mx = x
 cte_lsx_min = 0  # End of LS travel in lower units
-cte_lsx_scale = -(1000 * 1000)  # LS units / mm * 1000 mm / 1 m
+cte_lsx_scale = (1000 * 1000)  # LS units / mm * 1000 mm / 1 m
 cte_lsx_max = 26900  # End of LS travel in upper units
 cte_lsx_zero = 13100  # LS units coincidence with 0 mm (center)
 
 # My = y
 cte_lsy_min = 0  # End of LS travel in lower units
-cte_lsy_scale = (2000 * 1000)  # LS units / mm * 1000 mm / 1 m
+cte_lsy_scale = - (2000 * 1000)  # LS units / mm * 1000 mm / 1 m
 cte_lsy_max = 39401  # End of LS travel in upper units
 cte_lsy_zero = 18400  # LS units coincidence with 0 mm (center)
 
 # Mcomp = compensaTion
 cte_lscomp_min = 0  # End of LS travel in lower units
-cte_lscomp_scale = -(2000 * 1000)  # LS units / mm * 1000 mm / 1 m
+cte_lscomp_scale = (2000 * 1000)  # LS units / mm * 1000 mm / 1 m
 cte_lscomp_max = 39800  # End of LS travel in upper units
 cte_lscomp_zero = 25800  # LS units coincidence with 0 mm (center)
 
