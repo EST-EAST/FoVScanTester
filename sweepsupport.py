@@ -373,6 +373,51 @@ def commandLScomp(setpoint, blocking = True):
 
 # Commands the window to x and y position (in mm from centered position)
 # It calculates the needed commands for Mx, My and Mcomp motors and sends them.
+def commandMotorUnits(x, y, z):
+    ret = 0
+    # Compute compensation
+    lscomp = z
+    # Compute LSX and LSY
+    lsx_temp = x
+    lsx_pos = max(min(lsx_temp, cte_lsx_max), cte_lsx_min)
+    lsy_temp = y
+    lsy_pos = max(min(lsy_temp, cte_lsy_max), cte_lsy_min)
+    lscomp_temp = z
+    lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
+
+    if (lsx_temp != lsx_pos or
+                lsy_temp != lsy_pos or
+                lscomp_temp != lscomp_pos):
+        if sweepconfig.cte_verbose:
+            print "Error on calculating position: out of range of LS motors"
+            print "X: %f Y: %f" % (x, y)
+            print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
+            print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
+
+        ret = -1
+    else:
+        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos,
+                 'Delta': abs(lsx_pos - current_pos_x) / (float(cte_vx) / 100.0),
+                 'Blocking': False}
+        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos,
+                 'Delta': abs(lsy_pos - current_pos_y) / (float(cte_vy) / 100.0),
+                 'Blocking': False}
+        compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
+                    'Delta': abs(lscomp_pos - current_pos_comp) / (float(cte_vcomp) / 100.0),
+                    'Blocking': False}
+        reordDict = [xDict, yDict, compDict]
+        # send the commands
+        newlist = sorted(reordDict, key=lambda k: k['Delta'])
+        newlist[len(newlist) - 1]['Blocking'] = True
+        for func in newlist:
+            print("Ord: " + func['Name'] + ", Delta:" + str(func['Delta']) + ", blocking:" + str(
+                func['Blocking']))
+            (func['Function'])(func['Argument'], func['Blocking'])
+    return ret, lsx_pos, lsy_pos, lscomp_pos
+
+
+# Commands the window to x and y position (in mm from centered position)
+# It calculates the needed commands for Mx, My and Mcomp motors and sends them.
 def commandMotor(x, y):
     ret = 0
     # Compute compensation
@@ -393,6 +438,7 @@ def commandMotor(x, y):
             print "X: %f Y: %f" % (x, y)
             print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
             print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
+
         ret = -1
     else:
         xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x)/(float(cte_vx)/100.0),
@@ -405,10 +451,9 @@ def commandMotor(x, y):
         # send the commands
         newlist = sorted(reordDict, key=lambda k: k['Delta'])
         newlist[len(newlist)-1]['Blocking'] = True
-    	for func in newlist:
-        	print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
-        	(func['Function'])(func['Argument'], func['Blocking'])
-
+        for func in newlist:
+            print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
+            (func['Function'])(func['Argument'], func['Blocking'])
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
 
@@ -434,23 +479,22 @@ def commandMotorComp(x, y):
             print "X: %f Y: %f" % (x, y)
             print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
             print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
+
         ret = -1
     else:
-        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x),
+        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x)/(float(cte_vx)/100.0),
                  'Blocking': False}
-        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y),
+        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y)/(float(cte_vy)/100.0),
                  'Blocking': False}
         compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
-                    'Delta': abs(lscomp_pos-current_pos_comp), 'Blocking': False}
-        reordDict=[compDict]
+                    'Delta': abs(lscomp_pos-current_pos_comp)/(float(cte_vcomp)/100.0), 'Blocking': False}
+        reordDict = [compDict]
         # send the commands
-        # newlist = sorted(reordDict, key=lambda k: k['Delta'])
-	newlist=reordDict        
-	newlist[len(newlist)-1]['Blocking'] = True
-    	for func in newlist:
-        	print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
-        	(func['Function'])(func['Argument'], func['Blocking'])
-
+        newlist = reordDict
+        newlist[len(newlist)-1]['Blocking'] = True
+        for func in newlist:
+            print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
+            (func['Function'])(func['Argument'], func['Blocking'])
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
 
