@@ -1,7 +1,7 @@
 # Tolerances for deciding if the movement has to be commanded or not.
 # If the distance to be covered is less than this ones, the movement will be skipped
 cte_tol_x = 5      # minimum distance in motor encoder to command a movement in X direction
-cte_tol_y = 5      # minimum distance in motor encoder to command a movement in Y direction
+cte_tol_y = 7      # minimum distance in motor encoder to command a movement in Y direction
 cte_tol_comp = 5   # minimum distance in motor encoder to command a movement in compensation direction
 
 # Time to wait between steps, apart from motors and camera ones
