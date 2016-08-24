@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# Forces the motors to move the window to the center position of the FoV
+
 import sweepconfig
 import sweepsupport as sws
 

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 12 13:13:44 2016
-
-@author: txinto
+Retrieves an scanning algorithms list from the given web server, and allows the user to execute one of them
 """
+
 import os
 import urllib
 import sweepconfig

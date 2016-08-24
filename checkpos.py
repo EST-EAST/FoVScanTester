@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# Script to checks the current position of the motors
+
 import sweepconfig
 import sweepsupport as sws
 

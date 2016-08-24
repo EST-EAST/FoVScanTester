@@ -1,3 +1,5 @@
+# Captures a picture using GPhoto2 library
+
 import subprocess
 
 import gphoto2 as gp
