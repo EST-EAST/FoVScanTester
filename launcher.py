@@ -6,7 +6,6 @@ Created on Thu May 12 13:13:44 2016
 """
 import os
 import urllib
-import sweepsupport
 import sweepconfig
 
 def import_URL(URL):
