@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 # Script to checks the current position of the motors
 
-import sweepconfig
-import sweepsupport as sws
+import scanconfig
+import scansupport as sws
 
 #### START EXECUTION ######
 
-if (sweepconfig.cte_disable_motors_first):
+if (scanconfig.cte_disable_motors_first):
     sws.disableMotors()
 
-if (sweepconfig.cte_enable_motors_first):
+if (scanconfig.cte_enable_motors_first):
     sws.enableMotors()
 
 print("Check initial motor positions")
