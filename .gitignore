@@ -107,6 +107,13 @@ target/
 /launch_masX.py
 /launch_menosX.py
 /launch_Xout.py
-/scan2.py
+/scan2.py	
+old
+photo.jpg
+tmpfile*
+
+
 /startcam.sh
 /startcalc.sh
+
+
