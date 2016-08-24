@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# Forces the motors to go to their Home positions, and sets their zeroes
+
 import sweepconfig
 import sweepsupport as sws
 

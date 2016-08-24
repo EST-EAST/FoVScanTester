@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+# Forces ONLY the X and Y motors to move the window to the center of the FoV.  Comp is not commanded.
+
 import sweepconfig
 import sweepsupport as sws
 

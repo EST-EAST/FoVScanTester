@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue May 17 16:44:56 2016
-
-@author: Txinto
+Simulator of 3 Faulhaber motors, using serial link or using XPort TCP link.
 """
 import sweepconfig
 import errno

@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+# Forces ONLY the Comp motor to go to the position corresponding to the window center location.
+
 import sweepconfig
 import sweepsupport as sws
 

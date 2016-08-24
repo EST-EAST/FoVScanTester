@@ -91,3 +91,22 @@ target/
 /db.*
 /capt*.jpg
 
+/launch2.py
+/launch_Xtmp.py
+/launch2.py
+/launch2web.py
+/launch3web.py
+/launch10web.py
+/launch12web.py
+/launch14web.py
+/launch15web.py
+/launch16web.py
+/launch20web.py
+/launch24web.py
+/launch25web.py
+/launch_masX.py
+/launch_menosX.py
+/launch_Xout.py
+/scan2.py
+/startcam.sh
+/startcalc.sh

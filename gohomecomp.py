@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# Forces the Comp motor to go to its Home position, and sets its zero
+
 import sweepconfig
 import sweepsupport as sws
 
