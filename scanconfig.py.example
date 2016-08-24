@@ -30,7 +30,7 @@ cte_proto_rev = 2  # Prototype revision.
 
 
 # ### Timing configuration
-cte_stabilization_time = 0  # Stabilization time before taking a picture.
+cte_stabilization_time = 2.000  # Stabilization time that actuates when no picture is taken.
 
 
 # ### Reporting configuration
@@ -112,3 +112,6 @@ if cte_use_gphoto2:
     cte_gphoto2_filename_root = "FoV"                   # Filename name root for storing the images.
 
 cte_second_picture = False  # Enables taking a secondary picture before leaving current position.
+
+if cte_second_picture:
+    cte_stabilization_time_pic2 = 4.000  # Stabilization time for pic 2
