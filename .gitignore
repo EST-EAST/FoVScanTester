@@ -68,7 +68,7 @@ target/
 /db/*.sqlite3*
 /db/2*.ods
 /db/2*.xlsx
-/sweepconfig.py
+/scanconfig.py
 
 /doc/commands.txt
 
@@ -85,7 +85,7 @@ target/
 /PortableDeviceLib.dll
 /log4net.dll
 /submodules
-/sweepconfig - copia.py
+/scanconfig - copia.py
 
 /01_metrology
 /db.*

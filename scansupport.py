@@ -1,11 +1,11 @@
-import sweepconfig
+import scanconfig
 import sys
 sys.path.insert(0, './fsm')
 import FoV
 
-from sweepcalib import *
+from scancalib import *
 
-if sweepconfig.cte_use_cvcam:
+if scanconfig.cte_use_cvcam:
     import cv2
 
 ########### XPORT SIDE #################
@@ -13,7 +13,7 @@ if sweepconfig.cte_use_cvcam:
 
 # Sends an escape char to clear the Xport channel
 def resetXport():
-    if sweepconfig.cte_use_socket:
+    if scanconfig.cte_use_socket:
         str = "" + chr(27)
         FoV.dre.ser.sendall(str)
         sendMotorCommand("@")
@@ -27,12 +27,12 @@ def sendXportCmd(str):
     global numberOfOkToRx
     global numberOfPToRx
     sendMotorCommand(str)
-    if sweepconfig.cte_verbose:
+    if scanconfig.cte_verbose:
         print("XportCmd>" + str)
     done = False
     while not (done):
         r = getMotorResponse()
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("XPortResponse>" + r + "< nothing?")
         done = (len(r) == 0)
         if not (done):
@@ -43,7 +43,7 @@ def sendXportCmd(str):
 # while waiting for the response, also processes the probable
 # pending Ok's and P's
 def sendXportBegin(m):
-    if (sweepconfig.cte_use_socket):
+    if (scanconfig.cte_use_socket):
         cmd_str = "#" + str(m)
         sendXportCmd(cmd_str)
 
@@ -52,7 +52,7 @@ def sendXportBegin(m):
 # while waiting for the response, also processes the probable
 # pending Ok's and P's
 def sendXportEnd():
-    if (sweepconfig.cte_use_socket):
+    if (scanconfig.cte_use_socket):
         cmd_str = "@"
         sendXportCmd(cmd_str)
 
@@ -69,7 +69,7 @@ def getMotorResponse():
 # Sends a command to the Motors
 def sendMotorCommand(cmd_str):
     #ser.write(cmd_str+chr(13))
-    if sweepconfig.cte_verbose:
+    if scanconfig.cte_verbose:
         print "Command sent: "+cmd_str
     FoV.dre.command_tx_buf = cmd_str
     FoV.sendCtrlCommand()
@@ -84,14 +84,14 @@ numberOfOkToRx = 0      # Number of pending Ok responses
 def processPendingResponse(r):
     global numberOfOkToRx
     global numberOfPToRx
-    if sweepconfig.cte_verbose:
+    if scanconfig.cte_verbose:
         print("Resp2:" + r)
     if (r == "p"):
-        if sweepconfig.cte_wait_for_p:
+        if scanconfig.cte_wait_for_p:
             numberOfPToRx -= 1
     if (r == "OK"):
         numberOfOkToRx -= 1
-    if sweepconfig.cte_verbose:
+    if scanconfig.cte_verbose:
         print("Number of pending P to Rx: " + str(numberOfPToRx))
         print("Number of pending Ok to Rx: " + str(numberOfOkToRx))
 
@@ -131,7 +131,7 @@ def consumePendingOks():
 def consumePendingPs():
     global numberOfOkToRx
     global numberOfPToRx
-    if sweepconfig.cte_wait_for_p:
+    if scanconfig.cte_wait_for_p:
         while (numberOfPToRx > 0):
             consumeResponse()
         if (numberOfPToRx == 0):
@@ -146,7 +146,7 @@ def consumePendingPs():
 # Increments the count of pending P responses
 def incrementPendingP():
     global numberOfPToRx
-    if sweepconfig.cte_wait_for_p:
+    if scanconfig.cte_wait_for_p:
         numberOfPToRx += 1
 
 
@@ -163,22 +163,22 @@ def goHome(idx):
         # Programming the Home speeds
         cmd_str = prefixX+"HOSP-%3d" % (cte_vh[idx])
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
 
         cmd_str = prefixX+"APL0"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
 
-        if (sweepconfig.cte_command_np_flags):
+        if (scanconfig.cte_command_np_flags):
             cmd_str = prefixX + "NP"
             sendMotorCommand(cmd_str)
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Command:"+cmd_str)
             incrementPendingOk()
             consumePendingOks()
@@ -186,7 +186,7 @@ def goHome(idx):
 
         cmd_str = prefixX + "GOHOSEQ"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
@@ -194,15 +194,15 @@ def goHome(idx):
 
         cmd_str = prefixX+"HOSP%3d" % (cte_vi[idx])
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
 
-        if (sweepconfig.cte_command_np_flags):
+        if (scanconfig.cte_command_np_flags):
             cmd_str = prefixX + "NP"
             sendMotorCommand(cmd_str)
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Command:"+cmd_str)
             incrementPendingOk()
             consumePendingOks()
@@ -210,7 +210,7 @@ def goHome(idx):
 
         cmd_str = prefixX + "GOIX"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
@@ -218,14 +218,14 @@ def goHome(idx):
 
         cmd_str = prefixX+"APL1"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
 
         cmd_str = prefixX+"HOSP-%3d" % (cte_vh[idx])
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:"+cmd_str)
         incrementPendingOk()
         consumePendingOks()
@@ -233,38 +233,38 @@ def goHome(idx):
 
 # Sends to Home the motor assigned to X movements
 def goHomeMx():
-    if (sweepconfig.cte_use_motor_x):
-        sendXportBegin(sweepconfig.cte_motor_x_xport)
-        goHome(sweepconfig.cte_motor_x - 1)
+    if (scanconfig.cte_use_motor_x):
+        sendXportBegin(scanconfig.cte_motor_x_xport)
+        goHome(scanconfig.cte_motor_x - 1)
         sendXportEnd()
 
 
 # Sends to Home the motor assigned to Y movements
 def goHomeMy():
-    if (sweepconfig.cte_use_motor_y):
-        sendXportBegin(sweepconfig.cte_motor_y_xport)
-        goHome(sweepconfig.cte_motor_y - 1)
+    if (scanconfig.cte_use_motor_y):
+        sendXportBegin(scanconfig.cte_motor_y_xport)
+        goHome(scanconfig.cte_motor_y - 1)
         sendXportEnd()
 
 
 # Sends to Home the motor assigned to compensation movements
 def goHomeMcomp():
-    if (sweepconfig.cte_use_motor_comp):
-        sendXportBegin(sweepconfig.cte_motor_comp_xport)
-        goHome(sweepconfig.cte_motor_comp - 1)
+    if (scanconfig.cte_use_motor_comp):
+        sendXportBegin(scanconfig.cte_motor_comp_xport)
+        goHome(scanconfig.cte_motor_comp - 1)
         sendXportEnd()
 
 
 def commandLSx(setpoint, blocking = True):
     # Program the motor to warn when the command is done
-    if (sweepconfig.cte_use_motor_x):
+    if (scanconfig.cte_use_motor_x):
         if (abs(setpoint - current_pos_x) > cte_tol_x):
-            sendXportBegin(sweepconfig.cte_motor_x_xport)
+            sendXportBegin(scanconfig.cte_motor_x_xport)
 
-            if (sweepconfig.cte_command_np_flags and blocking):
+            if (scanconfig.cte_command_np_flags and blocking):
                 cmd_str = prefixX + "NP"
                 sendMotorCommand(cmd_str)
-                if sweepconfig.cte_verbose:
+                if scanconfig.cte_verbose:
                     print("Command:" + cmd_str)
                 incrementPendingOk()
                 consumePendingOks()
@@ -272,7 +272,7 @@ def commandLSx(setpoint, blocking = True):
 
             cmd_str = prefixX + "LA%04d" % (setpoint)
             sendMotorCommand(cmd_str)
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
@@ -280,7 +280,7 @@ def commandLSx(setpoint, blocking = True):
             # Move the motor
             cmd_str = prefixX + "M"
             sendMotorCommand(cmd_str)
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
@@ -290,20 +290,20 @@ def commandLSx(setpoint, blocking = True):
                 ret = consumePendingPs()
             sendXportEnd()
         else:
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Cancelo pues Pos actual: " + str(current_pos_x) + " parecida a orden: " + str(setpoint))
 
 
 def commandLSy(setpoint, blocking = True):
-    if (sweepconfig.cte_use_motor_y):
+    if (scanconfig.cte_use_motor_y):
         if (abs(setpoint - current_pos_y) > cte_tol_y):
-            sendXportBegin(sweepconfig.cte_motor_y_xport)
+            sendXportBegin(scanconfig.cte_motor_y_xport)
 
             # Program the motor to warn when the command is done
-            if (sweepconfig.cte_command_np_flags and blocking):
+            if (scanconfig.cte_command_np_flags and blocking):
                 cmd_str = prefixY + "NP"
                 sendMotorCommand(cmd_str)
-                if sweepconfig.cte_verbose:
+                if scanconfig.cte_verbose:
                     print("Command:" + cmd_str)
                 incrementPendingOk()
                 consumePendingOks()
@@ -311,14 +311,14 @@ def commandLSy(setpoint, blocking = True):
 
             cmd_str = prefixY + "LA%04d" % (setpoint)
             sendMotorCommand(cmd_str)
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
 
             cmd_str = prefixY + "M"
             sendMotorCommand(cmd_str)
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
@@ -329,19 +329,19 @@ def commandLSy(setpoint, blocking = True):
 
             sendXportEnd()
         else:
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Cancelo pues Pos actual: " + str(current_pos_y) + " parecida a orden: " + str(setpoint))
 
 
 def commandLScomp(setpoint, blocking = True):
-    if (sweepconfig.cte_use_motor_comp):
+    if (scanconfig.cte_use_motor_comp):
         if (abs(setpoint - current_pos_comp) > cte_tol_comp):
-            sendXportBegin(sweepconfig.cte_motor_comp_xport)
+            sendXportBegin(scanconfig.cte_motor_comp_xport)
             # Program the motor to warn when the command is done
-            if (sweepconfig.cte_command_np_flags and blocking):
+            if (scanconfig.cte_command_np_flags and blocking):
                 cmd_str = prefixComp + "NP"
                 sendMotorCommand(cmd_str)
-                if sweepconfig.cte_verbose:
+                if scanconfig.cte_verbose:
                     print("Command:" + cmd_str)
                 incrementPendingOk()
                 consumePendingOks()
@@ -349,14 +349,14 @@ def commandLScomp(setpoint, blocking = True):
 
             cmd_str = prefixComp + "LA%04d" % (setpoint)
             sendMotorCommand(cmd_str)
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
 
             cmd_str = prefixComp + "M"
             sendMotorCommand(cmd_str)
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Command:" + cmd_str)
             incrementPendingOk()
             consumePendingOks()
@@ -367,7 +367,7 @@ def commandLScomp(setpoint, blocking = True):
 
             sendXportEnd()
         else:
-            if sweepconfig.cte_verbose:
+            if scanconfig.cte_verbose:
                 print("Cancelo pues Pos actual: " + str(current_pos_comp) + " parecida a orden: " + str(setpoint))
 
 
@@ -388,7 +388,7 @@ def commandMotorUnits(x, y, z):
     if (lsx_temp != lsx_pos or
                 lsy_temp != lsy_pos or
                 lscomp_temp != lscomp_pos):
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print "Error on calculating position: out of range of LS motors"
             print "X: %f Y: %f" % (x, y)
             print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
@@ -433,7 +433,7 @@ def commandMotor(x, y):
     if (lsx_temp != lsx_pos or
                 lsy_temp != lsy_pos or
                 lscomp_temp != lscomp_pos):
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print "Error on calculating position: out of range of LS motors"
             print "X: %f Y: %f" % (x, y)
             print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
@@ -474,7 +474,7 @@ def commandMotorComp(x, y):
     if (lsx_temp != lsx_pos or
                 lsy_temp != lsy_pos or
                 lscomp_temp != lscomp_pos):
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print "Error on calculating position: out of range of LS motors"
             print "X: %f Y: %f" % (x, y)
             print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
@@ -515,7 +515,7 @@ def commandMotorWindow(x, y):
     if (lsx_temp != lsx_pos or
                 lsy_temp != lsy_pos or
                 lscomp_temp != lscomp_pos):
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print "Error on calculating position: out of range of LS motors"
             print "X: %f Y: %f" % (x, y)
             print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
@@ -589,32 +589,32 @@ def resetMotorsComp():
 
 # Disables the motors
 def disableMotors():
-    if (sweepconfig.cte_use_motor_x):
-        sendXportBegin(sweepconfig.cte_motor_x_xport)
+    if (scanconfig.cte_use_motor_x):
+        sendXportBegin(scanconfig.cte_motor_x_xport)
         cmd_str = prefixX + "DI"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
 
-    if (sweepconfig.cte_use_motor_y):
-        sendXportBegin(sweepconfig.cte_motor_y_xport)
+    if (scanconfig.cte_use_motor_y):
+        sendXportBegin(scanconfig.cte_motor_y_xport)
         cmd_str = prefixY + "DI"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
 
 
-    if (sweepconfig.cte_use_motor_comp):
-        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+    if (scanconfig.cte_use_motor_comp):
+        sendXportBegin(scanconfig.cte_motor_comp_xport)
         cmd_str = prefixComp + "DI"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
@@ -623,32 +623,32 @@ def disableMotors():
 
 # Disables the motors
 def enableMotors():
-    if (sweepconfig.cte_use_motor_x):
-        sendXportBegin(sweepconfig.cte_motor_x_xport)
+    if (scanconfig.cte_use_motor_x):
+        sendXportBegin(scanconfig.cte_motor_x_xport)
         cmd_str = prefixX + "EN"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
 
-    if (sweepconfig.cte_use_motor_y):
-        sendXportBegin(sweepconfig.cte_motor_y_xport)
+    if (scanconfig.cte_use_motor_y):
+        sendXportBegin(scanconfig.cte_motor_y_xport)
         cmd_str = prefixY + "EN"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
         sendXportEnd()
 
 
-    if (sweepconfig.cte_use_motor_comp):
-        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+    if (scanconfig.cte_use_motor_comp):
+        sendXportBegin(scanconfig.cte_motor_comp_xport)
         cmd_str = prefixComp + "EN"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("Command:" + cmd_str)
         incrementPendingOk()
         consumePendingOks()
@@ -675,11 +675,11 @@ def waitKey(t):
     return -1
 
 
-# Checks if the sweep step has been done.  It also returns if the sweep has to be cancelled
+# Checks if the scan step has been done.  It also returns if the scan has to be cancelled
 def stepDone():
     # Wait for command or step time
     # it returns True if nobody presses the ESC
-    if (sweepconfig.cte_use_cvcam):
+    if (scanconfig.cte_use_cvcam):
         key = cv2.waitKey(cte_stepTime)
     else:
         key = waitKey(cte_waitTime)
@@ -709,14 +709,14 @@ def motorPositions():
     global current_pos_comp
     
     # Obtain final positions
-    if (sweepconfig.cte_use_motor_x):
-        sendXportBegin(sweepconfig.cte_motor_x_xport)
+    if (scanconfig.cte_use_motor_x):
+        sendXportBegin(scanconfig.cte_motor_x_xport)
         cmd_str = prefixX+"POS"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("PosCmd:"+cmd_str)
         r=getMotorResponse()
-        #if sweepconfig.cte_verbose:
+        #if scanconfig.cte_verbose:
         print("PosResp x:"+r)
         mx_fdback=int(r)
         current_pos_x = mx_fdback
@@ -724,14 +724,14 @@ def motorPositions():
     else:
         mx_fdback = -1
 
-    if (sweepconfig.cte_use_motor_y):
-        sendXportBegin(sweepconfig.cte_motor_y_xport)
+    if (scanconfig.cte_use_motor_y):
+        sendXportBegin(scanconfig.cte_motor_y_xport)
         cmd_str = prefixY+"POS"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("PosCmd:"+cmd_str)
         r=getMotorResponse()
-        #if sweepconfig.cte_verbose:
+        #if scanconfig.cte_verbose:
         print("PosResp y:"+r)
         my_fdback=int(r)
         current_pos_y = my_fdback
@@ -739,14 +739,14 @@ def motorPositions():
     else:
         my_fdback = -1
 
-    if (sweepconfig.cte_use_motor_comp):
-        sendXportBegin(sweepconfig.cte_motor_comp_xport)
+    if (scanconfig.cte_use_motor_comp):
+        sendXportBegin(scanconfig.cte_motor_comp_xport)
         cmd_str = prefixComp+"POS"
         sendMotorCommand(cmd_str)
-        if sweepconfig.cte_verbose:
+        if scanconfig.cte_verbose:
             print("PosCmd:"+cmd_str)
         r=getMotorResponse()
-        #if sweepconfig.cte_verbose:
+        #if scanconfig.cte_verbose:
         print("PosResp comp:"+r)
         mcomp_fdback=int(r)
         current_pos_comp = mcomp_fdback
@@ -759,7 +759,7 @@ def motorPositions():
 
 # Closes the communication with the motors
 def motorClose():
-    if not(sweepconfig.cte_use_socket):
+    if not(scanconfig.cte_use_socket):
         ser.close()             # close port
     else:    
         sckt.close              # Close the socket when done    
@@ -771,14 +771,14 @@ cte_v = [cte_vx, cte_vy, cte_vcomp]
 ########### MAIN INITIALIZATIONS ###############
 
 # Indicates to the DRE (fsm data base) which kind of connection must be used
-FoV.dre.cte_use_socket = sweepconfig.cte_use_socket
+FoV.dre.cte_use_socket = scanconfig.cte_use_socket
 
 # Opens the communication channel
-if not (sweepconfig.cte_use_socket):
+if not (scanconfig.cte_use_socket):
     import serial
 
-    cte_serial_port = sweepconfig.cte_serial_port
-    if sweepconfig.cte_verbose:
+    cte_serial_port = scanconfig.cte_serial_port
+    if scanconfig.cte_verbose:
         print "Chosen serial port: " + cte_serial_port
     ser = serial.Serial(
         port=cte_serial_port,
@@ -796,16 +796,16 @@ else:
     import socket  # Import socket module
 
     sckt = socket.socket()  # Create a socket object
-    sckt.connect((sweepconfig.cte_socket_ip, sweepconfig.cte_socket_port))
+    sckt.connect((scanconfig.cte_socket_ip, scanconfig.cte_socket_port))
     FoV.dre.ser = sckt
     resetXport()
     resetPendingResponses()
 
-if (sweepconfig.cte_use_socket):
+if (scanconfig.cte_use_socket):
     prefixX = ""
     prefixY = ""
     prefixComp = ""
 else:
-    prefixX = str(sweepconfig.cte_motor_x)
-    prefixY = str(sweepconfig.cte_motor_y)
-    prefixComp = str(sweepconfig.cte_motor_comp)
+    prefixX = str(scanconfig.cte_motor_x)
+    prefixY = str(scanconfig.cte_motor_y)
+    prefixComp = str(scanconfig.cte_motor_comp)

@@ -2,7 +2,7 @@
 """
 Simulator of 3 Faulhaber motors, using serial link or using XPort TCP link.
 """
-import sweepconfig
+import scanconfig
 import errno
 import sys
 sys.path.insert(0, './fsm')
@@ -119,12 +119,12 @@ def clientthread(conn):
 
 ################ MAIN ####################
 
-FoV.dre.disable_untimely_resp = sweepconfig.cte_sim_disable_untimely_resp
+FoV.dre.disable_untimely_resp = scanconfig.cte_sim_disable_untimely_resp
 
-if not(sweepconfig.cte_use_socket):
+if not(scanconfig.cte_use_socket):
     import serial
 
-    cte_serial_port_loopback = sweepconfig.cte_serial_port_loopback
+    cte_serial_port_loopback = scanconfig.cte_serial_port_loopback
     print "Chosen serial port: "+cte_serial_port_loopback
     ser = serial.Serial(
         port=cte_serial_port_loopback,
@@ -156,9 +156,9 @@ else:
     import socket
     import sys
 
-    FoV.dre.m1port = sweepconfig.cte_motor_x_xport
-    FoV.dre.m2port = sweepconfig.cte_motor_y_xport
-    FoV.dre.m3port = sweepconfig.cte_motor_comp_xport
+    FoV.dre.m1port = scanconfig.cte_motor_x_xport
+    FoV.dre.m2port = scanconfig.cte_motor_y_xport
+    FoV.dre.m3port = scanconfig.cte_motor_comp_xport
 
     print("Arranco m1port=" + str(FoV.dre.m1port))
     print("Arranco m2port=" + str(FoV.dre.m2port))
@@ -168,7 +168,7 @@ else:
     print 'Socket created'
     #Bind socket to local host and port
     try:
-        sckt.bind((sweepconfig.cte_socket_ip, sweepconfig.cte_socket_port))
+        sckt.bind((scanconfig.cte_socket_ip, scanconfig.cte_socket_port))
     except socket.error as msg:
         print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
         sys.exit()
@@ -177,7 +177,7 @@ else:
     sckt.listen(1)
     print 'Socket now listening'
 
-    FoV.dre.cte_use_socket = sweepconfig.cte_use_socket
+    FoV.dre.cte_use_socket = scanconfig.cte_use_socket
 
     while (True):
         #wait to accept a connection - blocking call
