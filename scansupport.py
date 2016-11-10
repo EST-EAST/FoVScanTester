@@ -709,9 +709,10 @@ def stepDone():
     else:
         if (key == -1):
             # Time expired
-            my_finished = False
-            while not stepFinishedYPoll():
-                stepFinishedYPoll()
+            if scanconfig.cte_force_wait_bit_y:
+                my_finished = False
+                while not stepFinishedYPoll():
+                    stepFinishedYPoll()
 
             ret = 1
 
