@@ -415,6 +415,12 @@ def commandMotorUnits(x, y, z):
             (func['Function'])(func['Argument'], func['Blocking'])
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
+def commandMotorMot(xMot,yMot):
+	x=(xMot-cte_lsx_zero)/cte_lsx_scale
+	y=(yMot-cte_lsy_zero)/cte_lsy_scale
+        print "x: %.6f y: %.6f" % (x, y)
+	ret, lsx_pos, lsy_pos, lscomp_pos = commandMotor(x,y)
+        print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
 
 # Commands the window to x and y position (in mm from centered position)
 # It calculates the needed commands for Mx, My and Mcomp motors and sends them.
@@ -809,3 +815,7 @@ else:
     prefixX = str(scanconfig.cte_motor_x)
     prefixY = str(scanconfig.cte_motor_y)
     prefixComp = str(scanconfig.cte_motor_comp)
+
+# Comando para calcular la posicion de compensacion en base a coordenadas de motores x e y
+#commandMotorMot(11100.0,16400.0)
+
