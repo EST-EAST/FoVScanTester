@@ -813,7 +813,7 @@ def stepFinishedXPoll():
 
     if not mx_finished:
         getMotorStatusX()
-        mx_finished=testBit(mx_status, 11)
+        mx_finished=testBit(mx_status, 16)
 
     return mx_finished
 
@@ -824,7 +824,7 @@ def stepFinishedYPoll():
 
     if not my_finished:
         getMotorStatusY()
-        my_finished=testBit(my_status, 11)
+        my_finished=testBit(my_status, 16)
 
     return mx_finished
 
@@ -835,7 +835,7 @@ def stepFinishedCompPoll():
 
     if not mcomp_finished:
         getMotorStatusComp()
-        mcomp_finished=testBit(mcomp_status, 11)
+        mcomp_finished=testBit(mcomp_status, 16)
 
     return mcomp_finished
 
