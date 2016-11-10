@@ -417,11 +417,11 @@ def commandMotorUnits(x, y, z):
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
 def commandMotorMot(xMot,yMot):
-	x=(xMot-cte_lsx_zero)/cte_lsx_scale
-	y=(yMot-cte_lsy_zero)/cte_lsy_scale
-        print "x: %.6f y: %.6f" % (x, y)
-	ret, lsx_pos, lsy_pos, lscomp_pos = commandMotor(x,y)
-        print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
+    x=(xMot-cte_lsx_zero)/cte_lsx_scale
+    y=(yMot-cte_lsy_zero)/cte_lsy_scale
+    print "x: %.6f y: %.6f" % (x, y)
+    ret, lsx_pos, lsy_pos, lscomp_pos = commandMotor(x,y)
+    print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
 
 # Commands the window to x and y position (in mm from centered position)
 # It calculates the needed commands for Mx, My and Mcomp motors and sends them.
@@ -551,10 +551,10 @@ def commandMotorWindow(x, y):
         reordDict=[xDict,yDict]
         # send the commands
         newlist = sorted(reordDict, key=lambda k: k['Delta'])
-	newlist[len(newlist)-1]['Blocking'] = True
-    	for func in newlist:
-        	print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
-        	(func['Function'])(func['Argument'], func['Blocking'])
+        newlist[len(newlist)-1]['Blocking'] = True
+        for func in newlist:
+            print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
+            (func['Function'])(func['Argument'], func['Blocking'])
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
@@ -717,17 +717,17 @@ def stepDone():
             if scanconfig.cte_force_wait_bit_x:
                 mx_finished = False
                 while not mx_finished:
-                    mx_finished=stepFinishedXPoll()
+                    mx_finished = stepFinishedXPoll()
 
             if scanconfig.cte_force_wait_bit_y:
                 my_finished = False
                 while not my_finished:
-                    my_finished=stepFinishedYPoll()
+                    my_finished = stepFinishedYPoll()
 
             if scanconfig.cte_force_wait_bit_comp:
                 mcomp_finished = False
                 while not mcomp_finished:
-                    mcomp_finished=stepFinishedCompPoll()
+                    mcomp_finished = stepFinishedCompPoll()
 
             ret = 1
 
@@ -808,49 +808,51 @@ def CheckBitPosAttained(word_to_check):
     return True
 
 
-mx_finished = False;
-my_finished = False;
-mcomp_finished = False;
+mx_finished = False
+my_finished = False
+mcomp_finished = False
 
 # Checks if the positions has been attained for motor X
 def stepFinishedXPoll():
-    global mx_finished;
+    global mx_finished
 
     if not mx_finished:
         getMotorStatusX()
         mx_finished=testBit(mx_status, 16)
     if (mx_finished):
-	print "Acabado X!\n"
+        print "Acabado X!\n"
     else:
-	print "No Acabado X!\n"
+        print "No Acabado X!\n"
+
     return mx_finished
 
 
 # Checks if the positions has been attained for motor X
 def stepFinishedYPoll():
-    global my_finished;
+    global my_finished
 
     if not my_finished:
         getMotorStatusY()
         my_finished=testBit(my_status, 16)
     if (my_finished):
-	print "Acabado Y!\n"
+        print "Acabado Y!\n"
     else:
-	print "No Acabado Y!\n"
+        print "No Acabado Y!\n"
+
     return mx_finished
 
 
 # Checks if the positions has been attained for motor Comp
 def stepFinishedCompPoll():
-    global mcomp_finished;
+    global mcomp_finished
 
     if not mcomp_finished:
         getMotorStatusComp()
         mcomp_finished=testBit(mcomp_status, 16)
     if (mcomp_finished):
-	print "Acabado Comp!\n"
+        print "Acabado Comp!\n"
     else:
-	print "No Acabado Comp!\n"
+        print "No Acabado Comp!\n"
 
     return mcomp_finished
 
