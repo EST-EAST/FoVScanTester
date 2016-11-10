@@ -35,7 +35,7 @@ cte_stabilization_time = 2.000  # Stabilization time that actuates when no pictu
 
 # ### Reporting configuration
 cte_export_ods = False      # Creates a report in ODS format (for Linux platforms)
-cte_export_openpyxl = True  # Creates a report in XLSX format (for Windows platforms)
+cte_export_openpyxl = False  # Creates a report in XLSX format (for Windows platforms)
 cte_upload_web = False      # [DOESN'T WORK] Uploads the results to the Scan Configuration web.
 
 
@@ -83,6 +83,16 @@ cte_motor_comp_xport = 24 # XPort Index of the Comp motor in the motor list
 cte_use_motor_x = True      # Enables the X motor
 cte_use_motor_y = True      # Enables the Y motor
 cte_use_motor_comp = True   # Enables the Comp motor
+
+# If 0, then the motor that is expected to take longer is asked to provide a 'p', while others use polling strategy
+# If 1, then the X motor is asked to provide a 'p', while others use polling strategy
+# If 2, then the Y motor is asked to provide a 'p', while others use polling strategy
+# If >=3, then the Comp motor is asked to provide a 'p', while others use polling strategy
+cte_force_wait_for_motor = 0
+
+cte_force_wait_bit_x = False        # Force waiting position attained bit on motor x
+cte_force_wait_bit_y = False        # Force waiting position attained bit on motor y
+cte_force_wait_bit_comp = False     # Force waiting position attained bit on motor z
 
 # ### App configuration
 cte_verbose = False         # Activates verbose mode of the App
