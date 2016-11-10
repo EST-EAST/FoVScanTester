@@ -697,6 +697,11 @@ def waitKey(t):
 
 # Checks if the scan step has been done.  It also returns if the scan has to be cancelled
 def stepDone():
+
+    global mx_finished
+    global my_finished
+    global mcomp_finished
+ 
     # Wait for command or step time
     # it returns True if nobody presses the ESC
     if (scanconfig.cte_use_cvcam):
@@ -712,17 +717,17 @@ def stepDone():
             if scanconfig.cte_force_wait_bit_x:
                 mx_finished = False
                 while not mx_finished:
-                    stepFinishedXPoll()
+                    mx_finished=stepFinishedXPoll()
 
             if scanconfig.cte_force_wait_bit_y:
                 my_finished = False
                 while not my_finished:
-                    stepFinishedYPoll()
+                    my_finished=stepFinishedYPoll()
 
             if scanconfig.cte_force_wait_bit_comp:
                 mcomp_finished = False
                 while not mcomp_finished:
-                    stepFinishedCompPoll()
+                    mcomp_finished=stepFinishedCompPoll()
 
             ret = 1
 
@@ -750,11 +755,11 @@ def getMotorStatusX():
         sendXportBegin(scanconfig.cte_motor_x_xport)
         cmd_str = prefixX + "OST"
         sendMotorCommand(cmd_str)
-        if scanconfig.cte_verbose:
-            print("OSTCmd:" + cmd_str)
+        #if scanconfig.cte_verbose:
+        print("OSTCmd:" + cmd_str)
         r = getMotorResponse()
-        if scanconfig.cte_verbose:
-            print("OSTResp x:" + r)
+        #if scanconfig.cte_verbose:
+        print("OSTResp x:" + r)
         mx_status = int(r)
         sendXportEnd()
     else:
@@ -769,11 +774,11 @@ def getMotorStatusY():
         sendXportBegin(scanconfig.cte_motor_y_xport)
         cmd_str = prefixY + "OST"
         sendMotorCommand(cmd_str)
-        if scanconfig.cte_verbose:
-            print("OSTCmd:" + cmd_str)
+        #if scanconfig.cte_verbose:
+        print("OSTCmd:" + cmd_str)
         r = getMotorResponse()
-        if scanconfig.cte_verbose:
-            print("OSTResp y:" + r)
+        #if scanconfig.cte_verbose:
+        print("OSTResp y:" + r)
         my_status = int(r)
         sendXportEnd()
     else:
@@ -788,11 +793,11 @@ def getMotorStatusComp():
         sendXportBegin(scanconfig.cte_motor_comp_xport)
         cmd_str = prefixComp + "OST"
         sendMotorCommand(cmd_str)
-        if scanconfig.cte_verbose:
-            print("OSTCmd:" + cmd_str)
+        #if scanconfig.cte_verbose:
+        print("OSTCmd:" + cmd_str)
         r = getMotorResponse()
-        if scanconfig.cte_verbose:
-            print("OSTResp Comp:" + r)
+        #if scanconfig.cte_verbose:
+        print("OSTResp Comp:" + r)
         mcomp_status = int(r)
         sendXportEnd()
     else:
@@ -814,7 +819,10 @@ def stepFinishedXPoll():
     if not mx_finished:
         getMotorStatusX()
         mx_finished=testBit(mx_status, 16)
-
+    if (mx_finished):
+	print "Acabado X!\n"
+    else:
+	print "No Acabado X!\n"
     return mx_finished
 
 
@@ -825,7 +833,10 @@ def stepFinishedYPoll():
     if not my_finished:
         getMotorStatusY()
         my_finished=testBit(my_status, 16)
-
+    if (my_finished):
+	print "Acabado Y!\n"
+    else:
+	print "No Acabado Y!\n"
     return mx_finished
 
 
@@ -836,6 +847,10 @@ def stepFinishedCompPoll():
     if not mcomp_finished:
         getMotorStatusComp()
         mcomp_finished=testBit(mcomp_status, 16)
+    if (mcomp_finished):
+	print "Acabado Comp!\n"
+    else:
+	print "No Acabado Comp!\n"
 
     return mcomp_finished
 
