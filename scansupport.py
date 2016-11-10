@@ -839,7 +839,7 @@ def stepFinishedYPoll():
     else:
         print "No Acabado Y!\n"
 
-    return mx_finished
+    return my_finished
 
 
 # Checks if the positions has been attained for motor Comp
