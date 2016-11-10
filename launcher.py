@@ -2,7 +2,7 @@
 """
 Retrieves an scanning algorithms list from the given web server, and allows the user to execute one of them
 """
-
+2
 import os
 import urllib
 import scanconfig
