@@ -14,6 +14,9 @@ if (scanconfig.cte_enable_motors_first):
     sws.enableMotors()
 
 print("Check initial motor positions")
+sws.stepFinishedXPoll();
+sws.stepFinishedYPoll();
+sws.stepFinishedCompPoll();
 sws.motorPositions()
 
 
