@@ -94,6 +94,9 @@ cte_force_wait_bit_x = False        # Force waiting position attained bit on mot
 cte_force_wait_bit_y = False        # Force waiting position attained bit on motor y
 cte_force_wait_bit_comp = False     # Force waiting position attained bit on motor z
 
+# Answer mode of the controller
+cte_mode_answ = 1
+
 # ### App configuration
 cte_verbose = False         # Activates verbose mode of the App
 cte_fileprefix = "frame"    # Prefix for the camera files

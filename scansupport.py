@@ -154,7 +154,11 @@ def incrementPendingP():
 # Increments the count of pending Ok responses
 def incrementPendingOk():
     global numberOfOkToRx
-    numberOfOkToRx += 1
+    if scanconfig.cte_mode_answ == 2:
+        numberOfOkToRx += 1
+# Just for documentation:   
+# if scanconfig.cte_mode_answ == 1:
+#        numberOfOkToRx += 0
 
 
 ############ MOTOR ACTIONS SECTION #############
