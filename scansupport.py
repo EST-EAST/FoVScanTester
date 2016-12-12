@@ -441,6 +441,10 @@ def commandMotor(x, y):
     lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
 
+    if scanconfig.cte_verbose:
+        print("Waiting delay time between steps")
+    sleep(scanconfig.cte_step_delay_time)
+
     if (lsx_temp != lsx_pos or
                 lsy_temp != lsy_pos or
                 lscomp_temp != lscomp_pos):
