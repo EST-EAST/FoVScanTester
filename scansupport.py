@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, './fsm')
 import FoV
 
+from time import gmtime, strftime, sleep
 from scancalib import *
 from BitManipulation import *
 
