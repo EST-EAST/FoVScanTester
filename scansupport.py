@@ -377,13 +377,99 @@ def commandLScomp(setpoint, blocking = True):
                 print("Cancelo pues Pos actual: " + str(current_pos_comp) + " parecida a orden: " + str(setpoint))
 
 
-# Commands the window to x and y position (in mm from centered position)
-# It calculates the needed commands for Mx, My and Mcomp motors and sends them.
-def commandMotorUnits(x, y, z):
+# Commands the window to x, y and z positions (already filtered).
+# DO NOT USE THIS FUNCTION DIRECTLY, USE commandMotorUnits3D or commandMotor ones.
+def commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp,
+                         enable_lsx=True, enable_lsy=True, enable_lscomp=True):
     ret = 0
-    # Compute compensation
-    lscomp = z
-    # Compute LSX and LSY
+    if scanconfig.cte_verbose:
+        print("Waiting delay time between steps")
+    sleep(scanconfig.cte_step_delay_time)
+
+    if (lsx_temp != lsx_pos or
+                lsy_temp != lsy_pos or
+                lscomp_temp != lscomp_pos):
+        print "Error on calculating position: out of range of LS motors"
+        if scanconfig.cte_verbose:
+            print "X: %f Y: %f" % (x, y)
+            print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
+            print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
+
+        ret = -1
+    else:
+        if enable_lsx:
+            xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos,
+                 'Delta': abs(lsx_pos - current_pos_x) / (float(cte_vx) / 100.0),
+                 'Blocking': False}
+
+        if enable_lsy:
+            yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos,
+                 'Delta': abs(lsy_pos - current_pos_y) / (float(cte_vy) / 100.0),
+                 'Blocking': False}
+
+        if enable_lscomp:
+            compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
+                    'Delta': abs(lscomp_pos - current_pos_comp) / (float(cte_vcomp) / 100.0),
+                    'Blocking': False}
+
+        if scanconfig.cte_force_wait_for_motor == 0:
+            # reordDict = [xDict, yDict, compDict]
+            reordDict=[]
+            if (enable_lsx):
+                reordDict += [xDict]
+            if (enable_lsy):
+                reordDict += [yDict]
+            if (enable_lscomp):
+                reordDict += [compDict]
+            # sort the commands
+            newlist = sorted(reordDict, key=lambda k: k['Delta'])
+        else:
+            newlist = []
+            if scanconfig.cte_force_wait_for_motor == 1:
+                # Manual sort
+                # newlist = [yDict, compDict, xDict]
+                if (enable_lsy):
+                    newlist += [yDict]
+                if (enable_lscomp):
+                    newlist += [compDict]
+                if (enable_lsx):
+                    newlist += [xDict]
+            else:
+                if scanconfig.cte_force_wait_for_motor == 2:
+                    # Manual sort
+                    # newlist = [xDict, compDict, yDict]
+                    if (enable_lsx):
+                        newlist += [xDict]
+                    if (enable_lscomp):
+                        newlist += [compDict]
+                    if (enable_lsy):
+                        newlist += [yDict]
+                else:
+                    if scanconfig.cte_force_wait_for_motor >= 3:
+                        # Manual sort
+                        # newlist = [xDict, yDict, compDict]
+                        if (enable_lsx):
+                            newlist += [xDict]
+                        if (enable_lsy):
+                            newlist += [yDict]
+                        if (enable_lscomp):
+                            newlist += [compDict]
+
+        # Last command of the list must be the 'blocking' one
+        newlist[len(newlist) - 1]['Blocking'] = True
+        # Explore the list and send the commands
+        for func in newlist:
+            print("Ord: " + func['Name'] + ", Delta:" + str(func['Delta']) + ", blocking:" + str(
+                func['Blocking']))
+            (func['Function'])(func['Argument'], func['Blocking'])
+
+    return ret
+
+
+# Commands the window to x and y position (in raw motor units)
+# It calculates the needed commands for Mx, My and Mcomp motors and sends them.
+def commandMotorUnits3D(x, y, z):
+    # Set LSX, LSY, LSCOMP "as is" (no computation)
     lsx_temp = x
     lsx_pos = max(min(lsx_temp, cte_lsx_max), cte_lsx_min)
     lsy_temp = y
@@ -391,47 +477,21 @@ def commandMotorUnits(x, y, z):
     lscomp_temp = z
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
 
-    if (lsx_temp != lsx_pos or
-                lsy_temp != lsy_pos or
-                lscomp_temp != lscomp_pos):
-        if scanconfig.cte_verbose:
-            print "Error on calculating position: out of range of LS motors"
-            print "X: %f Y: %f" % (x, y)
-            print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
-            print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
+    ret = commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp)
 
-        ret = -1
-    else:
-        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos,
-                 'Delta': abs(lsx_pos - current_pos_x) / (float(cte_vx) / 100.0),
-                 'Blocking': False}
-        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos,
-                 'Delta': abs(lsy_pos - current_pos_y) / (float(cte_vy) / 100.0),
-                 'Blocking': False}
-        compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
-                    'Delta': abs(lscomp_pos - current_pos_comp) / (float(cte_vcomp) / 100.0),
-                    'Blocking': False}
-        reordDict = [xDict, yDict, compDict]
-        # send the commands
-        newlist = sorted(reordDict, key=lambda k: k['Delta'])
-        newlist[len(newlist) - 1]['Blocking'] = True
-        for func in newlist:
-            print("Ord: " + func['Name'] + ", Delta:" + str(func['Delta']) + ", blocking:" + str(
-                func['Blocking']))
-            (func['Function'])(func['Argument'], func['Blocking'])
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
-def commandMotorMot(xMot,yMot):
-    x=(xMot-cte_lsx_zero)/cte_lsx_scale
-    y=(yMot-cte_lsy_zero)/cte_lsy_scale
-    print "x: %.6f y: %.6f" % (x, y)
-    ret, lsx_pos, lsy_pos, lscomp_pos = commandMotor(x,y)
-    print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
+
+def commandMotorUnits2D(xMot, yMot):
+    x = (xMot - cte_lsx_zero) / cte_lsx_scale
+    y = (yMot - cte_lsy_zero) / cte_lsy_scale
+    print "commandMotorUnits2D x: %.6f y: %.6f" % (x, y)
+    ret, lsx_pos, lsy_pos, lscomp_pos = commandMotor(x, y)
+
 
 # Commands the window to x and y position (in mm from centered position)
 # It calculates the needed commands for Mx, My and Mcomp motors and sends them.
 def commandMotor(x, y):
-    ret = 0
     # Compute compensation
     lscomp = ((cte_comp_factor_x * x) + (cte_comp_factor_x * y)) / cte_comp_divisor
     # Compute LSX and LSY
@@ -442,52 +502,12 @@ def commandMotor(x, y):
     lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
 
-    if scanconfig.cte_verbose:
-        print("Waiting delay time between steps")
-    sleep(scanconfig.cte_step_delay_time)
-
-    if (lsx_temp != lsx_pos or
-                lsy_temp != lsy_pos or
-                lscomp_temp != lscomp_pos):
-        if scanconfig.cte_verbose:
-            print "Error on calculating position: out of range of LS motors"
-            print "X: %f Y: %f" % (x, y)
-            print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
-            print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
-
-        ret = -1
-    else:
-        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x)/(float(cte_vx)/100.0),
-                 'Blocking': False}
-        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y)/(float(cte_vy)/100.0),
-                 'Blocking': False}
-        compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
-                    'Delta': abs(lscomp_pos-current_pos_comp)/(float(cte_vcomp)/100.0), 'Blocking': False}
-        if scanconfig.cte_force_wait_for_motor == 0 :
-            reordDict=[xDict, yDict, compDict]
-            # send the commands
-            newlist = sorted(reordDict, key=lambda k: k['Delta'])
-
-        else:
-            if scanconfig.cte_force_wait_for_motor == 1 :
-                newlist = [yDict, compDict, xDict]
-            else:
-                if scanconfig.cte_force_wait_for_motor == 2 :
-                    newlist = [xDict, compDict, yDict]
-                else:
-                    if scanconfig.cte_force_wait_for_motor >= 3 :
-                        newlist = [xDict, yDict, compDict]
-
-        newlist[len(newlist) - 1]['Blocking'] = True
-        for func in newlist:
-            print("Ord: " + func['Name'] + ", Delta:" + str(func['Delta']) + ", blocking:" + str(func['Blocking']))
-            (func['Function'])(func['Argument'], func['Blocking'])
+    ret = commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp)
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
 
-# Commands the window to x and y position (in mm from centered position)
-# It calculates the needed commands for Mx, My and Mcomp motors and sends them.
+# For a given X,Y window position, it computes the compensation, but only commands the compensation motor
 def commandMotorComp(x, y):
     ret = 0
     # Compute compensation
@@ -500,30 +520,9 @@ def commandMotorComp(x, y):
     lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
 
-    if (lsx_temp != lsx_pos or
-                lsy_temp != lsy_pos or
-                lscomp_temp != lscomp_pos):
-        if scanconfig.cte_verbose:
-            print "Error on calculating position: out of range of LS motors"
-            print "X: %f Y: %f" % (x, y)
-            print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
-            print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
+    ret = commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp,
+                               False, False, True)
 
-        ret = -1
-    else:
-        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x)/(float(cte_vx)/100.0),
-                 'Blocking': False}
-        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y)/(float(cte_vy)/100.0),
-                 'Blocking': False}
-        compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
-                    'Delta': abs(lscomp_pos-current_pos_comp)/(float(cte_vcomp)/100.0), 'Blocking': False}
-        reordDict = [compDict]
-        # send the commands
-        newlist = reordDict
-        newlist[len(newlist)-1]['Blocking'] = True
-        for func in newlist:
-            print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
-            (func['Function'])(func['Argument'], func['Blocking'])
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
 
@@ -541,29 +540,8 @@ def commandMotorWindow(x, y):
     lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
 
-    if (lsx_temp != lsx_pos or
-                lsy_temp != lsy_pos or
-                lscomp_temp != lscomp_pos):
-        if scanconfig.cte_verbose:
-            print "Error on calculating position: out of range of LS motors"
-            print "X: %f Y: %f" % (x, y)
-            print "LSX_TEMP: %.2f LSY_TEMP: %.2f LSCOMP_TEMP: %.2f" % (lsx_temp, lsy_temp, lscomp_temp)
-            print "LSX_POS: %.2f LSY_POS: %.2f LSCOMP_POS: %.2f" % (lsx_pos, lsy_pos, lscomp_pos)
-        ret = -1
-    else:
-        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos, 'Delta': abs(lsx_pos-current_pos_x),
-                 'Blocking': False}
-        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos, 'Delta': abs(lsy_pos-current_pos_y),
-                 'Blocking': False}
-        compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
-                    'Delta': abs(lscomp_pos-current_pos_comp), 'Blocking': False}
-        reordDict=[xDict,yDict]
-        # send the commands
-        newlist = sorted(reordDict, key=lambda k: k['Delta'])
-        newlist[len(newlist)-1]['Blocking'] = True
-        for func in newlist:
-            print("Ord: "+func['Name']+", Delta:"+str(func['Delta'])+", blocking:"+str(func['Blocking']))
-            (func['Function'])(func['Argument'], func['Blocking'])
+    ret = commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp,
+                               True, True, False)
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
@@ -975,5 +953,5 @@ else:
     prefixComp = str(scanconfig.cte_motor_comp)
 
 # Comando para calcular la posicion de compensacion en base a coordenadas de motores x e y
-#commandMotorMot(11100.0,16400.0)
+#commandMotorUnits2D(11100.0,16400.0)
 
