@@ -379,8 +379,119 @@ def commandLScomp(setpoint, blocking = True):
 
 # Commands the window to x, y and z positions (already filtered).
 # DO NOT USE THIS FUNCTION DIRECTLY, USE commandMotorUnits3D or commandMotor ones.
-def commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp,
+def commandMotorInternalStep(lsx_pos, lsy_pos, lscomp_pos,
                          enable_lsx=True, enable_lsy=True, enable_lscomp=True):
+    if enable_lsx:
+        xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos,
+             'Delta': abs(lsx_pos - current_pos_x) / (float(cte_vx) / 100.0),
+             'Blocking': False}
+
+    if enable_lsy:
+        yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos,
+             'Delta': abs(lsy_pos - current_pos_y) / (float(cte_vy) / 100.0),
+             'Blocking': False}
+
+    if enable_lscomp:
+        compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
+                'Delta': abs(lscomp_pos - current_pos_comp) / (float(cte_vcomp) / 100.0),
+                'Blocking': False}
+
+    print ("Paso por aqui")
+
+    if scanconfig.cte_force_wait_for_motor == 0:
+        # reordDict = [xDict, yDict, compDict]
+        reordDict=[]
+        if (enable_lsx):
+            reordDict += [xDict]
+        if (enable_lsy):
+            reordDict += [yDict]
+        if (enable_lscomp):
+            reordDict += [compDict]
+        # sort the commands
+        newlist = sorted(reordDict, key=lambda k: k['Delta'])
+    else:
+        newlist = []
+        if scanconfig.cte_force_wait_for_motor == 1:
+            # Manual sort
+            # newlist = [yDict, compDict, xDict]
+            if (enable_lsy):
+                newlist += [yDict]
+            if (enable_lscomp):
+                newlist += [compDict]
+            if (enable_lsx):
+                newlist += [xDict]
+        else:
+            if scanconfig.cte_force_wait_for_motor == 2:
+                # Manual sort
+                # newlist = [xDict, compDict, yDict]
+                if (enable_lsx):
+                    newlist += [xDict]
+                if (enable_lscomp):
+                    newlist += [compDict]
+                if (enable_lsy):
+                    newlist += [yDict]
+            else:
+                if scanconfig.cte_force_wait_for_motor >= 3:
+                    # Manual sort
+                    # newlist = [xDict, yDict, compDict]
+                    if (enable_lsx):
+                        newlist += [xDict]
+                    if (enable_lsy):
+                        newlist += [yDict]
+                    if (enable_lscomp):
+                        newlist += [compDict]
+
+    print ("Newlist size: "+str(len(newlist)))
+
+    # Last command of the list must be the 'blocking' one
+    newlist[len(newlist) - 1]['Blocking'] = True
+    # Explore the list and send the commands
+    for func in newlist:
+        print("Ord: " + func['Name'] + ", Delta:" + str(func['Delta']) + ", blocking:" + str(
+            func['Blocking']))
+        (func['Function'])(func['Argument'], func['Blocking'])
+
+    return True
+
+
+# Decide if a there is the need of execute a previous step due to backslash corrections
+def backSlashPresent():
+    return (cte_backslash_comp_correction_enable or cte_backslash_x_correction_enable or
+                    cte_backslash_y_correction_enable)
+
+
+def calculateBackslashStepX(stepXcoord):
+    return stepXcoord
+
+
+def calculateBackslashStepY(stepYcoord):
+    return stepYcoord
+
+
+def calculateBackslashStepZ(stepZcoord):
+    return stepZcoord
+
+
+def calculateBackslashStep(stepXcoord, stepYcoord, stepZcoord):
+    backslash_step_x = calculateBackslashStepX(stepXcoord)
+    backslash_step_y = calculateBackslashStepY(stepYcoord)
+    backslash_step_z = calculateBackslashStepZ(stepZcoord)
+    return backslash_step_x, backslash_step_y, backslash_step_z
+
+
+def calculateBackslashStepXY(stepXcoord, stepYcoord):
+    stepZcoord = ((cte_comp_factor_x * stepXcoord) + (cte_comp_factor_x * stepYcoord)) / cte_comp_divisor
+    backslash_step_x = calculateBackslashStepX(stepXcoord)
+    backslash_step_y = calculateBackslashStepY(stepYcoord)
+    backslash_step_z = calculateBackslashStepZ(stepZcoord)
+    return backslash_step_x, backslash_step_y, backslash_step_z
+
+
+# Commands the window to x, y and z positions (already filtered).
+# DO NOT USE THIS FUNCTION DIRECTLY, USE commandMotorUnits3D or commandMotor ones.
+def commandMotorInternal(x, y, lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp,
+                         enable_lsx=True, enable_lsy=True, enable_lscomp=True):
+
     ret = 0
     if scanconfig.cte_verbose:
         print("Waiting delay time between steps")
@@ -397,72 +508,59 @@ def commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscom
 
         ret = -1
     else:
-        if enable_lsx:
-            xDict = {'Name': 'x', 'Function': commandLSx, 'Argument': lsx_pos,
-                 'Delta': abs(lsx_pos - current_pos_x) / (float(cte_vx) / 100.0),
-                 'Blocking': False}
+        if backSlashPresent():
+            correctionNeeded = False
+            backslash_lsx_pos = lsx_pos
+            backslash_lsy_pos = lsy_pos
+            backslash_lscomp_pos = lscomp_pos
+            # Let's calculate the correction step, and execute it
+            if (cte_backslash_x_correction_enable):
+                # The x movement has backslash
+                # Decide if this step is in the "unprivileged" direction
+                if (cte_backslash_x_correction_direction == CTE_DIRECTION_POSITIVE):
+                    if lsx_pos < current_pos_x:
+                        correctionNeeded = True
+                        backslash_lsx_pos = calculateBackslashStepX(lsx_pos)
 
-        if enable_lsy:
-            yDict = {'Name': 'y', 'Function': commandLSy, 'Argument': lsy_pos,
-                 'Delta': abs(lsy_pos - current_pos_y) / (float(cte_vy) / 100.0),
-                 'Blocking': False}
-
-        if enable_lscomp:
-            compDict = {'Name': 'comp', 'Function': commandLScomp, 'Argument': lscomp_pos,
-                    'Delta': abs(lscomp_pos - current_pos_comp) / (float(cte_vcomp) / 100.0),
-                    'Blocking': False}
-
-        if scanconfig.cte_force_wait_for_motor == 0:
-            # reordDict = [xDict, yDict, compDict]
-            reordDict=[]
-            if (enable_lsx):
-                reordDict += [xDict]
-            if (enable_lsy):
-                reordDict += [yDict]
-            if (enable_lscomp):
-                reordDict += [compDict]
-            # sort the commands
-            newlist = sorted(reordDict, key=lambda k: k['Delta'])
-        else:
-            newlist = []
-            if scanconfig.cte_force_wait_for_motor == 1:
-                # Manual sort
-                # newlist = [yDict, compDict, xDict]
-                if (enable_lsy):
-                    newlist += [yDict]
-                if (enable_lscomp):
-                    newlist += [compDict]
-                if (enable_lsx):
-                    newlist += [xDict]
-            else:
-                if scanconfig.cte_force_wait_for_motor == 2:
-                    # Manual sort
-                    # newlist = [xDict, compDict, yDict]
-                    if (enable_lsx):
-                        newlist += [xDict]
-                    if (enable_lscomp):
-                        newlist += [compDict]
-                    if (enable_lsy):
-                        newlist += [yDict]
                 else:
-                    if scanconfig.cte_force_wait_for_motor >= 3:
-                        # Manual sort
-                        # newlist = [xDict, yDict, compDict]
-                        if (enable_lsx):
-                            newlist += [xDict]
-                        if (enable_lsy):
-                            newlist += [yDict]
-                        if (enable_lscomp):
-                            newlist += [compDict]
+                    if lsx_pos > current_pos_x:
+                        correctionNeeded = True
+                        backslash_lsx_pos = calculateBackslashStepX(lsx_pos)
 
-        # Last command of the list must be the 'blocking' one
-        newlist[len(newlist) - 1]['Blocking'] = True
-        # Explore the list and send the commands
-        for func in newlist:
-            print("Ord: " + func['Name'] + ", Delta:" + str(func['Delta']) + ", blocking:" + str(
-                func['Blocking']))
-            (func['Function'])(func['Argument'], func['Blocking'])
+            if (cte_backslash_y_correction_enable):
+                # The y movement has backslash
+                # Decide if this step is in the "unprivileged" direction
+                if (cte_backslash_y_correction_direction == CTE_DIRECTION_POSITIVE):
+                    if lsy_pos < current_pos_y:
+                        correctionNeeded = True
+                        backslash_lsy_pos = calculateBackslashStepY(lsy_pos)
+                else:
+                    if lsy_pos > current_pos_y:
+                        correctionNeeded = True
+                        backslash_lsy_pos = calculateBackslashStepY(lsy_pos)
 
+            if (cte_backslash_comp_correction_enable):
+                # The comp movement has backslash
+                # Decide if this step is in the "unprivileged" direction
+                if (cte_backslash_comp_correction_direction == CTE_DIRECTION_POSITIVE):
+                    if lscomp_pos < current_pos_comp:
+                        correctionNeeded = True
+                        backslash_lscomp_pos = calculateBackslashStepZ(lscomp_pos)
+                else:
+                    if lscomp_pos > current_pos_comp:
+                        correctionNeeded = True
+                        backslash_lscomp_pos = calculateBackslashStepZ(lscomp_pos)
+
+            if correctionNeeded:
+                print ("***************** WE INTRODUCE A BACKSLASH STEP *************************")
+                # Let's perform the backslash correction step
+                ret = commandMotorInternalStep(backslash_lsx_pos, backslash_lsy_pos, backslash_lscomp_pos,
+                                                enable_lsx, enable_lsy, enable_lscomp)
+
+        print ("Paso por aqui 2")
+        # Let's perform the scanning step
+        ret = commandMotorInternalStep(lsx_pos, lsy_pos, lscomp_pos,
+                             enable_lsx, enable_lsy, enable_lscomp)
     return ret
 
 
@@ -477,7 +575,7 @@ def commandMotorUnits3D(x, y, z):
     lscomp_temp = z
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
 
-    ret = commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp)
+    ret = commandMotorInternal(x, y, lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp)
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
@@ -502,7 +600,7 @@ def commandMotor(x, y):
     lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
 
-    ret = commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp)
+    ret = commandMotorInternal(x, y, lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp)
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
@@ -520,7 +618,7 @@ def commandMotorComp(x, y):
     lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
 
-    ret = commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp,
+    ret = commandMotorInternal(x, y, lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp,
                                False, False, True)
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
@@ -540,7 +638,7 @@ def commandMotorWindow(x, y):
     lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
 
-    ret = commandMotorInternal(lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp,
+    ret = commandMotorInternal(x, y, lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp,
                                True, True, False)
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
