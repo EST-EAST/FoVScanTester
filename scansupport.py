@@ -396,8 +396,6 @@ def commandMotorInternalStep(lsx_pos, lsy_pos, lscomp_pos,
                 'Delta': abs(lscomp_pos - current_pos_comp) / (float(cte_vcomp) / 100.0),
                 'Blocking': False}
 
-    print ("Paso por aqui")
-
     if scanconfig.cte_force_wait_for_motor == 0:
         # reordDict = [xDict, yDict, compDict]
         reordDict=[]
@@ -441,8 +439,6 @@ def commandMotorInternalStep(lsx_pos, lsy_pos, lscomp_pos,
                     if (enable_lscomp):
                         newlist += [compDict]
 
-    print ("Newlist size: "+str(len(newlist)))
-
     # Last command of the list must be the 'blocking' one
     newlist[len(newlist) - 1]['Blocking'] = True
     # Explore the list and send the commands
@@ -461,15 +457,45 @@ def backSlashPresent():
 
 
 def calculateBackslashStepX(stepXcoord):
-    return stepXcoord
+    if cte_backslash_x_correction_enable:
+        # The x movement has backslash
+        backslash_correction = cte_backslash_x_correction_delta * cte_lsx_scale
+        if cte_backslash_x_correction_direction == CTE_DIRECTION_POSITIVE:
+            newStepXcoord = stepXcoord - backslash_correction
+        else:
+            newStepXcoord = stepXcoord + backslash_correction
+    else:
+        newStepXcoord = stepXcoord
+
+    return newStepXcoord
 
 
 def calculateBackslashStepY(stepYcoord):
-    return stepYcoord
+    if cte_backslash_y_correction_enable:
+        # The y movement has backslash
+        backslash_correction = cte_backslash_y_correction_delta * cte_lsy_scale
+        if cte_backslash_y_correction_direction == CTE_DIRECTION_POSITIVE:
+            newStepYcoord = stepYcoord - backslash_correction
+        else:
+            newStepYcoord = stepYcoord + backslash_correction
+    else:
+        newStepYcoord = stepYcoord
+
+    return newStepYcoord
 
 
 def calculateBackslashStepZ(stepZcoord):
-    return stepZcoord
+    if cte_backslash_y_correction_enable:
+        # The y movement has backslash
+        backslash_correction = cte_backslash_comp_correction_delta * cte_lscomp_scale
+        if cte_backslash_y_correction_direction == CTE_DIRECTION_POSITIVE:
+            newStepZcoord = stepZcoord - backslash_correction
+        else:
+            newStepZcoord = stepZcoord + backslash_correction
+    else:
+        newStepZcoord = stepZcoord
+
+    return newStepZcoord
 
 
 def calculateBackslashStep(stepXcoord, stepYcoord, stepZcoord):
@@ -479,11 +505,20 @@ def calculateBackslashStep(stepXcoord, stepYcoord, stepZcoord):
     return backslash_step_x, backslash_step_y, backslash_step_z
 
 
-def calculateBackslashStepXY(stepXcoord, stepYcoord):
-    stepZcoord = ((cte_comp_factor_x * stepXcoord) + (cte_comp_factor_x * stepYcoord)) / cte_comp_divisor
-    backslash_step_x = calculateBackslashStepX(stepXcoord)
-    backslash_step_y = calculateBackslashStepY(stepYcoord)
-    backslash_step_z = calculateBackslashStepZ(stepZcoord)
+def calculateBackslashStepXY(x, y):
+    # Compute compensation
+    lscomp = ((cte_comp_factor_x * x) + (cte_comp_factor_x * y)) / cte_comp_divisor
+    # Compute LSX and LSY
+    lsx_temp = cte_lsx_zero + (x * cte_lsx_scale)
+    lsx_pos = max(min(lsx_temp, cte_lsx_max), cte_lsx_min)
+    lsy_temp = cte_lsy_zero + (y * cte_lsy_scale)
+    lsy_pos = max(min(lsy_temp, cte_lsy_max), cte_lsy_min)
+    lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
+    lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
+
+    backslash_step_x = calculateBackslashStepX(lsx_pos)
+    backslash_step_y = calculateBackslashStepY(lsy_pos)
+    backslash_step_z = calculateBackslashStepZ(lscomp_pos)
     return backslash_step_x, backslash_step_y, backslash_step_z
 
 
@@ -553,11 +588,12 @@ def commandMotorInternal(x, y, lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos,
 
             if correctionNeeded:
                 print ("***************** WE INTRODUCE A BACKSLASH STEP *************************")
+                print "lsx_pos: %.6f, lsy_pos: %.6f lscomp_pos: %.6f" % (lsx_pos, lsy_pos, lscomp_pos)
+                print "backslash_lsx_pos: %.6f, backslash_lsy_pos: %.6f backslash_lscomp_pos: %.6f" % (backslash_lsx_pos, backslash_lsy_pos, backslash_lscomp_pos)
                 # Let's perform the backslash correction step
                 ret = commandMotorInternalStep(backslash_lsx_pos, backslash_lsy_pos, backslash_lscomp_pos,
                                                 enable_lsx, enable_lsy, enable_lscomp)
 
-        print ("Paso por aqui 2")
         # Let's perform the scanning step
         ret = commandMotorInternalStep(lsx_pos, lsy_pos, lscomp_pos,
                              enable_lsx, enable_lsy, enable_lscomp)
@@ -574,6 +610,7 @@ def commandMotorUnits3D(x, y, z):
     lsy_pos = max(min(lsy_temp, cte_lsy_max), cte_lsy_min)
     lscomp_temp = z
     lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
+    print "lsx_pos: %.6f, lsy_pos: %.6f lscomp_pos: %.6f" % (lsx_pos, lsy_pos, lscomp_pos)
 
     ret = commandMotorInternal(x, y, lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp)
 
