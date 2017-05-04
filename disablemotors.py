@@ -9,13 +9,13 @@ import scansupport as sws
 
 sws.disableMotors()
 
+print("Check motor positions")
+if not scanconfig.cte_use_motorsim:
+    # TODO: INCORPORATE 'OST' COMMAND HANDLING TO MOTORSIM
+    sws.stepFinishedXPoll()
+    sws.stepFinishedYPoll()
+    sws.stepFinishedCompPoll()
 
-print("Check initial motor positions")
-sws.stepFinishedXPoll();
-sws.stepFinishedYPoll();
-sws.stepFinishedCompPoll();
 sws.motorPositions()
-
-
 sws.motorClose()
 

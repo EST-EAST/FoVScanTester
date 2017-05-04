@@ -5,7 +5,7 @@ Copy it as scanconfig.py and taylor it to your needs.
 """
 
 # ### Simulator connection
-cte_debug = True            # Enables the simulator mode
+cte_use_motorsim = True            # Enables the simulator mode
 
 cte_test_protocol = False   # Enables the engineering mode to only test the protocol
 

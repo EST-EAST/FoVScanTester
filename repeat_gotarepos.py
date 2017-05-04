@@ -2,7 +2,6 @@
 # Moves the system to the position to tare it
 
 import scansupport as ss
-from scancalib import *
-from repet_ceros import *
+from repeat_config import *
 
 ss.commandMotor(0.0, repeat_tare_pos)

@@ -1,4 +1,5 @@
 import scansupport as ss
 
-# Comando para calcular la posicion de compensacion en base a coordenadas de motores x e y
-ss.commandMotorMot(11100.0,17400.0)
+# We use this commmand to calculate the compensated position for a 2D window position
+# this is very useful to calculate the new "compensation zero" value for cte_lscomp_zero
+ss.commandMotorUnits2D(11100.0, 17400.0)
