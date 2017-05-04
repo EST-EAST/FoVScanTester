@@ -459,7 +459,7 @@ def backSlashPresent():
 def calculateBackslashStepX(stepXcoord):
     if cte_backslash_x_correction_enable:
         # The x movement has backslash
-        backslash_correction = cte_backslash_x_correction_delta * cte_lsx_scale
+        backslash_correction = cte_backslash_x_correction_delta
         if cte_backslash_x_correction_direction == CTE_DIRECTION_POSITIVE:
             newStepXcoord = stepXcoord - backslash_correction
         else:
@@ -473,7 +473,7 @@ def calculateBackslashStepX(stepXcoord):
 def calculateBackslashStepY(stepYcoord):
     if cte_backslash_y_correction_enable:
         # The y movement has backslash
-        backslash_correction = cte_backslash_y_correction_delta * cte_lsy_scale
+        backslash_correction = cte_backslash_y_correction_delta
         if cte_backslash_y_correction_direction == CTE_DIRECTION_POSITIVE:
             newStepYcoord = stepYcoord - backslash_correction
         else:
@@ -487,7 +487,7 @@ def calculateBackslashStepY(stepYcoord):
 def calculateBackslashStepZ(stepZcoord):
     if cte_backslash_y_correction_enable:
         # The y movement has backslash
-        backslash_correction = cte_backslash_comp_correction_delta * cte_lscomp_scale
+        backslash_correction = cte_backslash_comp_correction_delta
         if cte_backslash_y_correction_direction == CTE_DIRECTION_POSITIVE:
             newStepZcoord = stepZcoord - backslash_correction
         else:
