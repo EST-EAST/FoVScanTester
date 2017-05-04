@@ -40,8 +40,8 @@ cte_upload_web = False      # [DOESN'T WORK] Uploads the results to the Scan Con
 
 
 # ### Algorithm source web
-cte_web_root = "http://gatatac.org:5555"    # Scan Configuration web to retrieve algorithms from.
-
+# cte_web_root = "http://fijar.ll.iac.es/fovscan"    # Scan Configuration web to retrieve algorithms from.
+cte_web_root = "http://fovscan.gatatac.org"    # Scan Configuration web to retrieve algorithms from.
 
 # ### Motors Connection configuration
 cte_use_socket = True   # If True it uses a XPort TCP socket to communicate with motors, serial link otherwise
@@ -54,7 +54,7 @@ if not (cte_use_socket):
         cte_serial_port = 'COM4:'   # Serial link port for windows machines
     else:
         cte_serial_port = '/dev/ttyUSB0'   # Serial link port for Linux machines
-    if (cte_debug):
+    if (cte_use_motorsim):
         if (os.name == 'nt'):
             # In case of using the simulator, the loopback serial link port for Windows machines
             cte_serial_port_loopback = 'COM5:'
@@ -67,7 +67,7 @@ else:
     import socket
 
     cte_socket_port = 10001     # TCP port for the connection
-    if not (cte_debug):
+    if not (cte_use_motorsim):
         cte_socket_ip = "192.168.90.105"    # IP for TCP connection
     else:
         cte_socket_ip = socket.gethostname()    # If using simulator, IP for the simulator machine
