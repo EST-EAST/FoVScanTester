@@ -800,11 +800,16 @@ def enableMotors():
 # Waits for a defined time for user to press a key
 def waitKey(t):
     if cte_waitTime > 0 or scanconfig.cte_step_wait_for_key:
-        import time, msvcrt
+        import time
         startTime = time.time()
 
         if scanconfig.cte_step_wait_for_key:
-            print "waiting for key"
+            import os
+            if os.name == 'nt':
+                import msvcrt
+                print "waiting for key"
+            else:
+                raw_input("Waiting for key")
         else:
             print "waiting "+str(cte_waitTime)+" seconds"
 
@@ -812,8 +817,12 @@ def waitKey(t):
         ret = -1
         while not done:
             if scanconfig.cte_step_wait_for_key:
-                if msvcrt.kbhit():
-                    ret = msvcrt.getch()
+                if os.name == 'nt':
+                    if msvcrt.kbhit():
+                        ret = msvcrt.getch()
+                        done = True
+
+                else:
                     done = True
 
 
