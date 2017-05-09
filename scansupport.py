@@ -447,7 +447,7 @@ def commandMotorInternalStep(lsx_pos, lsy_pos, lscomp_pos,
             func['Blocking']))
         (func['Function'])(func['Argument'], func['Blocking'])
 
-    return True
+    return 0
 
 
 # Decide if a there is the need of execute a previous step due to backslash corrections
@@ -799,22 +799,30 @@ def enableMotors():
 
 # Waits for a defined time for user to press a key
 def waitKey(t):
-    '''
-    import time, msvcrt
-    startTime=time.time()
+    if cte_waitTime > 0 or scanconfig.cte_step_wait_for_key:
+        import time, msvcrt
+        startTime = time.time()
 
-    print "Press any key or wait "+str(cte_waitTime)+" seconds"
-    done = False
-    ret = -1
-    while not(done):
-        if msvcrt.kbhit():
-            ret=msvcrt.getch()
-            done = True
-        elif time.time() - startTime > t:
-            done = True
-    return ret
-    '''
-    return -1
+        if scanconfig.cte_step_wait_for_key:
+            print "waiting for key"
+        else:
+            print "waiting "+str(cte_waitTime)+" seconds"
+
+        done = False
+        ret = -1
+        while not done:
+            if scanconfig.cte_step_wait_for_key:
+                if msvcrt.kbhit():
+                    ret = msvcrt.getch()
+                    done = True
+
+
+            elif time.time() - startTime > t:
+                done = True
+
+        return ret
+    else:
+        return -1
 
 
 # Checks if the scan step has been done.  It also returns if the scan has to be cancelled
@@ -834,8 +842,12 @@ def stepDone():
         # Someone presses the ESC key, should return
         ret = -1
     else:
-        if (key == -1):
-            # Time expired
+        if (key == -1) or True:
+            # Time expired or any key is pressed. should continue
+            # We have added True to allow any key to work.
+            # This is done in order to maintain the structure of the code
+            # The "else" corresponding to "another key present" is not possible to reach, but it is kept
+            # to maintain the structure of this code
             if scanconfig.cte_force_wait_bit_x:
                 mx_finished = False
                 while not mx_finished:
@@ -855,7 +867,7 @@ def stepDone():
 
         else:
             # Another key presssed
-            ret=0
+            ret = 0
 
     return ret
 
