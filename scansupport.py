@@ -681,11 +681,15 @@ def commandMotorWindow(x, y):
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
 
-# Commands home for all the motors, and then puts the window at the central position.
-def resetMotors():
+def homeMotors():
     goHomeMx()
     goHomeMy()
     goHomeMcomp()
+
+
+# Commands home for all the motors, and then puts the window at the central position.
+def resetMotors():
+    homeMotors()
 
     # Calculate the center position of the window over the FoV
     lsx = 0.0
