@@ -12,14 +12,16 @@ cte_test_protocol = False   # Enables the engineering mode to only test the prot
 if (cte_test_protocol):
     cte_enable_motors_first = False     # Sends a command to enable the motors before performing the scan
     cte_disable_motors_first = True     # Sends a command to disable the motors before performing the scan
-    cte_reset_motors_first = True       # Sends a command to the motors (home operation) before performing the scan
+    cte_reset_motors_first = True       # Sends a command to the motors (home and center operation) before performing the scan
+    cte_home_motors_first = False      	# Sends a command to the motors (home operation) before performing the scan
     cte_command_np_flags = True         # Enables the sending of NP commands to the motors
     cte_wait_for_p = False              # Waits for P answers from the motors
     cte_sim_disable_untimely_resp = True    # Disables the untimely response of P
 else:
     cte_enable_motors_first = False     # Sends a command to enable the motors before performing the scan
     cte_disable_motors_first = False    # Sends a command to disable the motors before performing the scan
-    cte_reset_motors_first = False      # Sends a command to the motors (home operation) before performing the scan
+    cte_reset_motors_first = False      # Sends a command to the motors (home and center operation) before performing the scan
+    cte_home_motors_first = True      	# Sends a command to the motors (home operation) before performing the scan
     cte_command_np_flags = True         # Enables the sending of NP commands to the motors
     cte_wait_for_p = True               # Waits for P answers from the motors
     cte_sim_disable_untimely_resp = False   # Disables the untimely response of P

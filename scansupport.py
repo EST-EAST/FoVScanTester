@@ -810,8 +810,8 @@ def waitKey(t):
                 print "waiting for key"
             else:
                 # raw_input("Waiting for key")
-		from getch import getch, pause
-		pause('Waiting for key')
+                from getch import getch, pause
+                pause('Waiting for key')
         else:
             print "waiting "+str(cte_waitTime)+" seconds"
 
