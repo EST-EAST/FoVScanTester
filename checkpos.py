@@ -23,4 +23,8 @@ if not scanconfig.cte_use_motorsim:
 
 sws.motorPositions()
 sws.motorClose()
+print "X = ", str(sws.current_pos_x)
+print "Y = ", str(sws.current_pos_y)
+print "Comp = ", str(sws.current_pos_comp)
+
 
