@@ -19,6 +19,8 @@ print 'lsx (in motor units) is ', lsx
 print 'lsy (in motor units) is ', lsy
 print 'lscomp (in motor units) is ', lscomp
 
+import checkpos
+
 # We use this command to move the motors freely in 3D in motor units
 # (in motor units)
 ss.commandMotorUnits3D(lsx, lsy, lscomp)
