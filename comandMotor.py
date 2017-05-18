@@ -15,4 +15,6 @@ else:
 # We use this command to freely move the window in 2D (in meters) while compensation is calculated
 print 'x (in meters) is ', x
 print 'y (in meters) is ', y
+import checkpos
+
 ss.commandMotor(x, y)

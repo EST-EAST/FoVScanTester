@@ -18,7 +18,8 @@ cte_lsx_scale = (1000 * 1000)  # LS units / mm * 1000 mm / 1 m
 cte_lsx_max = 26900  # End of LS travel in upper units
 # INTERNAL NOTES: TODO -> CHANGE THEM TO ANOTHER PLACE
 # cte_lsx_zero = 13100  # LS units coincidence with 0 mm (center)
-cte_lsx_zero = 11100  # Primer alineado en GREGOR
+# cte_lsx_zero = 11100  # Primer alineado en GREGOR
+cte_lsx_zero = 11100  # 
 
 # My = y
 cte_lsy_min = 0  # End of LS travel in lower units
@@ -26,7 +27,8 @@ cte_lsy_scale = - (2000 * 1000)  # LS units / mm * 1000 mm / 1 m
 cte_lsy_max = 39401  # End of LS travel in upper units
 # INTERNAL NOTES: TODO -> CHANGE THEM TO ANOTHER PLACE
 # cte_lsy_zero = 18400  # LS units coincidence with 0 mm (center)
-cte_lsy_zero = 16400  # Primer alineado en GREGOR
+# cte_lsy_zero = 16400  # Primer alineado en GREGOR
+cte_lsy_zero = 16400  # 
 
 # Mcomp = compensation
 cte_lscomp_min = 0  # End of LS travel in lower units
@@ -36,7 +38,8 @@ cte_lscomp_max = 39800  # End of LS travel in upper units
 # cte_lscomp_zero = 25800  # LS units coincidence with 0 mm (center)
 # cte_lscomp_zero = 15000  # LS units coincidence with 0 mm (center)
 # cte_lscomp_zero = 20350  # LS units coincidence with 0 mm (center) #CARLOS
-cte_lscomp_zero = 19500  # Primer alineado en GREGOR
+# cte_lscomp_zero = 19500  # Primer alineado en GREGOR
+cte_lscomp_zero = 18050  # 
 # INTERNAL NOTES: TODO -> CHANGE THEM TO ANOTHER PLACE
 # bien 20250 antes de tcar SM1 y RS1
 # Calculado con RS1 19500 ver excel
@@ -46,6 +49,8 @@ cte_lscomp_zero = 19500  # Primer alineado en GREGOR
 # Calculado en visible con Oct_BancoFocomascaraSW 20500 ver excel
 # TXINTO 19350 # Primer alineado en GREGOR
 # 19500 #  Alineado en GREGOR IR
+
+#MAY2017_ mascara cruz excel BancoFocoSW  18050
 
 # Home speeds
 cte_vhx = 100
