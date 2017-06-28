@@ -83,7 +83,7 @@ cte_backslash_x_correction_direction = CTE_DIRECTION_POSITIVE
 # cte_backslash_x_correction_direction = CTE_DIRECTION_NEGATIVE
 cte_backslash_x_correction_delta = 0.000015 * abs(cte_lsx_scale)
 
-cte_backslash_y_correction_enable = True
+cte_backslash_y_correction_enable = False
 cte_backslash_y_correction_direction = CTE_DIRECTION_POSITIVE
 # cte_backslash_y_correction_direction = CTE_DIRECTION_NEGATIVE
 cte_backslash_y_correction_delta = 0.000015 * abs(cte_lsy_scale)

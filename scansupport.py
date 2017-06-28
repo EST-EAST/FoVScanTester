@@ -296,6 +296,7 @@ def commandLSx(setpoint, blocking = True):
             # Wait for command responses
             if blocking:
                 ret = consumePendingPs()
+                
             sendXportEnd()
         else:
             if scanconfig.cte_verbose:
@@ -632,21 +633,73 @@ def commandMotorUnits2D(xMot, yMot):
     print "commandMotorUnits2D x: %.6f y: %.6f" % (x, y)
     ret, lsx_pos, lsy_pos, lscomp_pos = commandMotor(x, y)
 
+import dcpwrapper
+
+def sendDcpCommand( command_tx_buf ):
+    # FoV.dre.ser.sendall(command_tx_buf+chr(13))
+    resp = dcpwrapper.dcpwrapper(command_tx_buf,1)
+    print ("Respuesta "+str(resp))
+
+gcs_pos_x = 0
+gcs_pos_y = 0
 
 # Commands the window to x and y position (in mm from centered position)
 # It calculates the needed commands for Mx, My and Mcomp motors and sends them.
-def commandMotor(x, y):
-    # Compute compensation
-    lscomp = ((cte_comp_factor_x * x) + (cte_comp_factor_x * y)) / cte_comp_divisor
-    # Compute LSX and LSY
-    lsx_temp = cte_lsx_zero + (x * cte_lsx_scale)
-    lsx_pos = max(min(lsx_temp, cte_lsx_max), cte_lsx_min)
-    lsy_temp = cte_lsy_zero + (y * cte_lsy_scale)
-    lsy_pos = max(min(lsy_temp, cte_lsy_max), cte_lsy_min)
-    lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
-    lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
+def commandMotor(x, y, initial_step = False):
+    global gcs_pos_x
+    global gcs_pos_y
 
-    ret = commandMotorInternal(x, y, lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp)
+    if scanconfig.cte_command_gcs:
+        if initial_step:
+            gcs_pos_x = 0
+            gcs_pos_y = 0
+            
+        gcs_jump_y = (y * scanconfig.cte_command_gcs_scale) - gcs_pos_y
+        gcs_jump_x = (x * scanconfig.cte_command_gcs_scale) - gcs_pos_x
+        gcs_pos_y += gcs_jump_y
+        gcs_pos_x += gcs_jump_x
+        gcs_command_str = "5000 IFU set position rel FM1 0 " + str(gcs_jump_y) + " " + str(gcs_jump_x)
+        print ">>DCP: " + gcs_command_str
+        sendDcpCommand(gcs_command_str)
+        response = getDcpResponse()
+        response_list = response.split()
+        response_code = int(response_list[0])
+        if (response_code == 0):
+            print ("OK")
+            lsx_pos = int(response_list[2])
+            lsy_pos = int(response_list[1])
+            lscomp_pos = int(response_list[3])
+            ret = 0
+        else:
+            if (response_code > 0):
+                print ("ERROR: "+ response_list[0])
+                lsx_pos = 0
+                lsy_pos = 0
+                lscomp_pos = 0
+                ret = -1
+                
+            else:
+                print ("WARNING: "+ response_list[0])
+                lsx_pos = int(response_list[2])
+                lsy_pos = int(response_list[1])
+                lscomp_pos = int(response_list[3])
+                ret = 0
+
+        print ("lsy_pos " + str(lsy_pos))
+        print ("lsx_pos " + str(lsx_pos))
+        print ("lscomp_pos " + str(lscomp_pos))
+    else:
+        # Compute compensation
+        lscomp = ((cte_comp_factor_x * x) + (cte_comp_factor_x * y)) / cte_comp_divisor
+        # Compute LSX and LSY
+        lsx_temp = cte_lsx_zero + (x * cte_lsx_scale)
+        lsx_pos = max(min(lsx_temp, cte_lsx_max), cte_lsx_min)
+        lsy_temp = cte_lsy_zero + (y * cte_lsy_scale)
+        lsy_pos = max(min(lsy_temp, cte_lsy_max), cte_lsy_min)
+        lscomp_temp = cte_lscomp_zero + (lscomp * cte_lscomp_scale)
+        lscomp_pos = max(min(lscomp_temp, cte_lscomp_max), cte_lscomp_min)
+
+        ret = commandMotorInternal(x, y, lsx_pos, lsx_temp, lsy_pos, lsy_temp, lscomp_pos, lscomp_temp)
 
     return ret, lsx_pos, lsy_pos, lscomp_pos
 
@@ -692,9 +745,10 @@ def commandMotorWindow(x, y):
 
 # Commands all motors to their home positions
 def homeMotors():
-    goHomeMx()
-    goHomeMy()
-    goHomeMcomp()
+    if not scanconfig.cte_command_gcs:    
+        goHomeMx()
+        goHomeMy()
+        goHomeMcomp()
 
 
 # Commands home for all the motors, and then puts the window at the central position.
@@ -1016,52 +1070,58 @@ def motorPositions():
     global current_pos_y
     global current_pos_comp
 
-    # Obtain final positions
-    if scanconfig.cte_use_motor_x:
-        sendXportBegin(scanconfig.cte_motor_x_xport)
-        cmd_str = prefixX + "POS"
-        sendMotorCommand(cmd_str)
-        if scanconfig.cte_verbose:
-            print("PosCmd:" + cmd_str)
-        r = getMotorResponse()
-        if scanconfig.cte_verbose:
-            print("PosResp x:" + r)
-        mx_fdback = int(r)
-        current_pos_x = mx_fdback
-        sendXportEnd()
-    else:
-        mx_fdback = -1
+    if not scanconfig.cte_command_gcs:    
+        # Obtain final positions
+        if scanconfig.cte_use_motor_x:
+            sendXportBegin(scanconfig.cte_motor_x_xport)
+            cmd_str = prefixX + "POS"
+            sendMotorCommand(cmd_str)
+            if scanconfig.cte_verbose:
+                print("PosCmd:" + cmd_str)
+            r = getMotorResponse()
+            if scanconfig.cte_verbose:
+                print("PosResp x:" + r)
+            mx_fdback = int(r)
+            current_pos_x = mx_fdback
+            sendXportEnd()
+        else:
+            mx_fdback = -1
 
-    if scanconfig.cte_use_motor_y:
-        sendXportBegin(scanconfig.cte_motor_y_xport)
-        cmd_str = prefixY + "POS"
-        sendMotorCommand(cmd_str)
-        if scanconfig.cte_verbose:
-            print("PosCmd:" + cmd_str)
-        r = getMotorResponse()
-        if scanconfig.cte_verbose:
-            print("PosResp y:" + r)
-        my_fdback = int(r)
-        current_pos_y = my_fdback
-        sendXportEnd()
-    else:
-        my_fdback = -1
+        if scanconfig.cte_use_motor_y:
+            sendXportBegin(scanconfig.cte_motor_y_xport)
+            cmd_str = prefixY + "POS"
+            sendMotorCommand(cmd_str)
+            if scanconfig.cte_verbose:
+                print("PosCmd:" + cmd_str)
+            r = getMotorResponse()
+            if scanconfig.cte_verbose:
+                print("PosResp y:" + r)
+            my_fdback = int(r)
+            current_pos_y = my_fdback
+            sendXportEnd()
+        else:
+            my_fdback = -1
 
-    if scanconfig.cte_use_motor_comp:
-        sendXportBegin(scanconfig.cte_motor_comp_xport)
-        cmd_str = prefixComp + "POS"
-        sendMotorCommand(cmd_str)
-        if scanconfig.cte_verbose:
-            print("PosCmd:" + cmd_str)
-        r = getMotorResponse()
-        if scanconfig.cte_verbose:
-            print("PosResp comp:" + r)
-        mcomp_fdback = int(r)
-        current_pos_comp = mcomp_fdback
-        sendXportEnd()
+        if scanconfig.cte_use_motor_comp:
+            sendXportBegin(scanconfig.cte_motor_comp_xport)
+            cmd_str = prefixComp + "POS"
+            sendMotorCommand(cmd_str)
+            if scanconfig.cte_verbose:
+                print("PosCmd:" + cmd_str)
+            r = getMotorResponse()
+            if scanconfig.cte_verbose:
+                print("PosResp comp:" + r)
+            mcomp_fdback = int(r)
+            current_pos_comp = mcomp_fdback
+            sendXportEnd()
+        else:
+            mcomp_fdback = -1
+            
+        
     else:
-        mcomp_fdback = -1
-
+        mx_fdback = my_fdback = mcomp_fdback = 0
+                
+        
     return mx_fdback, my_fdback, mcomp_fdback
 
 
@@ -1071,6 +1131,69 @@ def motorClose():
         ser.close()             # close port
     else:    
         sckt.close              # Close the socket when done    
+
+
+ID_GETCTRLDCPRESPONSE_INITIAL = 49
+ID_GETCTRLDCPRESPONSE_FINAL = 50
+ID_GETCTRLDCPRESPONSE_READING = 51
+ID_GETCTRLDCPRESPONSE_FINISHING = 52
+
+dcp_response_state = ID_GETCTRLDCPRESPONSE_INITIAL
+
+def getDcpCtrlResponse(  ):
+    # set initial state
+    dcp_response_state = ID_GETCTRLDCPRESPONSE_INITIAL
+
+    while( True ):
+        # State ID: ID_GETCTRLDCPRESPONSE_INITIAL
+        if( dcp_response_state==ID_GETCTRLDCPRESPONSE_INITIAL ):
+            # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
+            # Actions:
+            # ['<global>::resetRxTask' begin]
+            FoV.dre.command_rx_buf=""
+            # ['<global>::resetRxTask' end]
+            FoV.serialCharRead()
+            dcp_response_state = ID_GETCTRLDCPRESPONSE_READING
+
+        # State ID: ID_GETCTRLDCPRESPONSE_READING
+        elif( dcp_response_state==ID_GETCTRLDCPRESPONSE_READING ):
+            if( FoV.dre.char_read==chr(10) or FoV.dre.char_read==chr(13) ):
+                # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
+                # Actions:
+                FoV.serialCharRead()
+                dcp_response_state = ID_GETCTRLDCPRESPONSE_FINISHING
+
+            elif( (FoV.dre.char_read != chr(10)) and (FoV.dre.char_read != chr(13)) ):
+                # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
+                # Actions:
+                # ['<global>::appendCharToRxBuf' begin]
+                FoV.dre.command_rx_buf += FoV.dre.char_read
+                # ['<global>::appendCharToRxBuf' end]
+                FoV.serialCharRead()
+
+        # State ID: ID_GETCTRLDCPRESPONSE_FINISHING
+        elif( dcp_response_state==ID_GETCTRLDCPRESPONSE_FINISHING ):
+            if( FoV.dre.char_read==chr(10) or dre.char_read==chr(13) ):
+                # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
+                dcp_response_state = ID_GETCTRLDCPRESPONSE_FINAL
+
+            elif( (FoV.dre.char_read != chr(10)) and (FoV.dre.char_read != chr(13)) ):
+                # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
+                # Actions:
+                FoV.serialCharRead()
+
+        # State ID: ID_GETCTRLDCPRESPONSE_FINAL
+        elif( dcp_response_state==ID_GETCTRLDCPRESPONSE_FINAL ):
+            return ID_GETCTRLDCPRESPONSE_FINAL
+
+
+
+# Gets a response from the DCP
+def getDcpResponse(  ):
+    getDcpCtrlResponse()
+    print ("DCP>> " + FoV.dre.command_rx_buf)        
+    return FoV.dre.command_rx_buf
+
 
 cte_vh = [cte_vhx, cte_vhy, cte_vhcomp]
 cte_vi = [cte_vix, cte_viy, cte_vicomp]
@@ -1104,9 +1227,15 @@ else:
     import socket  # Import socket module
 
     sckt = socket.socket()  # Create a socket object
-    sckt.connect((scanconfig.cte_socket_ip, scanconfig.cte_socket_port))
+    if scanconfig.cte_command_gcs:
+        sckt.connect((scanconfig.cte_command_gcs_ip, scanconfig.cte_command_gcs_port))
+    else:
+        sckt.connect((scanconfig.cte_socket_ip, scanconfig.cte_socket_port))
+        
     FoV.dre.ser = sckt
-    resetXport()
+    if not scanconfig.cte_command_gcs:
+        resetXport()
+        
     resetPendingResponses()
 
 if scanconfig.cte_use_socket:

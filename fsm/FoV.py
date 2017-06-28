@@ -7,22 +7,16 @@ from FoV_CI import *
 def serialCharRead(  ):
     # ['<global>::serialCharRead' begin]
     if not(dre.cte_use_socket):
-
         dre.char_read=dre.ser.read(1) 
-
     else:
-
         readlen=0
-
         while(readlen<1):
-
             data = dre.ser.recv(1)
-
             readlen=len(data)
 
         dre.char_read=str(data)[0]
-
     # ['<global>::serialCharRead' end]
+
 
 def decodeM1Cmd(  ):
     # ['<global>::decodeM1Cmd' begin]
