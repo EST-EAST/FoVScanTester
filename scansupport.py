@@ -666,12 +666,13 @@ def commandMotor(x, y, initial_step = False):
             sendGcsTcpCommand(gcs_command_str)
             response = getGcsTcpResponse()
         else:
-            respcode = dcpwrapper.commandwrapper(gcs_command_str,0,gcs_dcp_sckt)
+            respcode, response = dcpwrapper.commandwrapper(gcs_command_str,0,gcs_dcp_sckt)
             if respcode == 1:
-                response = "0 0 0 0"
+                response = "0 " + response
             else:
-                response = str(respcode)+" 0 0 0"
+                response = str(respcode) + " " + response
             
+        print "Response is <"+response+">"
         response_list = response.split()
         response_code = int(response_list[0])
         if (response_code == 0):
