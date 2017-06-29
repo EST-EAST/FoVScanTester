@@ -10,6 +10,9 @@ import FoV
 if scanconfig.cte_use_cvcam:
     import cv2
 
+if scanconfig.cte_command_gcs_dcp:
+    import dcpwrapper
+
 # ########## XPORT SIDE #################
 
 
@@ -639,12 +642,14 @@ def sendGcsTcpCommand( command_tx_buf ):
 
 gcs_pos_x = 0
 gcs_pos_y = 0
+gcs_dcp_sckt = 0
 
 # Commands the window to x and y position (in mm from centered position)
 # It calculates the needed commands for Mx, My and Mcomp motors and sends them.
 def commandMotor(x, y, initial_step = False):
     global gcs_pos_x
     global gcs_pos_y
+    global gcs_dcp_sckt
 
     if scanconfig.cte_command_gcs:
         if initial_step:
@@ -655,10 +660,18 @@ def commandMotor(x, y, initial_step = False):
         gcs_jump_x = (x * scanconfig.cte_command_gcs_scale) - gcs_pos_x
         gcs_pos_y += gcs_jump_y
         gcs_pos_x += gcs_jump_x
-        gcs_command_str = "5000 IFU set position rel FM1 0 " + str(gcs_jump_y) + " " + str(gcs_jump_x)
+        gcs_command_str = "IFU set position rel FM1 0 " + str(gcs_jump_y) + " " + str(gcs_jump_x)
         print ">>GCSTCP: " + gcs_command_str
-        sendGcsTcpCommand(gcs_command_str)
-        response = getGcsTcpResponse()
+        if scanconfig.cte_command_gcs_tcp:
+            sendGcsTcpCommand(gcs_command_str)
+            response = getGcsTcpResponse()
+        else:
+            respcode = dcpwrapper.commandwrapper(gcs_command_str,0,gcs_dcp_sckt)
+            if respcode == 1:
+                response = "0 0 0 0"
+            else:
+                response = str(respcode)+" 0 0 0"
+            
         response_list = response.split()
         response_code = int(response_list[0])
         if (response_code == 0):
@@ -1126,8 +1139,12 @@ def motorPositions():
 def motorClose():
     if not scanconfig.cte_use_socket:
         ser.close()             # close port
-    else:    
-        sckt.close              # Close the socket when done    
+    else:
+        if scanconfig.cte_command_gcs_dcp:
+            resp = dcpwrapper.closesocketwrapper(gcs_dcp_sckt)
+            print ("Respuesta close socket"+str(resp))
+        else:
+            sckt.close              # Close the socket when done    
 
 
 ID_GETCTRLGCSTCPRESPONSE_INITIAL = 49
@@ -1221,19 +1238,23 @@ if not scanconfig.cte_use_socket:
     FoV.dre.ser = ser
     resetPendingResponses()
 else:
-    import socket  # Import socket module
-
-    sckt = socket.socket()  # Create a socket object
-    if scanconfig.cte_command_gcs:
-        sckt.connect((scanconfig.cte_command_gcs_ip, scanconfig.cte_command_gcs_port))
+    if scanconfig.cte_command_gcs_dcp:
+        gcs_dcp_sckt = dcpwrapper.opensocketwrapper()
+        print ("Respuesta open socket "+str(gcs_dcp_sckt))
     else:
-        sckt.connect((scanconfig.cte_socket_ip, scanconfig.cte_socket_port))
-        
-    FoV.dre.ser = sckt
-    if not scanconfig.cte_command_gcs:
-        resetXport()
-        
-    resetPendingResponses()
+        import socket  # Import socket module
+
+        sckt = socket.socket()  # Create a socket object
+        if scanconfig.cte_command_gcs_tcp:
+            sckt.connect((scanconfig.cte_command_gcs_tcp_ip, scanconfig.cte_command_gcs_tcp_port))
+        else:
+            sckt.connect((scanconfig.cte_socket_ip, scanconfig.cte_socket_port))
+
+        FoV.dre.ser = sckt
+        if not scanconfig.cte_command_gcs:
+            resetXport()
+
+        resetPendingResponses()
 
 if scanconfig.cte_use_socket:
     prefixX = ""

@@ -132,10 +132,16 @@ if cte_second_picture:
     cte_stabilization_time_pic2 = 4.000  # Stabilization time for pic 2
 
 
-cte_command_gcs = True     # Enables commanding the system through GCS system
-if cte_command_gcs:
-    # cte_command_gcs_ip = "161.72.22.176" # GREGOR
-    cte_command_gcs_ip = socket.gethostname() # localhost
-    # cte_command_gcs_ip = "161.72.23.165"
-    cte_command_gcs_port = 2001 # DCP
+cte_command_gcs_dcp = True
+if cte_command_gcs_dcp:
     cte_command_gcs_scale = 10000000
+    cte_command_gcs = True
+    cte_command_gcs_tcp = False
+else:
+    cte_command_gcs_tcp = False     # Enables commanding the system through GCS system
+    if cte_command_gcs_tcp:
+        cte_command_gcs = True
+        cte_command_gcs_tcp_ip = socket.gethostname() # localhost
+        cte_command_gcs_tcp_port = 2001 # DCP
+        cte_command_gcs_tcp_scale = 10000000
+
