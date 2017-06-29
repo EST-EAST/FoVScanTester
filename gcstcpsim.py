@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Simulator of DCP system
+Simulator of GCS on TCP system
 """
 import scanconfig
 import errno

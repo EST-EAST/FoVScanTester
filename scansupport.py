@@ -635,10 +635,8 @@ def commandMotorUnits2D(xMot, yMot):
 
 import dcpwrapper
 
-def sendDcpCommand( command_tx_buf ):
-    # FoV.dre.ser.sendall(command_tx_buf+chr(13))
-    resp = dcpwrapper.dcpwrapper(command_tx_buf,1)
-    print ("Respuesta "+str(resp))
+def sendGcsTcpCommand( command_tx_buf ):
+    FoV.dre.ser.sendall(command_tx_buf+chr(13))
 
 gcs_pos_x = 0
 gcs_pos_y = 0
@@ -659,9 +657,9 @@ def commandMotor(x, y, initial_step = False):
         gcs_pos_y += gcs_jump_y
         gcs_pos_x += gcs_jump_x
         gcs_command_str = "5000 IFU set position rel FM1 0 " + str(gcs_jump_y) + " " + str(gcs_jump_x)
-        print ">>DCP: " + gcs_command_str
-        sendDcpCommand(gcs_command_str)
-        response = getDcpResponse()
+        print ">>GCSTCP: " + gcs_command_str
+        sendGcsTcpCommand(gcs_command_str)
+        response = getGcsTcpResponse()
         response_list = response.split()
         response_code = int(response_list[0])
         if (response_code == 0):
@@ -1133,65 +1131,65 @@ def motorClose():
         sckt.close              # Close the socket when done    
 
 
-ID_GETCTRLDCPRESPONSE_INITIAL = 49
-ID_GETCTRLDCPRESPONSE_FINAL = 50
-ID_GETCTRLDCPRESPONSE_READING = 51
-ID_GETCTRLDCPRESPONSE_FINISHING = 52
+ID_GETCTRLGCSTCPRESPONSE_INITIAL = 49
+ID_GETCTRLGCSTCPRESPONSE_FINAL = 50
+ID_GETCTRLGCSTCPRESPONSE_READING = 51
+ID_GETCTRLGCSTCPRESPONSE_FINISHING = 52
 
-dcp_response_state = ID_GETCTRLDCPRESPONSE_INITIAL
+gcs_tcp_response_state = ID_GETCTRLGCSTCPRESPONSE_INITIAL
 
-def getDcpCtrlResponse(  ):
+def getGcsTcpCtrlResponse(  ):
     # set initial state
-    dcp_response_state = ID_GETCTRLDCPRESPONSE_INITIAL
+    gcs_tcp_response_state = ID_GETCTRLGCSTCPRESPONSE_INITIAL
 
     while( True ):
-        # State ID: ID_GETCTRLDCPRESPONSE_INITIAL
-        if( dcp_response_state==ID_GETCTRLDCPRESPONSE_INITIAL ):
-            # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
+        # State ID: ID_GETCTRLGCSTCPRESPONSE_INITIAL
+        if( gcs_tcp_response_state==ID_GETCTRLGCSTCPRESPONSE_INITIAL ):
+            # Transition ID: ID_GETCTRLGCSTCPRESPONSE_TRANSITION_CONNECTION
             # Actions:
             # ['<global>::resetRxTask' begin]
             FoV.dre.command_rx_buf=""
             # ['<global>::resetRxTask' end]
             FoV.serialCharRead()
-            dcp_response_state = ID_GETCTRLDCPRESPONSE_READING
+            gcs_tcp_response_state = ID_GETCTRLGCSTCPRESPONSE_READING
 
-        # State ID: ID_GETCTRLDCPRESPONSE_READING
-        elif( dcp_response_state==ID_GETCTRLDCPRESPONSE_READING ):
+        # State ID: ID_GETCTRLGCSTCPRESPONSE_READING
+        elif( gcs_tcp_response_state==ID_GETCTRLGCSTCPRESPONSE_READING ):
             if( FoV.dre.char_read==chr(10) or FoV.dre.char_read==chr(13) ):
-                # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
+                # Transition ID: ID_GETCTRLGCSTCPRESPONSE_TRANSITION_CONNECTION
                 # Actions:
                 FoV.serialCharRead()
-                dcp_response_state = ID_GETCTRLDCPRESPONSE_FINISHING
+                gcs_tcp_response_state = ID_GETCTRLGCSTCPRESPONSE_FINISHING
 
             elif( (FoV.dre.char_read != chr(10)) and (FoV.dre.char_read != chr(13)) ):
-                # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
+                # Transition ID: ID_GETCTRLGCSTCPRESPONSE_TRANSITION_CONNECTION
                 # Actions:
                 # ['<global>::appendCharToRxBuf' begin]
                 FoV.dre.command_rx_buf += FoV.dre.char_read
                 # ['<global>::appendCharToRxBuf' end]
                 FoV.serialCharRead()
 
-        # State ID: ID_GETCTRLDCPRESPONSE_FINISHING
-        elif( dcp_response_state==ID_GETCTRLDCPRESPONSE_FINISHING ):
+        # State ID: ID_GETCTRLGCSTCPRESPONSE_FINISHING
+        elif( gcs_tcp_response_state==ID_GETCTRLGCSTCPRESPONSE_FINISHING ):
             if( FoV.dre.char_read==chr(10) or dre.char_read==chr(13) ):
-                # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
-                dcp_response_state = ID_GETCTRLDCPRESPONSE_FINAL
+                # Transition ID: ID_GETCTRLGCSTCPRESPONSE_TRANSITION_CONNECTION
+                gcs_tcp_response_state = ID_GETCTRLGCSTCPRESPONSE_FINAL
 
             elif( (FoV.dre.char_read != chr(10)) and (FoV.dre.char_read != chr(13)) ):
-                # Transition ID: ID_GETCTRLDCPRESPONSE_TRANSITION_CONNECTION
+                # Transition ID: ID_GETCTRLGCSTCPRESPONSE_TRANSITION_CONNECTION
                 # Actions:
                 FoV.serialCharRead()
 
-        # State ID: ID_GETCTRLDCPRESPONSE_FINAL
-        elif( dcp_response_state==ID_GETCTRLDCPRESPONSE_FINAL ):
-            return ID_GETCTRLDCPRESPONSE_FINAL
+        # State ID: ID_GETCTRLGCSTCPRESPONSE_FINAL
+        elif( gcs_tcp_response_state==ID_GETCTRLGCSTCPRESPONSE_FINAL ):
+            return ID_GETCTRLGCSTCPRESPONSE_FINAL
 
 
 
-# Gets a response from the DCP
-def getDcpResponse(  ):
-    getDcpCtrlResponse()
-    print ("DCP>> " + FoV.dre.command_rx_buf)        
+# Gets a response from the GCS over TCP
+def getGcsTcpResponse(  ):
+    getGcsTcpCtrlResponse()
+    print ("GCSTCP>> " + FoV.dre.command_rx_buf)        
     return FoV.dre.command_rx_buf
 
 
