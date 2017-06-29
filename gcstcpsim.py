@@ -134,7 +134,7 @@ def serialClose():
 def processCommand():
     readCommand()
     print "Arrived command: " + dre.command_rx_buf
-    dre.command_tx_buf = "0 1 2 3"
+    dre.command_tx_buf = "0 1 2 3 4"
     sendResponse()
 
 

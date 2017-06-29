@@ -644,6 +644,43 @@ gcs_pos_x = 0
 gcs_pos_y = 0
 gcs_dcp_sckt = 0
 
+
+def getDcpAbsPosition():
+    global gcs_dcp_sckt
+
+    ret = 0
+    gcs_command_str = "get position abs FM1 0"
+    print ">>GCSTCP: " + gcs_command_str
+    respcode, response = dcpwrapper.commandwrapper(gcs_command_str,0,gcs_dcp_sckt)
+    if respcode == 1:
+        response = "0 " + response
+    else:
+        response = str(respcode) + " " + response
+
+    print "Response is <"+response+">"
+    response_list = response.split()
+    response_code = int(response_list[0])
+    if (response_code == 0):
+        print ("OK: "+ str(respcode)+" "+response)
+        pos_x = int(response_list[3])
+        pos_y = int(response_list[2])
+    else:
+        if (response_code > 0):
+            print ("ERROR: "+ str(respcode)+" "+response)
+            pos_x = 0
+            pos_y = 0
+            lscomp_pos = 0
+            ret = -1
+
+        else:
+            print ("WARNING: "+ str(respcode)+" "+response)
+            pos_x = int(response_list[3])
+            pos_y = int(response_list[2])
+            ret = 0
+
+    return ret, pos_x, pos_y
+
+
 # Commands the window to x and y position (in mm from centered position)
 # It calculates the needed commands for Mx, My and Mcomp motors and sends them.
 def commandMotor(x, y, initial_step = False):
@@ -653,14 +690,13 @@ def commandMotor(x, y, initial_step = False):
 
     if scanconfig.cte_command_gcs:
         if initial_step:
-            gcs_pos_x = 0
-            gcs_pos_y = 0
+            ret, gcs_pos_x,gcs_pos_y = getDcpAbsPosition()
             
         gcs_jump_y = (y * scanconfig.cte_command_gcs_scale) - gcs_pos_y
         gcs_jump_x = (x * scanconfig.cte_command_gcs_scale) - gcs_pos_x
         gcs_pos_y += gcs_jump_y
         gcs_pos_x += gcs_jump_x
-        gcs_command_str = "IFU set position rel FM1 0 " + str(gcs_jump_y) + " " + str(gcs_jump_x)
+        gcs_command_str = "set position rel FM1 0 " + str(int(gcs_jump_y)) + " " + str(int(gcs_jump_x))+ " 0 0"
         print ">>GCSTCP: " + gcs_command_str
         if scanconfig.cte_command_gcs_tcp:
             sendGcsTcpCommand(gcs_command_str)
@@ -676,24 +712,24 @@ def commandMotor(x, y, initial_step = False):
         response_list = response.split()
         response_code = int(response_list[0])
         if (response_code == 0):
-            print ("OK")
-            lsx_pos = int(response_list[2])
-            lsy_pos = int(response_list[1])
-            lscomp_pos = int(response_list[3])
+            print ("OK: "+ str(respcode)+" "+response)
+            lsx_pos = int(response_list[3])
+            lsy_pos = int(response_list[2])
+            lscomp_pos = int(response_list[4])
             ret = 0
         else:
             if (response_code > 0):
-                print ("ERROR: "+ response_list[0])
+                print ("ERROR: "+ str(respcode)+" "+response)
                 lsx_pos = 0
                 lsy_pos = 0
                 lscomp_pos = 0
                 ret = -1
                 
             else:
-                print ("WARNING: "+ response_list[0])
-                lsx_pos = int(response_list[2])
-                lsy_pos = int(response_list[1])
-                lscomp_pos = int(response_list[3])
+                print ("WARNING: "+ str(respcode)+" "+response)
+                lsx_pos = int(response_list[3])
+                lsy_pos = int(response_list[2])
+                lscomp_pos = int(response_list[4])
                 ret = 0
 
         print ("lsy_pos " + str(lsy_pos))
