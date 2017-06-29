@@ -187,7 +187,7 @@ sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket created'
 #Bind socket to local host and port
 try:
-    sckt.bind((scanconfig.cte_command_gcs_ip, scanconfig.cte_command_gcs_port))
+    sckt.bind((scanconfig.cte_command_gcs_tcp_ip, scanconfig.cte_command_gcs_tcp_port))
 except socket.error as msg:
     print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
     sys.exit()
