@@ -633,7 +633,6 @@ def commandMotorUnits2D(xMot, yMot):
     print "commandMotorUnits2D x: %.6f y: %.6f" % (x, y)
     ret, lsx_pos, lsy_pos, lscomp_pos = commandMotor(x, y)
 
-import dcpwrapper
 
 def sendGcsTcpCommand( command_tx_buf ):
     FoV.dre.ser.sendall(command_tx_buf+chr(13))
