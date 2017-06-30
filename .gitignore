@@ -91,9 +91,7 @@ target/
 /db.*
 /capt*.jpg
 
-/launch2.py
 /launch_Xtmp.py
-/launch2.py
 /launch2web.py
 /launch3web.py
 /launch10web.py
