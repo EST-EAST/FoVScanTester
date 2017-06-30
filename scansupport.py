@@ -1385,7 +1385,7 @@ else:
         gcs_dcp_sckt = dcpwrapper.opensocketwrapper(
                                                     scanconfig.cte_command_gcs_dcp_ip,
                                                     scanconfig.cte_command_gcs_dcp_port)
-        print ("Respuesta open socket " + str(gcs_dcp_sckt))
+        print ("Respuesta open socket " + str(gcs_dcp_sckt)+ " " + scanconfig.cte_command_gcs_dcp_ip + ":" + str(scanconfig.cte_command_gcs_dcp_port))
 
     else:
         import socket  # Import socket module
