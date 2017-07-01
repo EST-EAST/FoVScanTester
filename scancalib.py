@@ -19,7 +19,8 @@ cte_lsx_max = 26900  # End of LS travel in upper units
 # INTERNAL NOTES: TODO -> CHANGE THEM TO ANOTHER PLACE
 # cte_lsx_zero = 13100  # LS units coincidence with 0 mm (center)
 # cte_lsx_zero = 11100  # Primer alineado en GREGOR
-cte_lsx_zero = 11100  # 
+# cte_lsx_zero = 11100  # 
+cte_lsx_zero = 12000  # Nuevo centro
 
 # My = y
 cte_lsy_min = 0  # End of LS travel in lower units
@@ -28,7 +29,8 @@ cte_lsy_max = 39401  # End of LS travel in upper units
 # INTERNAL NOTES: TODO -> CHANGE THEM TO ANOTHER PLACE
 # cte_lsy_zero = 18400  # LS units coincidence with 0 mm (center)
 # cte_lsy_zero = 16400  # Primer alineado en GREGOR
-cte_lsy_zero = 16400  # 
+# cte_lsy_zero = 16400  # 
+cte_lsy_zero = 17000  # New zero
 
 # Mcomp = compensation
 cte_lscomp_min = 0  # End of LS travel in lower units
@@ -45,10 +47,9 @@ cte_lscomp_max = 39800  # End of LS travel in upper units
 #cte_lscomp_zero = 18625 #  2107 jun _AIV ventana F_silica en visible
 
 #cte_lscomp_zero = 20000#  2107 jun _GREGOR ventana F_silica en visible
-cte_lscomp_zero = 19700#  2107 jun _GREGOR ventana F_silica en NIR
+# cte_lscomp_zero = 19700#  2107 jun _GREGOR ventana F_silica en NIR
+cte_lscomp_zero = 19176 #  New zero
 
-
-cte_lscomp_zero = 18050  # 
 # INTERNAL NOTES: TODO -> CHANGE THEM TO ANOTHER PLACE
 # bien 20250 antes de tcar SM1 y RS1
 # Calculado con RS1 19500 ver excel
