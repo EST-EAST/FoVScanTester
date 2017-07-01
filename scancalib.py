@@ -39,7 +39,15 @@ cte_lscomp_max = 39800  # End of LS travel in upper units
 # cte_lscomp_zero = 15000  # LS units coincidence with 0 mm (center)
 # cte_lscomp_zero = 20350  # LS units coincidence with 0 mm (center) #CARLOS
 # cte_lscomp_zero = 19500  # Primer alineado en GREGOR
-cte_lscomp_zero = 18050  # 
+#cte_lscomp_zero = 18050  #  2107 may _AIV mascara cruz excel BancoFocoSW  18050
+#cte_lscomp_zero = 17525   #  2107 jun _AIV mascara cruz excel 201706_BaFOV_focoCompens  17525
+#cte_lscomp_zero = 18000 #  2107 jun _AIV ventana USC
+#cte_lscomp_zero = 18625 #  2107 jun _AIV ventana F_silica en visible
+
+#cte_lscomp_zero = 20000#  2107 jun _GREGOR ventana F_silica en visible
+cte_lscomp_zero = 19700#  2107 jun _GREGOR ventana F_silica en NIR
+
+
 # INTERNAL NOTES: TODO -> CHANGE THEM TO ANOTHER PLACE
 # bien 20250 antes de tcar SM1 y RS1
 # Calculado con RS1 19500 ver excel
@@ -78,17 +86,19 @@ cte_comp_divisor = 2
 CTE_DIRECTION_POSITIVE = 1
 CTE_DIRECTION_NEGATIVE = -1
 
-cte_backslash_x_correction_enable = False
+cte_backslash_x_correction_enable =  True #False
 cte_backslash_x_correction_direction = CTE_DIRECTION_POSITIVE
 # cte_backslash_x_correction_direction = CTE_DIRECTION_NEGATIVE
 cte_backslash_x_correction_delta = 0.000015 * abs(cte_lsx_scale)
 
-cte_backslash_y_correction_enable = True
+cte_backslash_y_correction_enable = True #
 cte_backslash_y_correction_direction = CTE_DIRECTION_POSITIVE
 # cte_backslash_y_correction_direction = CTE_DIRECTION_NEGATIVE
 cte_backslash_y_correction_delta = 0.000015 * abs(cte_lsy_scale)
 
-cte_backslash_comp_correction_enable = False
+
+cte_backslash_comp_correction_enable = False #True
 cte_backslash_comp_correction_direction = CTE_DIRECTION_POSITIVE
 # cte_backslash_comp_correction_direction = CTE_DIRECTION_NEGATIVE
 cte_backslash_comp_correction_delta = 0.000015 * abs(cte_lscomp_scale)
+
