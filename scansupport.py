@@ -517,7 +517,7 @@ def calculateBackslashStep(stepXcoord, stepYcoord, stepZcoord):
 
 def calculateBackslashStepXY(x, y):
     # Compute compensation
-    lscomp = ((cte_comp_factor_x * x) + (cte_comp_factor_x * y)) / cte_comp_divisor
+    lscomp = ((cte_comp_factor_x * x) + (cte_comp_factor_y * y)) / cte_comp_divisor
     # Compute LSX and LSY
     lsx_temp = cte_lsx_zero + (x * cte_lsx_scale)
     lsx_pos = max(min(lsx_temp, cte_lsx_max), cte_lsx_min)
