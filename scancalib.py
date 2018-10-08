@@ -78,7 +78,7 @@ cte_vcomp = 100
 
 # ##################### COMPENSATION ALGORITHM PARAMETERS ######################
 # Original function ---> lscomp = (x + y) / 2
-# Tunable function ---> lscomp = ((cte_comp_factor_x * x) + (cte_comp_factor_x * y)) / cte_comp_divisor
+# Tunable function ---> lscomp = ((cte_comp_factor_x * x) + (cte_comp_factor_y * y)) / cte_comp_divisor
 cte_comp_factor_x = 1
 cte_comp_factor_y = 1
 cte_comp_divisor = 2
